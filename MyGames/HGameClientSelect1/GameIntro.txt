@@ -1,0 +1,24 @@
+2
+
+300 BACKGROUND
+../../Data/Bitmap/Loading800x600.bmp
+nullptr
+nullptr
+nullptr
+nullptr
+0 0
+-1 -1 -1 -1
+-1 -1
+0 255 0 255
+
+301 BUTTON1
+../../Data/Bitmap/main_start_nor.bmp
+../../Data/Bitmap/main_start_pus.bmp
+../../Data/Bitmap/main_start_sel.bmp
+../../Data/Bitmap/main_start_dis.bmp
+nullptr
+233 400
+-1 -1 -1 -1
+-1 -1
+0 255 255 255
+

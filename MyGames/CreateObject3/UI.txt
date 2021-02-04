@@ -1,0 +1,23 @@
+2
+
+1                                     // Button UI
+../../Data/Bitmap/main_start_nor.bmp  
+../../Data/Bitmap/main_start_pus.bmp
+../../Data/Bitmap/main_start_sel.bmp
+../../Data/Bitmap/main_start_dis.bmp
+nullptr    // mask
+233 350
+-1 -1 -1 -1
+-1 -1
+1 255 0 255
+
+0                                // BackGround
+../../Data/Bitmap/KGCABK.bmp
+nullptr
+nullptr
+nullptr
+nullptr
+0 0
+-1 -1 -1 -1
+-1 -1
+1 255 0 255

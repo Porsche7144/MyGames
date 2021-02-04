@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="FSM">
+      <UniqueIdentifier>{253be2fe-5183-465f-a35e-e6b0a3fb0449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{43b84006-ea42-4e49-b94c-46cefbc6b2d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{b86feead-39f0-479f-ad90-6ddde54aadf0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Hcore.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HGraphicAPI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HInput.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HTimer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HWindow.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HWrite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HSound.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HSoundManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HFiniteState\HAttackState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HFiniteState\HEnemyState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HFiniteState\HFiniteState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HFiniteState\HFiniteStateMachine.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HFiniteState\HMoveState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HFiniteState\HStandState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HBitmap.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapManager.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="HGameUser.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HObjectManager.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HCollision.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HEffect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HProjectTile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HUserInterface.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HNpcObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Hcore.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HCoreStd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HGraphicAPI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HInput.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Hstd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HTimer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HWindow.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HWrite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HSoundManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HSound.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HFiniteState\HAttackState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HFiniteState\HEnemyState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HFiniteState\HFiniteState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HFiniteState\HFiniteStateMachine.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HFiniteState\HMoveState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HFiniteState\HStandState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HBitmap.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapManager.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="HGameUser.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HObjectManager.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HCollision.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HEffect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HProjectTile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HUserInterface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HNpcObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Sound.txt" />
+  </ItemGroup>
+</Project>

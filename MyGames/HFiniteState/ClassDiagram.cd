@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HObject" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAsAAIAAAgBASAAAAAEAAAAEAAAgBKABAS6RAAAAE=</HashCode>
+      <FileName>HObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HCollision" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HCollision.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HEffect" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAABAAIABAAAAgAAAACAAAABAAAAAAAAAAE=</HashCode>
+      <FileName>HEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HGameUser" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAQAABQCAAAAAAE=</HashCode>
+      <FileName>HGameUser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HNpcObject" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAIgE=</HashCode>
+      <FileName>HNpcObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HObjectManager" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgAAAAAAAABAAACAAAAAkBAAAAAAAABICABAAAAE=</HashCode>
+      <FileName>HObjectManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HProjectTile" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HProjectTile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HScene" Collapsed="true">
+    <Position X="2.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgCFAABAAIQAAAAAEKACgAQAAAAAgABAjABAAEAE=</HashCode>
+      <FileName>HScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSceneInGame" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAIAAAAAAAAAAAAABAAAAAAAAE=</HashCode>
+      <FileName>HSceneInGame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSceneIntro" Collapsed="true">
+    <Position X="2.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>HSceneIntro.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HSceneLobby" Collapsed="true">
+    <Position X="5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>HSceneLobby.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HUserInterface" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HUserInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HButton" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAE=</HashCode>
+      <FileName>HUserInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sample" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAABAAAAAAAAAAAQBAiABAAAAE=</HashCode>
+      <FileName>Sample.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HAttackState" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HAttackState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HEnemyState" Collapsed="true">
+    <Position X="2.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAgAAACAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>HEnemyState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFiniteState" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQACAAAAAAAAAAAAAAIAAIAAAAAAAAA=</HashCode>
+      <FileName>HFiniteState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HFiniteStateMachine" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAQAAAAAAAAAAAAAABBAAACAAAAAAAAAA=</HashCode>
+      <FileName>HFiniteStateMachine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HMoveState" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HMoveState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HStandState" Collapsed="true">
+    <Position X="5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>HStandState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="HObjAttribute" Collapsed="true">
+    <Position X="11.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEIEAAQSAAAAAGAAAAAAYQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HObject.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HEffectInfo" Collapsed="true">
+    <Position X="9.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAABAIARgAAAIAAAAAACAAAABAAAQAAAgE=</HashCode>
+      <FileName>HProjectTile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HProjectTileInfo" Collapsed="true">
+    <Position X="13.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAgAAABAIARgAAAIAAAAAACAAAIBAAAQAAAgE=</HashCode>
+      <FileName>HProjectTile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HSpriteInfo" Collapsed="true">
+    <Position X="9.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>HScene.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="RECT_ARRAY" Collapsed="true">
+    <Position X="9.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HProjectTile.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="ObjState" Collapsed="true">
+    <Position X="9.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAEAAAAAEAAAAAAAAAEAA=</HashCode>
+      <FileName>HObject.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HControlState" Collapsed="true">
+    <Position X="9.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAggAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>HObject.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HFSMState" Collapsed="true">
+    <Position X="13.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAKAABAAAAAA=</HashCode>
+      <FileName>HFiniteState.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HFSMEvent" Collapsed="true">
+    <Position X="11.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAABAAAAAAAAgIAAIAAIAAAAAAAAAA=</HashCode>
+      <FileName>HFiniteState.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

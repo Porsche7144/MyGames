@@ -1,0 +1,23 @@
+2
+
+2                                // USER
+../../Data/Bitmap/The_Kid.bmp     // Original Image
+../../Data/Bitmap/The_Kidmask.bmp  // Mask
+nullptr
+nullptr
+nullptr
+400 500                           // Position x, y
+0 0 220 193                       // RECT
+50 30                             // Size
+0 255 0 255                       // RGB
+
+3                                  // NPC
+../../Data/Bitmap/bitmap1.bmp
+../../Data/Bitmap/bitmap1mask.bmp
+nullptr
+nullptr
+nullptr
+400 0
+91 1 40 60
+40 60
+0 255 0 255 

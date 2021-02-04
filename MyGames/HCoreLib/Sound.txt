@@ -1,0 +1,11 @@
+
+
+사운드 fmod engin 다운로드
+fmod폴더에 있는 inc lib 복사
+새 fmode 폴더 생성 후 붙여넣기
+c++ 추가 포함 드렉터리에 등록 ../../fmod/inc
+링커 추가 포함 디렉터리 ../../fmod/lib/x64
+pragma comment fmod_vc.lib 추가
+dll을 실행파일 있는 폴더로 이동
+빌드전이벤트  copy "../../fmod/lib/x64/*.dll" "../../output/
+include  fmod.h  fmod_errors.h  fmod.hpp

@@ -1,0 +1,34 @@
+3
+
+300 BACKGROUND_LOBBY
+../../Data/Bitmap/kgcabk.bmp
+nullptr
+../../Data/Bitmap/main_start_sel.bmp
+nullptr
+nullptr
+0 0
+-1 -1 -1 -1
+-1 -1
+0 255 0 255
+
+301 GO
+../../Data/Bitmap/go.bmp
+nullptr
+nullptr
+nullptr
+nullptr
+400 0
+-1 -1 -1 -1
+-1 -1
+1 255 0 255
+
+301 BUTTON1
+../../Data/Bitmap/main_start_nor.bmp
+../../Data/Bitmap/main_start_pus.bmp
+../../Data/Bitmap/main_start_sel.bmp
+../../Data/Bitmap/main_start_dis.bmp
+nullptr
+233 400
+-1 -1 -1 -1
+-1 -1
+0 255 255 255

@@ -1,0 +1,26 @@
+// HLSL = ½¦ÀÌ´õ ¾ð¾î
+
+cbuffer HDataCB
+{
+	float4 vColor : packoffset(c0.x);
+	float  fTime  : packoffset(c1.x);
+	float  fGameTime  : packoffset(c1.y);
+};
+struct VS_INPUT
+{
+	float3 p : POSITION;
+};
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;
+};
+VS_OUTPUT VS( VS_INPUT vIn)
+{
+	VS_OUTPUT vOut;
+	vOut.p = float4(vIn.p,1.0f);
+	vOut.c = float4(1*fTime,1*fTime,1*fTime,1);
+	float fValue = cos(fGameTime)*0.5f+0.5f;
+	vOut.c = float4(fValue,fValue,fValue,1.0f);
+	return vOut;
+}

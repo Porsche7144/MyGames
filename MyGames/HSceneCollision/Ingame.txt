@@ -1,0 +1,45 @@
+4
+
+300 //BACKGROUND
+../../Data/Bitmap/Loading800x600.bmp
+nullptr
+nullptr
+nullptr
+nullptr
+0 0
+-1 -1 -1 -1
+-1 -1
+0 255 0 255
+
+100 //USER
+../../Data/Bitmap/bitmap1.bmp
+nullptr
+nullptr
+nullptr
+../../Data/Bitmap/bitmap1mask.bmp
+400 500
+91 1 40 60 
+40 60
+0 255 0 255
+
+200 //NPC
+../../Data/Bitmap/bitmap1.bmp
+nullptr
+nullptr
+nullptr
+../../Data/Bitmap/bitmap1mask.bmp
+400 100
+46 62 68 79	
+68 79
+0 255 0 255
+
+200 //NPC
+../../Data/Bitmap/bitmap1.bmp
+nullptr
+nullptr
+nullptr
+../../Data/Bitmap/bitmap1mask.bmp
+400 300
+115 62 37 35	
+37 35
+0 255 0 255

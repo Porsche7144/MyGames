@@ -1,0 +1,22 @@
+// ½¦ÀÌ´õ ¾ð¾î = HLSL
+
+float4 VS(float3 p : POSITION) : SV_POSITION
+{
+	float4 pOut;
+	pOut.x = p.x;
+	pOut.y = p.y;
+	pOut.z = p.z;
+	pOut.w = 1.0f;
+	return pOut;
+
+}
+
+float4 PS( float4 p : SV_POSITION) : SV_TARGET
+{
+	float4 pOut;
+	pOut.x = 1;
+	pOut.y = 0;
+	pOut.z = 0;
+	pOut.w = 1;
+	return pOut;
+}
