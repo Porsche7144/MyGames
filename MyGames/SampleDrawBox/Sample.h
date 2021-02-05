@@ -1,8 +1,9 @@
 #pragma once
 #include "HCore.h"
-#include "HVertex.h"
+#include "HVector.h"
 #include <d3dcompiler.h>
 #include "WICTextureLoader.h"
+#include "HMatrix.h"
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "directxtk.lib")
 
@@ -25,6 +26,10 @@ struct P_VERTEX
 
 struct HDataCB
 {
+	HMatrix matWorld;
+	HMatrix matView;
+	HMatrix matProject;
+
 	float vColor[4];
 	float vTime[4];
 };
@@ -35,6 +40,13 @@ class Sample : public HCore
 public:
 	std::vector<P_VERTEX>		m_VertexList;
 	std::vector<DWORD>			m_IndexList;
+
+public:
+	HMatrix						m_matWorld;
+	HMatrix						m_matView;
+	HMatrix						m_matProject;
+	HVector3					m_vCameraPos = { 0,0,-10 };
+	HVector3					m_vCameraTarget = { 0,0,0 };
 
 public:
 	ID3D11Buffer*				m_pVertexBuffer;

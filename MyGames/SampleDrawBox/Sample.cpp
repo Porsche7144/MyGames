@@ -26,6 +26,11 @@ bool Sample::Init()
 {
 	HRESULT hr;
 
+	m_matWorld.Identity();
+	HVector3 p = m_vCameraPos;
+	HVector3 t = m_vCameraTarget;
+	HVector3 u = { 0,0,0 };
+
 	// Depth Texture »ý¼º
 
 	ID3D11Texture2D* pTexture = nullptr;
