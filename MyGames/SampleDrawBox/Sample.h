@@ -7,6 +7,12 @@
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "directxtk.lib")
 
+struct H_VERTEX
+{
+	HVector3 p;
+	HVector2 t;
+};
+
 struct P_VERTEX
 {
 	HVector3 p;
@@ -45,7 +51,7 @@ public:
 	HMatrix						m_matWorld;
 	HMatrix						m_matView;
 	HMatrix						m_matProject;
-	HVector3					m_vCameraPos = { 0,0,-10 };
+	HVector3					m_vCameraPos = { -5,-3,0 };
 	HVector3					m_vCameraTarget = { 0,0,0 };
 
 public:
@@ -70,6 +76,9 @@ public:
 	ID3D11DepthStencilState*	m_pDSS;
 
 	HDataCB						m_cbData;
+
+	UINT iNumVertex;
+	UINT iNumIndex;
 
 public:
 	bool Init() override;

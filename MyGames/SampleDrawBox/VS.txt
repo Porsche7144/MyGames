@@ -2,9 +2,12 @@
 
 cbuffer HDataCB
 {
-	float4 vColor : packoffset(c0.x);
-	float  fTime  : packoffset(c1.x);
-	float  fGameTime  : packoffset(c1.y);
+	float4x4  g_matWorld: packoffset(c0);
+	float4x4  g_matView: packoffset(c4);
+	float4x4  g_matProj: packoffset(c8);
+	float4 vColor : packoffset(c12.x);
+	float  fTime  : packoffset(c13.x);
+	float  fGameTime  : packoffset(c13.y);
 };
 struct VS_INPUT
 {
@@ -23,7 +26,12 @@ struct VS_OUTPUT
 VS_OUTPUT VS( VS_INPUT vIn)
 {
 	VS_OUTPUT vOut;
-	vOut.p = float4(vIn.p,1.0f);
+	float4 p = float4(vIn.p,1.0f);
+	p = mul(p, g_matWorld);
+	p = mul(p, g_matView);
+	vOut.p = mul(p, g_matProj);
+
+	// dot
 	vOut.n = vIn.n;
 	vOut.c = vIn.c;
 	vOut.t = vIn.t;
