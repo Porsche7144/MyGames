@@ -91,10 +91,6 @@ bool Sample::Init()
 		return false;
 	}
 
-	m_FillMode = D3D11_FILL_SOLID;
-	m_CullMode = D3D11_CULL_NONE;
-	SetRasterState();
-
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -111,11 +107,16 @@ bool Sample::Init()
 
 
 	// RASTERIZER ป๓ลย
+
+	m_FillMode = D3D11_FILL_SOLID;
+	m_CullMode = D3D11_CULL_NONE;
+	SetRasterState();
+
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
 	rd.FillMode = D3D11_FILL_SOLID;
 	rd.CullMode = D3D11_CULL_BACK;
-	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRS);
+	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRSSSolidBack);
 	if (FAILED(hr))
 	{
 		return false;
@@ -124,7 +125,7 @@ bool Sample::Init()
 	ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
 	rd.FillMode = D3D11_FILL_WIREFRAME;
 	rd.CullMode = D3D11_CULL_BACK;
-	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRS);
+	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRSWireBack);
 	if (FAILED(hr))
 	{
 		return false;
@@ -135,6 +136,10 @@ bool Sample::Init()
 		return false;
 	}
 	if (!m_Plane.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
+	{
+		return false;
+	}
+	if (!m_Line.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
 	{
 		return false;
 	}
@@ -154,11 +159,11 @@ bool Sample::Frame()
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
-		m_vCameraPos.y += 10.0f * g_fSecondPerFrame;
+		m_vCameraPos.z += 10.0f * g_fSecondPerFrame;
 	}
 	if (g_Input.GetKey('S') == KEY_HOLD)
 	{
-		m_vCameraPos.y -= 10.0f * g_fSecondPerFrame;
+		m_vCameraPos.z -= 10.0f * g_fSecondPerFrame;
 	}
 	HVector3 u = { 0,1,0 };
 	m_matView.CreateViewLook(m_vCameraPos, m_vCameraTarget, u);
@@ -214,6 +219,11 @@ bool Sample::Render()
 	m_Plane.SetMatrix(&m_matPlaneWorld, &m_matView, &m_matProject);
 	m_Plane.Render(m_pd3dContext);
 
+	m_Line.SetMatrix(NULL, &m_matView, &m_matProject);
+	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(100, 0, 0), HVector4(1, 0, 0, 1));
+	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(0, 100, 0), HVector4(0, 1, 0, 1));
+	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(0, 0, 100), HVector4(0, 0, 1, 1));
+
 	return true;
 }
 
@@ -234,6 +244,8 @@ bool Sample::Release()
 		m_pRSWireBack->Release();
 	}
 	m_Box.Release();
+	m_Plane.Release();
+	m_Line.Release();
 
 	return true;
 }

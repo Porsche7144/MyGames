@@ -156,7 +156,7 @@ bool HShape::LoadShader(T_STR vs, T_STR ps)
 	ID3DBlob* pErrorMsg;
 
 	// Vertex ½¦ÀÌ´õ
-	HRESULT hr = D3DCompileFromFile(vs.c_str(), NULL, NULL, "VS", "vs_5_0", 0, 0, &pVSObj, &pErrorMsg);
+	HRESULT hr = D3DCompileFromFile(vs.c_str(), NULL, NULL, m_szVertexShader.c_str(), "vs_5_0", 0, 0, &pVSObj, &pErrorMsg);
 	if (FAILED(hr))
 	{
 		CompilerCheck(pErrorMsg);
@@ -166,7 +166,7 @@ bool HShape::LoadShader(T_STR vs, T_STR ps)
 		&m_pVertexShader);
 
 	// Pixel ½¦ÀÌ´õ
-	hr = D3DCompileFromFile(ps.c_str(), NULL, NULL, "PS", "ps_5_0", 0, 0, &pPSObj, &pErrorMsg);
+	hr = D3DCompileFromFile(ps.c_str(), NULL, NULL, m_szPixelShader.c_str(), "ps_5_0", 0, 0, &pPSObj, &pErrorMsg);
 	if (FAILED(hr))
 	{
 		CompilerCheck(pErrorMsg);
@@ -237,6 +237,7 @@ bool HShape::Render(ID3D11DeviceContext* pContext)
 
 	pContext->VSSetShader(m_pVertexShader, NULL, 0);
 	pContext->PSSetShader(m_pPixelShader, NULL, 0);
+	pContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iTopology);
 	pContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
 	// Vertex Draw
 	// m_pd3dContext->Draw(m_VertexList.size(), 0);
@@ -258,6 +259,17 @@ bool HShape::Release()
 	m_pPixelShader->Release();
 
 	return true;
+}
+
+HShape::HShape()
+{
+	m_szVertexShader = "VS";
+	m_szPixelShader = "PS";
+	m_iTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+}
+
+HShape::~HShape()
+{
 }
 
 bool HShapeBox::CreateVertexData()
@@ -484,18 +496,60 @@ HShapePlane::~HShapePlane()
 {
 }
 
+bool HShapeLine::Draw(ID3D11DeviceContext * pContext, HVector3 p, HVector3 e, HVector4 c)
+{
+	m_VertexList = 
+	{
+	   { p,
+		 HVector3(0.0f,0.0f,-1.0f),
+		 c,
+		 HVector2(0,0)
+	   },
+
+	   { e,
+		 HVector3(0.0f,0.0f,-1.0f),
+		 c,
+		 HVector2(1,0) },
+	};
+	pContext->UpdateSubresource(m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+
+	return HShape::Render(pContext);
+}
+
 bool HShapeLine::CreateVertexData()
 {
+	m_VertexList.resize(2);
+	m_VertexList =
+	{
+	   { HVector3(0.0f, 0.0f, 0.0f),
+		 HVector3(0.0f, 0.0f, -1.0f),
+		 HVector4(1.0f ,0.0f ,0.0f ,1.0f),
+		 HVector2(0,0)
+	   },
+
+	   { HVector3(100.0f, 0.0f, 0.0f),
+		 HVector3(0.0f, 0.0f, -1.0f),
+		 HVector4(1.0f ,0.0f ,0.0f ,1.0f),
+		 HVector2(1.0f, 0) },
+	};
+
 	return true;
 }
 
 bool HShapeLine::CreateIndexData()
 {
+	m_IndexList.resize(2);
+	m_IndexList =
+	{
+		0, 1
+	};
 	return true;
 }
 
 HShapeLine::HShapeLine()
 {
+	m_szPixelShader = "PSLine";
+	m_iTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 }
 
 HShapeLine::~HShapeLine()

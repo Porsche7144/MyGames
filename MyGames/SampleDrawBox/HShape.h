@@ -56,8 +56,13 @@ public:
 	ID3D11VertexShader*			m_pVertexShader;
 	ID3D11PixelShader*			m_pPixelShader;
 
+	// 유니코드 불가
+	C_STR m_szVertexShader;
+	C_STR m_szPixelShader;
+
 	UINT iNumVertex;
 	UINT iNumIndex;
+	UINT m_iTopology;
 
 public:
 	virtual bool Create(ID3D11Device* pDevice, T_STR vs, T_STR ps, T_STR texture);
@@ -79,7 +84,9 @@ public:
 	virtual bool Frame();
 	virtual bool Render(ID3D11DeviceContext* pContext);
 	virtual bool Release();
-
+public:
+	HShape();
+	virtual ~HShape();
 };
 
 class HShapeBox : public HShape
@@ -104,6 +111,9 @@ public:
 
 class HShapeLine : public HShape
 {
+public:
+	bool Draw(ID3D11DeviceContext* pContext, HVector3 p, HVector3 e, HVector4 c = HVector4(1, 0, 0, 1));
+
 public:
 	bool CreateVertexData() override;
 	bool CreateIndexData() override;

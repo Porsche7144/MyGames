@@ -11,6 +11,7 @@ class Sample : public HCore
 public:
 	HShapeBox m_Box;
 	HShapePlane m_Plane;
+	HShapeLine m_Line;
 
 public:
 	HVector3					m_vCameraPos = { -5,-3,0 };
@@ -18,6 +19,7 @@ public:
 
 	HMatrix						m_matBoxWorld;
 	HMatrix						m_matPlaneWorld;
+	HMatrix						m_matLineWorld;
 
 	HMatrix						m_matView;
 	HMatrix						m_matProject;
