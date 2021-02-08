@@ -164,7 +164,10 @@ bool HShape::LoadShader(T_STR vs, T_STR ps)
 	}
 	hr = m_pd3dDevice->CreateVertexShader(pVSObj->GetBufferPointer(), pVSObj->GetBufferSize(), NULL,
 		&m_pVertexShader);
-
+	if (FAILED(hr))
+	{
+		return false;
+	}
 	// Pixel ½¦ÀÌ´õ
 	hr = D3DCompileFromFile(ps.c_str(), NULL, NULL, m_szPixelShader.c_str(), "ps_5_0", 0, 0, &pPSObj, &pErrorMsg);
 	if (FAILED(hr))
@@ -174,6 +177,15 @@ bool HShape::LoadShader(T_STR vs, T_STR ps)
 	}
 	hr = m_pd3dDevice->CreatePixelShader(pPSObj->GetBufferPointer(), pPSObj->GetBufferSize(), NULL,
 		&m_pPixelShader);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	if (pPSObj)
+	{
+		pPSObj->Release();
+	}
 
 	return true;
 }
@@ -187,7 +199,6 @@ bool HShape::LoadTexture(T_STR texture)
 	{
 		return false;
 	}
-
 	return true;
 }
 
