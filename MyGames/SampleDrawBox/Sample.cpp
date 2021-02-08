@@ -25,16 +25,17 @@ void Sample::CompilerCheck(ID3DBlob* ErrorMsg)
 bool Sample::Init()
 {
 	HRESULT hr;
+	m_vCameraPos = { 10,10,-10 };
+	m_vCameraTarget = { 0,0,0 };
 
-	m_matWorld.Identity();
 	HVector3 p = m_vCameraPos;
 	HVector3 t = m_vCameraTarget;
 	HVector3 u = { 0,1,0 };
 	m_matView.CreateViewLook(p, t, u);
 	float fN = 1;
 	float fF = 1000;
-	float fFov = HBASIS_PI / 2.0f;
-	float fAspect = g_rtClient.right / g_rtClient.bottom;
+	float fFov = HBASIS_PI / 4.0f;
+	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_matProject.PerspectiveFovLH(fN, fF, fFov, fAspect);
 
 	// Depth Texture 생성
@@ -67,7 +68,6 @@ bool Sample::Init()
 		return false;
 	}
 
-
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -78,6 +78,7 @@ bool Sample::Init()
 	{
 		return false;
 	}
+	pTexture->Release();
 
 	D3D11_DEPTH_STENCIL_DESC dsdDesc;
 	ZeroMemory(&dsdDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
@@ -90,13 +91,8 @@ bool Sample::Init()
 		return false;
 	}
 
-	// 텍스쳐 로드
-	ID3D11Resource* texture;
-	hr = DirectX::CreateWICTextureFromFile(m_pd3dDevice, L"../../Image/KakaoTalk_20201201_210710448.jpg"
-											, NULL, &m_pTextureSRV);
-
 	m_FillMode = D3D11_FILL_SOLID;
-	m_CullMode = D3D11_CULL_BACK;
+	m_CullMode = D3D11_CULL_NONE;
 	SetRasterState();
 
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -134,325 +130,14 @@ bool Sample::Init()
 		return false;
 	}
 
-
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(HDataCB);
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	// Constant 버퍼로 바인딩
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA sd;
-	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-	sd.pSysMem = &m_cbData;
-	hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_ConstantBuffer);
-	if (FAILED(hr))
+	if (!m_Box.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
 	{
 		return false;
 	}
-
-	// Vertex버퍼
-	// P_VERTEX pos = { HVertex3(-0.3f, 0.3f, 0.5f), HVertex3(0,0,0) };
-
-
-	P_VERTEX vertex[] = 
-	{
-		 // 앞면
-		{ HVector3(-1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0) 
-		},
-
-		{ HVector3(1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0) },
-
-		{ HVector3(1.0f, -1.0f, -0.5f),
-	      HVector3(0,0,0),
-	      HVector4(0,0,1,1),
-	      HVector2(0,1) },
-
-		{ HVector3(-1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1) },
-
-		 // 뒷면
-		{ HVector3(1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0)
-		},
-
-		{ HVector3(-1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0) },
-
-		{ HVector3(-1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1) },
-
-		{ HVector3(1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1) },
-
-		// 위
-		{ HVector3(-1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0)
-		},
-
-		{ HVector3(1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0) },
-
-		{ HVector3(1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1) },
-
-		{ HVector3(-1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1) },
-	
-		// 아래
-		{ HVector3(1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0)
-		},
-
-		{ HVector3(-1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0) },
-
-		{ HVector3(-1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1) },
-
-		{ HVector3(1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1) },
-
-		// 왼쪽
-		{ HVector3(-1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0)
-		},
-
-		{ HVector3(-1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0) },
-
-		{ HVector3(-1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1) },
-
-		{ HVector3(-1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1) },
-
-		// 오른쪽
-		{ HVector3(1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0)
-		},
-
-		{ HVector3(1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0) },
-
-		{ HVector3(1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1) },
-
-		{ HVector3(1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1) },
-		
-	};
-	iNumVertex = sizeof(vertex) / sizeof(vertex[0]);
-	//m_VertexList.resize(4);
-	//m_VertexList[0] = {
-	//	HVector3(-1.0f, 1.0f, -0.5f),
-	//	HVector3(0,0,0),
-	//	HVector4(1,0,0,1),
-	//	HVector2(0,0) };
-	//m_VertexList[1] = {
-	//	HVector3(1.0f, 1.0f, -0.5f),
-	//	HVector3(0,0,0),
-	//	HVector4(0,1,0,1),
-	//	HVector2(1,0) };
-	//m_VertexList[2] = {
-	//	HVector3(-1.0f, -1.0f, -0.5f),
-	//	HVector3(0,0,0),
-	//	HVector4(0,0,1,1),
-	//	HVector2(0,1) };
-	//m_VertexList[3] = {
-	//	HVector3(1.0f, -1.0f, -0.5f),
-	//	HVector3(0,0,0),
-	//	HVector4(1,1,1,1),
-	//	HVector2(1,1) };
-
-
-
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	/*UINT ByteWidth;
-	D3D11_USAGE Usage;
-	UINT BindFlags;
-	UINT CPUAccessFlags;
-	UINT MiscFlags;
-	UINT StructureByteStride;*/
-	bd.ByteWidth = sizeof(P_VERTEX) * iNumVertex;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	// Vertex 버퍼로 바인딩
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-	sd.pSysMem = &vertex[0];
-	hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer);
-	if (FAILED(hr))
+	if (!m_Plane.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
 	{
 		return false;
 	}
-
-	// Index 버퍼
-	/*DWORD p[4];
-	p[0] = pos.pos.x;
-	p[1] = pos.pos.y;
-	p[2] = pos.pos.z;
-	p[3] = -0.3f;*/
-
-	DWORD index[] =
-	{
-		0, 1, 2,
-		0, 2, 3,
-		4, 5, 6,
-		4, 6, 7,
-		8, 9, 10,
-		8, 10, 11,
-		12, 13, 14,
-		12, 14, 15,
-		16, 17, 18,
-		16, 18, 19,
-		20, 21, 22,
-		20, 22, 23,
-	};
-	iNumIndex = sizeof(index) / sizeof(index[0]);
-
-	/*m_IndexList.resize(36);
-	m_IndexList[0] = 0;
-	m_IndexList[1] = 1;
-	m_IndexList[2] = 2;
-	m_IndexList[3] = 0;
-	m_IndexList[4] = 2;
-	m_IndexList[5] = 3;
-
-	m_IndexList[6] = 4;
-	m_IndexList[7] = 5;
-	m_IndexList[8] = 6;
-	m_IndexList[9] = 4;
-	m_IndexList[10] = 6;
-	m_IndexList[11] = 7;
-
-	m_IndexList[12] = 8;
-	m_IndexList[13] = 9;
-	m_IndexList[14] = 10;
-	m_IndexList[15] = 8;
-	m_IndexList[16] = 10;
-	m_IndexList[17] = 11;
-
-	m_IndexList[18] = 12;
-	m_IndexList[19] = 13;
-	m_IndexList[20] = 14;
-	m_IndexList[21] = 12;
-	m_IndexList[22] = 14;
-	m_IndexList[23] = 15;
-
-	m_IndexList[24] = 16;
-	m_IndexList[25] = 17;
-	m_IndexList[26] = 18;
-	m_IndexList[27] = 16;
-	m_IndexList[28] = 18;
-	m_IndexList[29] = 19;
-
-	m_IndexList[30] = 20;
-	m_IndexList[31] = 21;
-	m_IndexList[32] = 22;
-	m_IndexList[33] = 20;
-	m_IndexList[34] = 22;
-	m_IndexList[35] = 23;*/
-
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(P_VERTEX) * iNumIndex;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	// 인덱스 버퍼로 바인딩
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-	sd.pSysMem = &index[0];
-	hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-
-	// 쉐이더
-	ID3DBlob* pVSObj;
-	ID3DBlob* pPSObj;
-	ID3DBlob* pErrorMsg;
-
-	// Vertex 쉐이더
-	hr = D3DCompileFromFile(L"VS.txt", NULL, NULL, "VS", "vs_5_0", 0, 0, &pVSObj, &pErrorMsg);
-	if (FAILED(hr))
-	{
-		CompilerCheck(pErrorMsg);
-		return false;
-	}
-	hr = m_pd3dDevice->CreateVertexShader(pVSObj->GetBufferPointer(), pVSObj->GetBufferSize(), NULL,
-		&m_pVertexShader);
-
-	// Pixel 쉐이더
-	hr = D3DCompileFromFile(L"PS.txt", NULL, NULL, "PS", "ps_5_0", 0, 0, &pPSObj, &pErrorMsg);
-	if (FAILED(hr))
-	{
-		CompilerCheck(pErrorMsg);
-		return false;
-	}
-	hr = m_pd3dDevice->CreatePixelShader(pPSObj->GetBufferPointer(), pPSObj->GetBufferSize(), NULL, 
-		&m_pPixelShader);
-
-	// LayOut
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXTURE",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 40,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	UINT iNumElement = sizeof(layout) / sizeof(layout[0]);
-	hr = m_pd3dDevice->CreateInputLayout(layout, iNumElement, pVSObj->GetBufferPointer(),
-		pVSObj->GetBufferSize(), &m_pInputLayout);
 
 	return true;
 }
@@ -461,9 +146,11 @@ bool Sample::Frame()
 {
 	HMatrix matScale;
 	HMatrix matRotation;
-	matScale.Scale(2, 2, 2);
+	matScale.Scale(1, 1, 1);
 	matRotation.YRotate(g_fGameTimer);
-	m_matWorld = matScale * matRotation;
+	m_matBoxWorld = matScale * matRotation;
+	m_matPlaneWorld = matScale * matRotation;
+	m_matPlaneWorld._41 = 3.0f;
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
@@ -500,25 +187,6 @@ bool Sample::Frame()
 		SetRasterState();
 	}
 
-	D3D11_MAPPED_SUBRESOURCE ms;
-	HRESULT hr = m_pd3dContext->Map(m_ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms);
-	if (SUCCEEDED(hr))
-	{
-		HDataCB* pData = (HDataCB*)ms.pData;
-		pData->matWorld = m_matWorld.Transpose();
-		pData->matView = m_matView.Transpose();
-		pData->matProject = m_matProject.Transpose();
-
-		pData->vColor[0] = cosf(g_fGameTimer);
-		pData->vColor[1] = sinf(g_fGameTimer);
-		pData->vColor[2] = 1.0f - cosf(g_fGameTimer);
-		pData->vColor[3] = 1;
-		pData->vTime[0] = cosf(g_fGameTimer) * 0.5f + 0.5f;
-		pData->vTime[1] = g_fGameTimer;
-		// map 사용 후 unmap 쓰레드. mutex와 같음
-		m_pd3dContext->Unmap(m_ConstantBuffer, 0);
-	}
-
 	return true;
 }
 
@@ -535,31 +203,16 @@ bool Sample::PreRender()
 
 bool Sample::Render()
 {
-	UINT iStride = sizeof(P_VERTEX);
-	UINT iOffset = 0;
-	m_pd3dContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &iStride, &iOffset);
-	m_pd3dContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	m_pd3dContext->IASetInputLayout(m_pInputLayout);
-
-	m_pd3dContext->VSSetConstantBuffers(0, 1, &m_ConstantBuffer);
-	m_pd3dContext->PSSetConstantBuffers(0, 1, &m_ConstantBuffer);
-
-	m_pd3dContext->VSSetShader(m_pVertexShader, NULL, 0);
-	m_pd3dContext->PSSetShader(m_pPixelShader, NULL, 0);
 	m_pd3dContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	m_pd3dContext->RSSetState(m_pRS);
-	
-	m_pd3dContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
 	m_pd3dContext->PSSetSamplers(0, 1, &m_pWrapLinear);
-
 	m_pd3dContext->OMSetDepthStencilState(m_pDSS, 0);
 
-	// Vertex Draw
-	// m_pd3dContext->Draw(iNumVertex, 0);
+	m_Box.SetMatrix(&m_matBoxWorld, &m_matView, &m_matProject);
+	m_Box.Render(m_pd3dContext);
 
-	// Index Draw
-	m_pd3dContext->DrawIndexed(iNumIndex, 0, 0);
+	m_Plane.SetMatrix(&m_matPlaneWorld, &m_matView, &m_matProject);
+	m_Plane.Render(m_pd3dContext);
 
 	return true;
 }
@@ -570,7 +223,6 @@ bool Sample::Release()
 	m_pDSV->Release();
 
 	m_pWrapLinear->Release();
-	m_pTextureSRV->Release();
 
 	m_pRS->Release();
 	if (m_pRSSSolidBack != nullptr)
@@ -581,13 +233,7 @@ bool Sample::Release()
 	{
 		m_pRSWireBack->Release();
 	}
-	m_ConstantBuffer->Release();
-
-	m_pVertexBuffer->Release();
-	m_pIndexBuffer->Release();
-	m_pInputLayout->Release();
-	m_pVertexShader->Release();
-	m_pPixelShader->Release();
+	m_Box.Release();
 
 	return true;
 }
