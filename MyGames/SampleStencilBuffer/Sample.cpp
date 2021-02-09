@@ -65,7 +65,7 @@ bool Sample::Init()
 	m_matProject.PerspectiveFovLH(fN, fF, fFov, fAspect);
 
 	HMatrix matScale, matRotation;
-	matScale.Scale(30, 30, 30);
+	matScale.Scale(100, 100, 0);
 	matRotation.XRotate(HBASIS_PI * 0.5f);
 	m_matPlaneWorld = matScale * matRotation;
 
