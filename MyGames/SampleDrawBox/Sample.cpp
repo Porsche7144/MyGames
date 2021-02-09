@@ -1,20 +1,4 @@
 #include "Sample.h"
-void Sample::SetRasterState()
-{
-	HRESULT hr;
-	// RASTERIZER 상태
-	D3D11_RASTERIZER_DESC rd;
-	ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-	rd.FillMode = m_FillMode;
-	rd.CullMode = m_CullMode;
-
-	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRS);
-	if (FAILED(hr))
-	{
-		return;
-	}
-}
-
 void Sample::CompilerCheck(ID3DBlob* ErrorMsg)
 {
 	C_STR szMsg = (char*)ErrorMsg->GetBufferPointer();
@@ -37,99 +21,6 @@ bool Sample::Init()
 	float fFov = HBASIS_PI / 4.0f;
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_matProject.PerspectiveFovLH(fN, fF, fFov, fAspect);
-
-	// Depth Texture 생성
-
-	ID3D11Texture2D* pTexture = nullptr;
-	D3D11_TEXTURE2D_DESC textureDesc;
-	ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-	//UINT Width;
-	//UINT Height;
-	//UINT MipLevels;
-	//UINT ArraySize;
-	//DXGI_FORMAT Format;
-	//DXGI_SAMPLE_DESC SampleDesc;
-	//D3D11_USAGE Usage;
-	//UINT BindFlags;
-	//UINT CPUAccessFlags;
-	//UINT MiscFlags;
-	textureDesc.Width = g_rtClient.right;
-	textureDesc.Height = g_rtClient.bottom;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.SampleDesc.Quality = 0;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	hr = m_pd3dDevice->CreateTexture2D(&textureDesc, NULL, &pTexture);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Texture2D.MipSlice = 0;
-	hr = m_pd3dDevice->CreateDepthStencilView(pTexture , &dsvDesc, &m_pDSV);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-	pTexture->Release();
-
-	D3D11_DEPTH_STENCIL_DESC dsdDesc;
-	ZeroMemory(&dsdDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-	dsdDesc.DepthEnable = TRUE;
-	dsdDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsdDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	hr = m_pd3dDevice->CreateDepthStencilState(&dsdDesc, &m_pDSS);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-
-	D3D11_SAMPLER_DESC samplerDesc;
-	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.BorderColor[0] = 1;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 1;
-	samplerDesc.MinLOD = FLT_MIN;
-	samplerDesc.MaxLOD = FLT_MAX;
-	hr = m_pd3dDevice->CreateSamplerState(&samplerDesc, &m_pWrapLinear);
-
-
-	// RASTERIZER 상태
-
-	m_FillMode = D3D11_FILL_SOLID;
-	m_CullMode = D3D11_CULL_NONE;
-	SetRasterState();
-
-	D3D11_RASTERIZER_DESC rd;
-	ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-	rd.FillMode = D3D11_FILL_SOLID;
-	rd.CullMode = D3D11_CULL_BACK;
-	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRSSSolidBack);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-
-	ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-	rd.FillMode = D3D11_FILL_WIREFRAME;
-	rd.CullMode = D3D11_CULL_BACK;
-	hr = m_pd3dDevice->CreateRasterizerState(&rd, &m_pRSWireBack);
-	if (FAILED(hr))
-	{
-		return false;
-	}
 
 	if (!m_Box.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
 	{
@@ -170,38 +61,27 @@ bool Sample::Frame()
 
 	if (g_Input.GetKey('1') == KEY_PUSH)
 	{
-		m_FillMode = D3D11_FILL_WIREFRAME;
-		SetRasterState();
+		HDxState::m_FillMode = D3D11_FILL_WIREFRAME;
+		HDxState::SetRasterState(m_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('2') == KEY_PUSH)
 	{
-		m_FillMode = D3D11_FILL_SOLID;
-		SetRasterState();
+		HDxState::m_FillMode = D3D11_FILL_SOLID;
+		HDxState::SetRasterState(m_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('3') == KEY_PUSH)
 	{
-		m_CullMode = D3D11_CULL_BACK;
-		SetRasterState();
+		HDxState::m_CullMode = D3D11_CULL_BACK;
+		HDxState::SetRasterState(m_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('4') == KEY_PUSH)
 	{
-		m_CullMode = D3D11_CULL_FRONT;
-		SetRasterState();
+		HDxState::m_CullMode = D3D11_CULL_FRONT;
+		HDxState::SetRasterState(m_pd3dDevice);
 	}
-
-	return true;
-}
-
-bool Sample::PreRender()
-{
-	HCore::PreRender();
-	ID3D11RenderTargetView* pNullRTV = NULL;
-	m_pd3dContext->OMSetRenderTargets(1, &pNullRTV, NULL);
-	m_pd3dContext->OMSetRenderTargets(1, &m_pRednerTargetView, m_pDSV);
-	m_pd3dContext->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 
 	return true;
 }
@@ -209,9 +89,9 @@ bool Sample::PreRender()
 bool Sample::Render()
 {
 	m_pd3dContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_pd3dContext->RSSetState(m_pRS);
-	m_pd3dContext->PSSetSamplers(0, 1, &m_pWrapLinear);
-	m_pd3dContext->OMSetDepthStencilState(m_pDSS, 0);
+	m_pd3dContext->RSSetState(HDxState::m_pRS);
+	m_pd3dContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
+	m_pd3dContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
 
 	m_Box.SetMatrix(&m_matBoxWorld, &m_matView, &m_matProject);
 	m_Box.Render(m_pd3dContext);
@@ -229,20 +109,6 @@ bool Sample::Render()
 
 bool Sample::Release()
 {
-	m_pDSS->Release();
-	m_pDSV->Release();
-
-	m_pWrapLinear->Release();
-
-	m_pRS->Release();
-	if (m_pRSSSolidBack != nullptr)
-	{
-		m_pRSSSolidBack->Release();
-	}
-	if (m_pRSWireBack != nullptr)
-	{
-		m_pRSWireBack->Release();
-	}
 	m_Box.Release();
 	m_Plane.Release();
 	m_Line.Release();

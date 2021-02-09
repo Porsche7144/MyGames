@@ -1,8 +1,7 @@
 #pragma once
 #include "HWindow.h"
 #include <d3d11.h>
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
+#include "HDxState.h"
 
 class HDevice : public HWindow
 {
@@ -13,11 +12,14 @@ public:
 	IDXGISwapChain*			m_pSwapChain;
 	ID3D11RenderTargetView* m_pRednerTargetView;
 	D3D11_VIEWPORT			m_ViewPort;
+	ID3D11DepthStencilView* m_pDSV;
+
 public:
 	HRESULT		CreateGIFactory();
 	HRESULT		CreateDevice();
 	HRESULT		CreateSwapChain();
 	HRESULT		SetRenderTargetView();
+	HRESULT     SetDepthStencilView();
 	bool		SetViewport();
 public:
 	bool		Init();

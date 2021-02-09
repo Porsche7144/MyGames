@@ -1,6 +1,8 @@
 #pragma once
 #include "HBasisStd.h"
 
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
 #if NDEBUG
 #pragma comment (lib, "Basis3DLib_R.lib")
 #else

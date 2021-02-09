@@ -19,15 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HMatrix.cpp" />
-    <ClCompile Include="HShape.cpp" />
-    <ClCompile Include="HVector.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HMatrix.h" />
-    <ClInclude Include="HShape.h" />
-    <ClInclude Include="HVector.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>

@@ -19,23 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dxtk\DDS.h" />
+    <ClInclude Include="Dxtk\DDSTextureLoader.h" />
+    <ClInclude Include="Dxtk\DirectXHelpers.h" />
+    <ClInclude Include="Dxtk\LoaderHelpers.h" />
+    <ClInclude Include="Dxtk\pch.h" />
+    <ClInclude Include="Dxtk\PlatformHelpers.h" />
+    <ClInclude Include="Dxtk\WICTextureLoader.h" />
     <ClInclude Include="HBasisStd.h" />
     <ClInclude Include="HCore.h" />
     <ClInclude Include="HCoreStd.h" />
     <ClInclude Include="HDevice.h" />
+    <ClInclude Include="HDxState.h" />
     <ClInclude Include="HGraphicAPI.h" />
     <ClInclude Include="HInput.h" />
+    <ClInclude Include="HMatrix.h" />
+    <ClInclude Include="HShape.h" />
     <ClInclude Include="HStd.h" />
     <ClInclude Include="HTimer.h" />
+    <ClInclude Include="HVector.h" />
     <ClInclude Include="HWindow.h" />
     <ClInclude Include="HWrite.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Dxtk\DDSTextureLoader.cpp" />
+    <ClCompile Include="Dxtk\WICTextureLoader.cpp" />
     <ClCompile Include="HCore.cpp" />
     <ClCompile Include="HDevice.cpp" />
+    <ClCompile Include="HDxState.cpp" />
     <ClCompile Include="HGraphicAPI.cpp" />
     <ClCompile Include="HInput.cpp" />
+    <ClCompile Include="HMatrix.cpp" />
+    <ClCompile Include="HShape.cpp" />
     <ClCompile Include="HTimer.cpp" />
+    <ClCompile Include="HVector.cpp" />
     <ClCompile Include="HWindow.cpp" />
     <ClCompile Include="HWrite.cpp" />
   </ItemGroup>

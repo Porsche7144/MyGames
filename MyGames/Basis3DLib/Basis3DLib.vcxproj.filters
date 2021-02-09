@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="dxtk">
+      <UniqueIdentifier>{1e7ec2a1-1c78-4c10-aeaf-5038e986d64d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{2b4868f0-afdb-46c0-84a6-3b0df38729f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dx">
+      <UniqueIdentifier>{3de1ff60-534c-4480-8a5d-ca00695f9f93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HBasisStd.h">
@@ -45,6 +54,39 @@
     <ClInclude Include="HDevice.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="HDxState.h">
+      <Filter>dx</Filter>
+    </ClInclude>
+    <ClInclude Include="HMatrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="HShape.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="HVector.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\DDS.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\DDSTextureLoader.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\DirectXHelpers.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\LoaderHelpers.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\pch.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\PlatformHelpers.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
+    <ClInclude Include="Dxtk\WICTextureLoader.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -67,6 +109,24 @@
     </ClCompile>
     <ClCompile Include="HDevice.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HDxState.cpp">
+      <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HMatrix.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="HShape.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="HVector.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Dxtk\DDSTextureLoader.cpp">
+      <Filter>dxtk</Filter>
+    </ClCompile>
+    <ClCompile Include="Dxtk\WICTextureLoader.cpp">
+      <Filter>dxtk</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
