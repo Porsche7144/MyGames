@@ -51,33 +51,28 @@ HMatrix Sample::CreateMatrixShadow(
 bool Sample::Init()
 {
 	HRESULT hr;
-	m_vCameraPos = { 10,10,-10 };
-	m_vCameraTarget = { 0,0,0 };
+	m_Camera.m_vCameraPos = { 10,10,-10 };
+	m_Camera.m_vCameraTarget = { 0,0,0 };
 
-	HVector3 p = m_vCameraPos;
-	HVector3 t = m_vCameraTarget;
-	HVector3 u = { 0,1,0 };
-	m_matView.CreateViewLook(p, t, u);
-	float fN = 1;
-	float fF = 1000;
-	float fFov = HBASIS_PI / 4.0f;
+	m_vDirValue = { 0,0,0,0 };
+	m_Camera.CreateViewMatrix({ 0, 10, -10 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_matProject.PerspectiveFovLH(fN, fF, fFov, fAspect);
+	m_Camera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 
 	HMatrix matScale, matRotation;
 	matScale.Scale(100, 100, 0);
 	matRotation.XRotate(HBASIS_PI * 0.5f);
 	m_matPlaneWorld = matScale * matRotation;
 
-	if (!m_Box.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	if (!m_Box.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
 	{
 		return false;
 	}
-	if (!m_Plane.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	if (!m_Plane.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
 	{
 		return false;
 	}
-	if (!m_Line.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../tileA.jpg"))
+	if (!m_Line.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../KakaoTalk_20201201_210710448.jpg"))
 	{
 		return false;
 	}
@@ -93,17 +88,6 @@ bool Sample::Frame()
 	matRotation.YRotate(g_fGameTimer);
 	m_matBoxWorld = matScale * matRotation;
 	m_matBoxWorld._42 = 3.0f;
-
-	if (g_Input.GetKey('W') == KEY_HOLD)
-	{
-		m_vCameraPos.z += 10.0f * g_fSecondPerFrame;
-	}
-	if (g_Input.GetKey('S') == KEY_HOLD)
-	{
-		m_vCameraPos.z -= 10.0f * g_fSecondPerFrame;
-	}
-	HVector3 u = { 0,1,0 };
-	m_matView.CreateViewLook(m_vCameraPos, m_vCameraTarget, u);
 
 	if (g_Input.GetKey('1') == KEY_PUSH)
 	{
@@ -129,6 +113,38 @@ bool Sample::Frame()
 		HDxState::SetRasterState(m_pd3dDevice);
 	}
 
+	if (g_Input.GetKey('W') == KEY_HOLD)
+	{
+		m_Camera.FrontMovement(1.0f);
+	}
+	if (g_Input.GetKey('S') == KEY_HOLD)
+	{
+		m_Camera.FrontMovement(-1.0f);
+	}
+	if (g_Input.GetKey('A') == KEY_HOLD)
+	{
+		m_Camera.RightMovement(1.0f);
+	}
+	if (g_Input.GetKey('D') == KEY_HOLD)
+	{
+		m_Camera.RightMovement(-1.0f);
+	}
+	if (g_Input.GetKey('Q') == KEY_HOLD)
+	{
+		m_Camera.UpMovement(1.0f);
+	}
+	if (g_Input.GetKey('E') == KEY_HOLD)
+	{
+		m_Camera.UpMovement(-1.0f);
+	}
+	if (g_Input.GetKey(VK_LEFT) == KEY_HOLD)
+	{
+		m_vDirValue.y += g_fSecondPerFrame;
+		m_Camera.Update(m_vDirValue);
+	}
+
+	m_Camera.Frame();
+
 	return true;
 }
 
@@ -139,7 +155,7 @@ bool Sample::Render()
 	m_pd3dContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
 	m_pd3dContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
 
-	m_Box.SetMatrix(&m_matBoxWorld, &m_matView, &m_matProject);
+	m_Box.SetMatrix(&m_matBoxWorld, &m_Camera.m_matView, &m_Camera.m_matProject);
 	m_Box.Render(m_pd3dContext);
 
 	HMatrix matShadow;
@@ -147,13 +163,13 @@ bool Sample::Render()
 	HVector4 LIGHT = HVector4(-10, 10, 0, 1);
 	matShadow = CreateMatrixShadow(&PLANE, &LIGHT);
 	matShadow = m_matBoxWorld * matShadow;
-	m_Box.SetMatrix(&matShadow, &m_matView, &m_matProject);
+	m_Box.SetMatrix(&matShadow, &m_Camera.m_matView, &m_Camera.m_matProject);
 	m_Box.Render(m_pd3dContext);
 
-	m_Plane.SetMatrix(&m_matPlaneWorld, &m_matView, &m_matProject);
+	m_Plane.SetMatrix(&m_matPlaneWorld, &m_Camera.m_matView, &m_Camera.m_matProject);
 	m_Plane.Render(m_pd3dContext);
 
-	m_Line.SetMatrix(NULL, &m_matView, &m_matProject);
+	m_Line.SetMatrix(NULL, &m_Camera.m_matView, &m_Camera.m_matProject);
 	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(100, 0, 0), HVector4(1, 0, 0, 1));
 	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(0, 100, 0), HVector4(0, 1, 0, 1));
 	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(0, 0, 100), HVector4(0, 0, 1, 1));

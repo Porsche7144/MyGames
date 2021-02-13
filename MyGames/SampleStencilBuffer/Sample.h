@@ -1,6 +1,7 @@
 #pragma once
 #include "HCore.h"
 #include "HShape.h"
+#include "HCamera.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -10,17 +11,14 @@ public:
 	HShapeBox m_Box;
 	HShapePlane m_Plane;
 	HShapeLine m_Line;
+	HCamera m_Camera;
+	HVector4 m_vDirValue;
 
 public:
-	HVector3					m_vCameraPos = { 10,0,-10 };
-	HVector3					m_vCameraTarget = { 0,0,0 };
 
 	HMatrix						m_matBoxWorld;
 	HMatrix						m_matPlaneWorld;
 	HMatrix						m_matLineWorld;
-
-	HMatrix						m_matView;
-	HMatrix						m_matProject;
 
 public:
 	HMatrix* TD3DXMatrixShadow(HMatrix *pout,

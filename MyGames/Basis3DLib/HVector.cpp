@@ -44,6 +44,14 @@ HVector3 HVector3::operator / (float const &fScala)
 	return HVector3(x*fInvert, y*fInvert, z*fInvert);
 }
 
+HVector3 HVector3::operator += (HVector3 const &v0)
+{
+	x += v0.x;
+	y += v0.y;
+	z += v0.z;
+	return *this;
+}
+
 // Dot Product
 float HVector3::operator | (HVector3 const &v0)
 {

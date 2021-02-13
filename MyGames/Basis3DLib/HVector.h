@@ -48,6 +48,7 @@ namespace HBASIS_VECTOR {
 		HVector3 operator * (float const &fScala);
 		HVector3 operator + (float const &fScala);
 		HVector3 operator / (float const &fScala);
+		HVector3 operator += (HVector3 const &v0);
 		// Dot Product
 		float operator | (HVector3 const &v0);
 		// Cross Product
