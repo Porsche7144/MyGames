@@ -33,6 +33,7 @@
     <ClInclude Include="HDxState.h" />
     <ClInclude Include="HGraphicAPI.h" />
     <ClInclude Include="HInput.h" />
+    <ClInclude Include="HMath.h" />
     <ClInclude Include="HMatrix.h" />
     <ClInclude Include="HShape.h" />
     <ClInclude Include="HStd.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="HVector.h" />
     <ClInclude Include="HWindow.h" />
     <ClInclude Include="HWrite.h" />
+    <ClInclude Include="SimpleMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dxtk\DDSTextureLoader.cpp" />
@@ -55,6 +57,9 @@
     <ClCompile Include="HVector.cpp" />
     <ClCompile Include="HWindow.cpp" />
     <ClCompile Include="HWrite.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

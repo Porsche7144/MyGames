@@ -36,50 +36,50 @@ namespace HBASIS_VECTOR {
 			float v[4];
 		};
 	};
-	class HVector3 : public float3
+	class Vector3 : public float3
 	{
 	public:
-		HVector3();
-		HVector3(const HVector3& v0);
-		HVector3(float fX, float fY, float fZ);
+		Vector3();
+		Vector3(const Vector3& v0);
+		Vector3(float fX, float fY, float fZ);
 		// 연산자 재정의 
-		HVector3 operator + (HVector3 const &v0);
-		HVector3 operator - (HVector3 const &v0);
-		HVector3 operator * (float const &fScala);
-		HVector3 operator + (float const &fScala);
-		HVector3 operator / (float const &fScala);
-		HVector3 operator += (HVector3 const &v0);
+		Vector3 operator + (Vector3 const &v0);
+		Vector3 operator - (Vector3 const &v0);
+		Vector3 operator * (float const &fScala);
+		Vector3 operator + (float const &fScala);
+		Vector3 operator / (float const &fScala);
+		Vector3 operator += (Vector3 const &v0);
 		// Dot Product
-		float operator | (HVector3 const &v0);
+		float operator | (Vector3 const &v0);
 		// Cross Product
-		HVector3 operator ^ (HVector3 const &v0);
-		bool	operator == (HVector3 const &v0);
+		Vector3 operator ^ (Vector3 const &v0);
+		bool	operator == (Vector3 const &v0);
 		// 제곱
 		float LengthSquared();
 		// 원점으로 부터의 거리
 		float Length();
-		HVector3 Normal();
-		float Angle(HVector3& v0);
+		Vector3 Normal();
+		float Angle(Vector3& v0);
 	};
-	class HVector4 : public float4
+	class Vector4 : public float4
 	{
 	public:
-		HVector4();
-		HVector4(const HVector4& v0);
-		HVector4(float fX, float fY, float fZ, float fW);
+		Vector4();
+		Vector4(const Vector4& v0);
+		Vector4(float fX, float fY, float fZ, float fW);
 		float Length();
-		HVector4 Normal();
-		float operator | (HVector4 const &v0);
-		bool operator == (HVector4 const &v0);
+		Vector4 Normal();
+		float operator | (Vector4 const &v0);
+		bool operator == (Vector4 const &v0);
 	};
 
-	class HVector2 : public float2
+	class Vector2 : public float2
 	{
 	public:
-		HVector2();
-		HVector2(const HVector2& v0);
-		HVector2(float fX, float fY);
-		bool operator == (HVector2 const &v0);
+		Vector2();
+		Vector2(const Vector2& v0);
+		Vector2(float fX, float fY);
+		bool operator == (Vector2 const &v0);
 	};
 }
 using namespace HBASIS_VECTOR;

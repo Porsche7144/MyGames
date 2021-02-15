@@ -1,17 +1,20 @@
 #pragma once
 #include "HStd.h"
 #include "HDxState.h"
-#include "HMAtrix.h"
+#include "SimpleMath.h"
+
+using namespace DirectX;
+using namespace SimpleMath;
 
 struct P_VERTEX
 {
-	HVector3 p;
-	HVector3 n;
-	HVector4 c;
-	HVector2 t;
+	Vector3 p;
+	Vector3 n;
+	Vector4 c;
+	Vector2 t;
 
 	P_VERTEX() {};
-	P_VERTEX(HVector3 p, HVector3 n, HVector4 c, HVector2 t)
+	P_VERTEX(Vector3 p, Vector3 n, Vector4 c, Vector2 t)
 	{
 		this->p = p;
 		this->n = n;
@@ -22,10 +25,10 @@ struct P_VERTEX
 
 struct PNCT_VERTEX
 {
-	HVector3		p;
-	HVector3		n;
-	HVector4		c;
-	HVector2     t;
+	Vector3		p;
+	Vector3		n;
+	Vector4		c;
+	Vector2     t;
 	bool operator == (const PNCT_VERTEX & Vertex)
 	{
 		if (p == Vertex.p  && n == Vertex.n && 	c == Vertex.c  &&	t == Vertex.t)
@@ -35,10 +38,10 @@ struct PNCT_VERTEX
 		return  false;
 	}
 	PNCT_VERTEX() {}
-	PNCT_VERTEX(HVector3		vp,
-		HVector3		vn,
-		HVector4		vc,
-		HVector2     vt)
+	PNCT_VERTEX(Vector3		vp,
+		Vector3		vn,
+		Vector4		vc,
+		Vector2     vt)
 	{
 		p = vp, n = vn, c = vc, t = vt;
 	}
@@ -46,9 +49,9 @@ struct PNCT_VERTEX
 
 struct HDataCB
 {
-	HMatrix matWorld;
-	HMatrix matView;
-	HMatrix matProject;
+	Matrix matWorld;
+	Matrix matView;
+	Matrix matProject;
 
 	float vColor[4];
 	float vTime[4];
@@ -61,9 +64,9 @@ public:
 	std::vector<PNCT_VERTEX>		m_VertexList;
 	std::vector<DWORD>			m_IndexList;
 
-	HMatrix						m_matWorld;
-	HMatrix						m_matView;
-	HMatrix						m_matProject;
+	Matrix						m_matWorld;
+	Matrix						m_matView;
+	Matrix						m_matProject;
 
 public:
 	ID3DBlob*					pVSObj;
@@ -99,7 +102,7 @@ public:
 	virtual bool Update(ID3D11DeviceContext* pd3dContext);
 	virtual bool LoadShader(T_STR vs, T_STR ps);
 	virtual bool LoadTexture(T_STR texture);
-	virtual bool SetMatrix(HMatrix* pWorld, HMatrix* pView, HMatrix* pProj);
+	virtual bool SetMatrix(Matrix* pWorld, Matrix* pView, Matrix* pProj);
 
 	void CompilerCheck(ID3DBlob* ErrorMsg);
 
@@ -136,7 +139,7 @@ public:
 class HShapeLine : public HShape
 {
 public:
-	bool Draw(ID3D11DeviceContext* pContext, HVector3 p, HVector3 e, HVector4 c = HVector4(1, 0, 0, 1));
+	bool Draw(ID3D11DeviceContext* pContext, Vector3 p, Vector3 e, Vector4 c = Vector4(1, 0, 0, 1));
 
 public:
 	bool CreateVertexData() override;

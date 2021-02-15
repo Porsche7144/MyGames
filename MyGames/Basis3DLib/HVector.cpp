@@ -1,18 +1,18 @@
 #include "HVector.h"
 
-HVector3::HVector3()
+Vector3::Vector3()
 {
 	x = y = z = 0.0f;
 }
 
-HVector3::HVector3(const HVector3& v0)
+Vector3::Vector3(const Vector3& v0)
 {
 	x = v0.x;
 	y = v0.y;
 	z = v0.z;
 }
 
-HVector3::HVector3(float fX, float fY, float fZ)
+Vector3::Vector3(float fX, float fY, float fZ)
 {
 	x = fX;
 	y = fY;
@@ -20,31 +20,31 @@ HVector3::HVector3(float fX, float fY, float fZ)
 }
 
 // 연산자 재정의 
-HVector3 HVector3::operator + (HVector3 const &v0)
+Vector3 Vector3::operator + (Vector3 const &v0)
 {
-	return HVector3(v0.x + x, v0.y + y, v0.z + z);
+	return Vector3(v0.x + x, v0.y + y, v0.z + z);
 }
 
-HVector3 HVector3::operator - (HVector3 const &v0)
+Vector3 Vector3::operator - (Vector3 const &v0)
 {
-	return HVector3(x - v0.x, y - v0.y, z - v0.z);
+	return Vector3(x - v0.x, y - v0.y, z - v0.z);
 }
 
-HVector3 HVector3::operator + (float const &fScala)
+Vector3 Vector3::operator + (float const &fScala)
 {
-	return HVector3(fScala + x, fScala + y, fScala + z);
+	return Vector3(fScala + x, fScala + y, fScala + z);
 }
-HVector3 HVector3::operator * (float const &fScala)
+Vector3 Vector3::operator * (float const &fScala)
 {
-	return HVector3(fScala*x, fScala*y, fScala*z);
+	return Vector3(fScala*x, fScala*y, fScala*z);
 }
-HVector3 HVector3::operator / (float const &fScala)
+Vector3 Vector3::operator / (float const &fScala)
 {
 	float fInvert = 1.0f / fScala;
-	return HVector3(x*fInvert, y*fInvert, z*fInvert);
+	return Vector3(x*fInvert, y*fInvert, z*fInvert);
 }
 
-HVector3 HVector3::operator += (HVector3 const &v0)
+Vector3 Vector3::operator += (Vector3 const &v0)
 {
 	x += v0.x;
 	y += v0.y;
@@ -53,18 +53,18 @@ HVector3 HVector3::operator += (HVector3 const &v0)
 }
 
 // Dot Product
-float HVector3::operator | (HVector3 const &v0)
+float Vector3::operator | (Vector3 const &v0)
 {
 	return x * v0.x + y * v0.y + z * v0.z;
 }
 
 // Cross Product
-HVector3 HVector3::operator ^ (HVector3 const &v0)
+Vector3 Vector3::operator ^ (Vector3 const &v0)
 {
-	return HVector3((y*v0.z - z * v0.y), (z*v0.x - x * v0.z), (x*v0.y - y * v0.x));
+	return Vector3((y*v0.z - z * v0.y), (z*v0.x - x * v0.z), (x*v0.y - y * v0.x));
 }
 
-bool	HVector3::operator == (HVector3 const &v0)
+bool	Vector3::operator == (Vector3 const &v0)
 {
 	if (fabs(x - v0.x) < HBASIS_EPSILON)
 	{
@@ -80,24 +80,24 @@ bool	HVector3::operator == (HVector3 const &v0)
 }
 
 // 제곱
-float HVector3::LengthSquared()
+float Vector3::LengthSquared()
 {
 	return (x*x + y * y + z * z);
 }
 
 // 원점으로 부터의 거리
-float HVector3::Length()
+float Vector3::Length()
 {
 	return (float)sqrt(LengthSquared());
 }
 
-HVector3 HVector3::Normal()
+Vector3 Vector3::Normal()
 {
 	float invertLength = 1.0f / Length();
-	return HVector3(x*invertLength, y*invertLength, z*invertLength);
+	return Vector3(x*invertLength, y*invertLength, z*invertLength);
 }
 
-float HVector3::Angle(HVector3& v0)
+float Vector3::Angle(Vector3& v0)
 {
 	float fLength1 = Length();
 	float fLength2 = v0.Length();
@@ -106,22 +106,22 @@ float HVector3::Angle(HVector3& v0)
 }
 
 
-HVector4::HVector4()
+Vector4::Vector4()
 {
 	x = y = z = w = 0.0f;
 }
 
-float HVector4::Length()
+float Vector4::Length()
 {
 	return (float)sqrt((x*x + y * y + z * z + w * w));
 }
 
-float HVector4::operator | (HVector4 const &v0)
+float Vector4::operator | (Vector4 const &v0)
 {
 	return x * v0.x + y * v0.y + z * v0.z + w * v0.w;
 }
 
-bool	HVector4::operator == (HVector4 const &v0)
+bool	Vector4::operator == (Vector4 const &v0)
 {
 	if (fabs(x - v0.x) < HBASIS_EPSILON)
 	{
@@ -140,13 +140,13 @@ bool	HVector4::operator == (HVector4 const &v0)
 	return false;
 }
 
-HVector4 HVector4::Normal()
+Vector4 Vector4::Normal()
 {
 	float invertLength = 1.0f / Length();
-	return HVector4(x*invertLength, y*invertLength, z*invertLength, w*invertLength);
+	return Vector4(x*invertLength, y*invertLength, z*invertLength, w*invertLength);
 }
 
-HVector4::HVector4(const HVector4& v0)
+Vector4::Vector4(const Vector4& v0)
 {
 	x = v0.x;
 	y = v0.y;
@@ -156,7 +156,7 @@ HVector4::HVector4(const HVector4& v0)
 
 
 
-HVector4::HVector4(float fX, float fY, float fZ, float fW)
+Vector4::Vector4(float fX, float fY, float fZ, float fW)
 {
 	x = fX;
 	y = fY;
@@ -165,12 +165,12 @@ HVector4::HVector4(float fX, float fY, float fZ, float fW)
 }
 
 
-HVector2::HVector2()
+Vector2::Vector2()
 {
 	x = y = 0.0f;
 }
 
-bool	HVector2::operator == (HVector2 const &v0)
+bool	Vector2::operator == (Vector2 const &v0)
 {
 	if (fabs(x - v0.x) < HBASIS_EPSILON)
 	{
@@ -182,13 +182,13 @@ bool	HVector2::operator == (HVector2 const &v0)
 	return false;
 }
 
-HVector2::HVector2(const HVector2& v0)
+Vector2::Vector2(const Vector2& v0)
 {
 	x = v0.x;
 	y = v0.y;
 }
 
-HVector2::HVector2(float fX, float fY)
+Vector2::Vector2(float fX, float fY)
 {
 	x = fX;
 	y = fY;

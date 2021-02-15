@@ -93,6 +93,7 @@ LRESULT CALLBACK WndProc(
 	}
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
+
 void HWindow::ResizeDevice(UINT w, UINT h)
 {
 

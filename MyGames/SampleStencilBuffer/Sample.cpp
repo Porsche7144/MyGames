@@ -1,14 +1,25 @@
 #include "Sample.h"
 
-HMatrix* TD3DXMatrixShadow(HMatrix *pout,
-	HVector4 *plight,
-	HVector4 *pplane)
+LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	HVector4 Nplane;
+	int iRet = m_Camera.WndProc(hWnd, message, wParam, lParam);
+	if (iRet >= 0)
+	{
+		return iRet;
+	}
+
+	return -1;
+}
+
+Matrix* TD3DXMatrixShadow(Matrix *pout,
+	Vector4 *plight,
+	Vector4 *pplane)
+{
+	Vector4 Nplane;
 	FLOAT dot;
-	Nplane = Nplane.Normal();
+	Nplane.Normalize();
 	//D3DXPlaneNormalize(&Nplane, pplane);
-	dot = Nplane | *plight;
+	dot = Nplane.Dot(*plight);
 	pout->m[0][0] = dot - Nplane.x * plight->x;
 	pout->m[0][1] = -Nplane.x * plight->y;
 	pout->m[0][2] = -Nplane.x * plight->z;
@@ -28,19 +39,19 @@ HMatrix* TD3DXMatrixShadow(HMatrix *pout,
 	return pout;
 }
 
-HMatrix Sample::CreateMatrixShadow(
-	HVector4* pPlane,
-	HVector4* pLight)
+Matrix Sample::CreateMatrixShadow(
+	Vector4* pPlane,
+	Vector4* pLight)
 {
-	HMatrix mat;
-	HVector4 plane, light;
-	pPlane->Normal();
+	Matrix mat;
+	Vector4 plane, light;
+	pPlane->Normalize();
 	plane.x = pPlane->x * -1.0f;
 	plane.y = pPlane->y * -1.0f;
 	plane.z = pPlane->z * -1.0f;
 	plane.w = pPlane->w * -1.0f;
 	light = *pLight;// * -1.0f;
-	float D = -(plane | light);
+	float D = -(plane.Dot(light));
 	mat._11 = plane.x * light.x + D;	mat._12 = plane.x * light.y;	mat._13 = plane.x * light.z;	mat._14 = plane.x * light.w;
 	mat._21 = plane.y * light.x;	mat._22 = plane.y * light.y + D;	mat._23 = plane.y * light.z;	mat._24 = plane.y * light.w;
 	mat._31 = plane.z * light.x;	mat._32 = plane.z * light.y;	mat._33 = plane.z * light.z + D;	mat._34 = plane.z * light.w;
@@ -51,17 +62,14 @@ HMatrix Sample::CreateMatrixShadow(
 bool Sample::Init()
 {
 	HRESULT hr;
-	m_Camera.m_vCameraPos = { 10,10,-10 };
-	m_Camera.m_vCameraTarget = { 0,0,0 };
-
 	m_vDirValue = { 0,0,0,0 };
 	m_Camera.CreateViewMatrix({ 0, 10, -10 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_Camera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 
-	HMatrix matScale, matRotation;
-	matScale.Scale(100, 100, 0);
-	matRotation.XRotate(HBASIS_PI * 0.5f);
+	Matrix matScale, matRotation;
+	matScale = Matrix::CreateScale(100, 100, 0);
+	matRotation = Matrix::CreateRotationX(HBASIS_PI * 0.5f);
 	m_matPlaneWorld = matScale * matRotation;
 
 	if (!m_Box.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
@@ -82,10 +90,10 @@ bool Sample::Init()
 
 bool Sample::Frame()
 {
-	HMatrix matScale;
-	HMatrix matRotation;
-	matScale.Scale(1, 1, 1);
-	matRotation.YRotate(g_fGameTimer);
+	Matrix matScale;
+	Matrix matRotation;
+	matScale = Matrix::CreateScale(1, 1, 1);
+	matRotation = Matrix::CreateRotationY(g_fGameTimer);
 	m_matBoxWorld = matScale * matRotation;
 	m_matBoxWorld._42 = 3.0f;
 
@@ -115,32 +123,27 @@ bool Sample::Frame()
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
-		m_Camera.FrontMovement(1.0f);
+		m_Camera.FrontMovement(-1.0f);
 	}
 	if (g_Input.GetKey('S') == KEY_HOLD)
 	{
-		m_Camera.FrontMovement(-1.0f);
+		m_Camera.FrontMovement(1.0f);
 	}
 	if (g_Input.GetKey('A') == KEY_HOLD)
 	{
-		m_Camera.RightMovement(1.0f);
+		m_Camera.RightMovement(-1.0f);
 	}
 	if (g_Input.GetKey('D') == KEY_HOLD)
 	{
-		m_Camera.RightMovement(-1.0f);
+		m_Camera.RightMovement(1.0f);
 	}
 	if (g_Input.GetKey('Q') == KEY_HOLD)
 	{
-		m_Camera.UpMovement(1.0f);
+		m_Camera.UpMovement(-1.0f);
 	}
 	if (g_Input.GetKey('E') == KEY_HOLD)
 	{
-		m_Camera.UpMovement(-1.0f);
-	}
-	if (g_Input.GetKey(VK_LEFT) == KEY_HOLD)
-	{
-		m_vDirValue.y += g_fSecondPerFrame;
-		m_Camera.Update(m_vDirValue);
+		m_Camera.UpMovement(1.0f);
 	}
 
 	m_Camera.Frame();
@@ -158,10 +161,13 @@ bool Sample::Render()
 	m_Box.SetMatrix(&m_matBoxWorld, &m_Camera.m_matView, &m_Camera.m_matProject);
 	m_Box.Render(m_pd3dContext);
 
-	HMatrix matShadow;
-	HVector4 PLANE = HVector4(0, 1, 0, -0.1f);
-	HVector4 LIGHT = HVector4(-10, 10, 0, 1);
-	matShadow = CreateMatrixShadow(&PLANE, &LIGHT);
+	Matrix matShadow;
+	Vector4 PLANE = Vector4(0, 1, 0, -0.1f);
+	Vector3 vLightDir = Vector3(-10, 10, 0);
+	// Vector4 LIGHT = Vector4(-10, 10, 0, 1);
+	// matShadow = CreateMatrixShadow(&PLANE, &LIGHT);
+	matShadow = Matrix::CreateShadow(vLightDir, PLANE);
+
 	matShadow = m_matBoxWorld * matShadow;
 	m_Box.SetMatrix(&matShadow, &m_Camera.m_matView, &m_Camera.m_matProject);
 	m_Box.Render(m_pd3dContext);
@@ -170,9 +176,9 @@ bool Sample::Render()
 	m_Plane.Render(m_pd3dContext);
 
 	m_Line.SetMatrix(NULL, &m_Camera.m_matView, &m_Camera.m_matProject);
-	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(100, 0, 0), HVector4(1, 0, 0, 1));
-	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(0, 100, 0), HVector4(0, 1, 0, 1));
-	m_Line.Draw(m_pd3dContext, HVector3(0, 0, 0), HVector3(0, 0, 100), HVector4(0, 0, 1, 1));
+	m_Line.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
+	m_Line.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
+	m_Line.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
 
 	return true;
 }

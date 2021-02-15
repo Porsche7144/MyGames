@@ -1,30 +1,35 @@
 #pragma once
 #include "HStd.h"
-#include "HMatrix.h"
+#include "HShape.h"
 
 class HCamera
 {
 public:
-	HVector3					m_vCameraPos = { 10,0,-10 };
-	HVector3					m_vCameraTarget = { 0,0,0 };
-	HMatrix						m_matView;
-	HMatrix						m_matProject;
+	Vector3		m_vCameraPos = { 10,0,-10 };
+	Vector3		m_vCameraTarget = { 0,0,0 };
+	Matrix		m_matView;
+	Matrix		m_matProject;
 
-	HVector3 m_vLook;
-	HVector3 m_vUp;
-	HVector3 m_vRight;
+	Vector3		m_vLook;
+	Vector3		m_vUp;
+	Vector3		m_vRight;
 
-	float m_fSpeed;
-	float m_fDistance;
+	float		m_fSpeed;
+	float		m_fDistance;
+
+	bool		m_bDrag;
+	POINT		m_ptClick;
+	RECT		m_rtOffset;
+	RECT		m_rtPreOffset;
 
 public:
 	virtual bool Frame();
-	virtual bool CreateViewMatrix(HVector3 p, HVector3 t, HVector3 u = { 0,1,0 });
+	virtual bool CreateViewMatrix(Vector3 p, Vector3 t, Vector3 u = { 0,1,0 });
 	virtual void UpdateVector();
 	virtual bool CreateProjectionMatrix(float fN, float fF, float fFov, float fAspect);
-	virtual void SetPos(HVector3 p);
-	virtual void SetTarget(HVector3 p);
-	virtual void Update(HVector4 d);
+	virtual void SetPos(Vector3 p);
+	virtual void SetTarget(Vector3 p);
+	virtual void Update(Vector4 d);
 
 	void FrontMovement(float fDir = 1.0f);
 	void RightMovement(float fDir = 1.0f);
@@ -32,6 +37,8 @@ public:
 	void FrontBase(float fDir);
 	void RightBase(float fDir);
 	void UpBase(float fDir);
+
+	int WndProc(HWND hWnd, UINT message, WPARAM wParam,	LPARAM lParam);
 
 public:
 	HCamera();

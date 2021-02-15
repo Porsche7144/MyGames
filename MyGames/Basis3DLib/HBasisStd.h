@@ -15,6 +15,7 @@
 #include <process.h> //_beginthreadex
 #include <d3dcompiler.h>
 #include "dxtk/WICTextureLoader.h"
+#include "HMath.h"
 
 #pragma comment( lib, "Winmm.lib")
 #pragma comment (lib, "ws2_32.lib")

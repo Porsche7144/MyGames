@@ -1,7 +1,7 @@
 #pragma once
 #include "HCore.h"
 #include "HShape.h"
-#include "HCamera.h"
+#include "HDebugCamera.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -11,22 +11,23 @@ public:
 	HShapeBox m_Box;
 	HShapePlane m_Plane;
 	HShapeLine m_Line;
-	HCamera m_Camera;
-	HVector4 m_vDirValue;
+	HDebugCamera m_Camera;
+	Vector4 m_vDirValue;
 
 public:
 
-	HMatrix						m_matBoxWorld;
-	HMatrix						m_matPlaneWorld;
-	HMatrix						m_matLineWorld;
+	Matrix						m_matBoxWorld;
+	Matrix						m_matPlaneWorld;
+	Matrix						m_matLineWorld;
 
 public:
-	HMatrix* TD3DXMatrixShadow(HMatrix *pout,
-		HVector4 *plight,
-		HVector4 *pplane);
-	HMatrix CreateMatrixShadow(
-		HVector4* pPlane,
-		HVector4* pLight);
+	Matrix* TD3DXMatrixShadow(Matrix *pout,
+		Vector4 *plight,
+		Vector4 *pplane);
+	Matrix CreateMatrixShadow(
+		Vector4* pPlane,
+		Vector4* pLight);
+	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
 	bool Init() override;

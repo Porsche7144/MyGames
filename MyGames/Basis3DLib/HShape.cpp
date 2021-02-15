@@ -202,7 +202,7 @@ bool HShape::LoadTexture(T_STR texture)
 	return true;
 }
 
-bool HShape::SetMatrix(HMatrix * pWorld, HMatrix * pView, HMatrix * pProj)
+bool HShape::SetMatrix(Matrix * pWorld, Matrix * pView, Matrix * pProj)
 {
 	if (pWorld != nullptr)
 	{
@@ -222,9 +222,9 @@ bool HShape::SetMatrix(HMatrix * pWorld, HMatrix * pView, HMatrix * pProj)
 
 bool HShape::Init()
 {
-	m_matWorld.Identity();
-	m_matView.Identity();
-	m_matProject.Identity();
+	m_matWorld = Matrix::Identity;
+	m_matView = Matrix::Identity;
+	m_matProject = Matrix::Identity;
 
 	return true;
 }
@@ -290,136 +290,136 @@ bool HShapeBox::CreateVertexData()
 	m_VertexList =
 	{
 		// 앞면
-	   { PNCT_VERTEX(HVector3(-1.0f, 1.0f, -0.5f),
-		 HVector3(0,0,0),
-		 HVector4(1,0,0,1),
-		 HVector2(0,0))
+	   { PNCT_VERTEX(Vector3(-1.0f, 1.0f, -1.0f),
+		 Vector3(0,0,0),
+		 Vector4(1,0,0,1),
+		 Vector2(0,0))
 	   },
 
-	   { PNCT_VERTEX(HVector3(1.0f, 1.0f, -0.5f),
-		 HVector3(0,0,0),
-		 HVector4(0,1,0,1),
-		 HVector2(1,0)) },
+	   { PNCT_VERTEX(Vector3(1.0f, 1.0f, -1.0f),
+		 Vector3(0,0,0),
+		 Vector4(0,1,0,1),
+		 Vector2(1,0)) },
 
-	   { PNCT_VERTEX(HVector3(1.0f, -1.0f, -0.5f),
-		 HVector3(0,0,0),
-		 HVector4(0,0,1,1),
-		 HVector2(0,1)) },
+	   { PNCT_VERTEX(Vector3(1.0f, -1.0f, -1.0f),
+		 Vector3(0,0,0),
+		 Vector4(0,0,1,1),
+		 Vector2(0,1)) },
 
-	   { PNCT_VERTEX(HVector3(-1.0f, -1.0f, -0.5f),
-		 HVector3(0,0,0),
-		 HVector4(1,1,1,1),
-		 HVector2(1,1)) },
+	   { PNCT_VERTEX(Vector3(-1.0f, -1.0f, -1.0f),
+		 Vector3(0,0,0),
+		 Vector4(1,1,1,1),
+		 Vector2(1,1)) },
 
 		// 뒷면
-	   { PNCT_VERTEX(HVector3(1.0f, 1.0f, 0.5f),
-		 HVector3(0,0,0),
-		 HVector4(1,0,0,1),
-		 HVector2(0,0))
+	   { PNCT_VERTEX(Vector3(1.0f, 1.0f, 1.0f),
+		 Vector3(0,0,0),
+		 Vector4(1,0,0,1),
+		 Vector2(0,0))
 	   },
 
-	   { PNCT_VERTEX(HVector3(-1.0f, 1.0f, 0.5f),
-		 HVector3(0,0,0),
-		 HVector4(0,1,0,1),
-		 HVector2(1,0)) },
+	   { PNCT_VERTEX(Vector3(-1.0f, 1.0f, 1.0f),
+		 Vector3(0,0,0),
+		 Vector4(0,1,0,1),
+		 Vector2(1,0)) },
 
-	   { PNCT_VERTEX(HVector3(-1.0f, -1.0f, 0.5f),
-		 HVector3(0,0,0),
-		 HVector4(0,0,1,1),
-		 HVector2(0,1)) },
+	   { PNCT_VERTEX(Vector3(-1.0f, -1.0f, 1.0f),
+		 Vector3(0,0,0),
+		 Vector4(0,0,1,1),
+		 Vector2(0,1)) },
 
-	   { PNCT_VERTEX(HVector3(1.0f, -1.0f, 0.5f),
-		 HVector3(0,0,0),
-		 HVector4(1,1,1,1),
-		 HVector2(1,1)) },
+	   { PNCT_VERTEX(Vector3(1.0f, -1.0f, 1.0f),
+		 Vector3(0,0,0),
+		 Vector4(1,1,1,1),
+		 Vector2(1,1)) },
 
 		// 위
-		{ PNCT_VERTEX(HVector3(-1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0))
+		{ PNCT_VERTEX(Vector3(-1.0f, 1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,0,0,1),
+		  Vector2(0,0))
 		},
 
-		{ PNCT_VERTEX(HVector3(1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0)) },
+		{ PNCT_VERTEX(Vector3(1.0f, 1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,1,0,1),
+		  Vector2(1,0)) },
 
-		{ PNCT_VERTEX(HVector3(1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1)) },
+		{ PNCT_VERTEX(Vector3(1.0f, 1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,0,1,1),
+		  Vector2(0,1)) },
 
-		{ PNCT_VERTEX(HVector3(-1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1)) },
+		{ PNCT_VERTEX(Vector3(-1.0f, 1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,1,1,1),
+		  Vector2(1,1)) },
 
 		// 아래
-		{ PNCT_VERTEX(HVector3(1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0))
+		{ PNCT_VERTEX(Vector3(1.0f, -1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,0,0,1),
+		  Vector2(0,0))
 		},
 
-		{ PNCT_VERTEX(HVector3(-1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0)) },
+		{ PNCT_VERTEX(Vector3(-1.0f, -1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,1,0,1),
+		  Vector2(1,0)) },
 
-		{ PNCT_VERTEX(HVector3(-1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1)) },
+		{ PNCT_VERTEX(Vector3(-1.0f, -1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,0,1,1),
+		  Vector2(0,1)) },
 
-		{ PNCT_VERTEX(HVector3(1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1)) },
+		{ PNCT_VERTEX(Vector3(1.0f, -1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,1,1,1),
+		  Vector2(1,1)) },
 
 		// 왼쪽
-		{ PNCT_VERTEX(HVector3(-1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0))
+		{ PNCT_VERTEX(Vector3(-1.0f, 1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,0,0,1),
+		  Vector2(0,0))
 		},
 
-		{ PNCT_VERTEX(HVector3(-1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0)) },
+		{ PNCT_VERTEX(Vector3(-1.0f, 1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,1,0,1),
+		  Vector2(1,0)) },
 
-		{ PNCT_VERTEX(HVector3(-1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1)) },
+		{ PNCT_VERTEX(Vector3(-1.0f, -1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,0,1,1),
+		  Vector2(0,1)) },
 
-		{ PNCT_VERTEX(HVector3(-1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1)) },
+		{ PNCT_VERTEX(Vector3(-1.0f, -1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,1,1,1),
+		  Vector2(1,1)) },
 
 		// 오른쪽
-		{ PNCT_VERTEX(HVector3(1.0f, 1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,0,0,1),
-		  HVector2(0,0))
+		{ PNCT_VERTEX(Vector3(1.0f, 1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,0,0,1),
+		  Vector2(0,0))
 		},
 
-		{ PNCT_VERTEX(HVector3(1.0f, 1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,1,0,1),
-		  HVector2(1,0)) },
+		{ PNCT_VERTEX(Vector3(1.0f, 1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,1,0,1),
+		  Vector2(1,0)) },
 
-		{ PNCT_VERTEX(HVector3(1.0f, -1.0f, 0.5f),
-		  HVector3(0,0,0),
-		  HVector4(0,0,1,1),
-		  HVector2(0,1)) },
+		{ PNCT_VERTEX(Vector3(1.0f, -1.0f, 1.0f),
+		  Vector3(0,0,0),
+		  Vector4(0,0,1,1),
+		  Vector2(0,1)) },
 
-		{ PNCT_VERTEX(HVector3(1.0f, -1.0f, -0.5f),
-		  HVector3(0,0,0),
-		  HVector4(1,1,1,1),
-		  HVector2(1,1)) },
+		{ PNCT_VERTEX(Vector3(1.0f, -1.0f, -1.0f),
+		  Vector3(0,0,0),
+		  Vector4(1,1,1,1),
+		  Vector2(1,1)) },
 
 	};
 
@@ -462,26 +462,26 @@ bool HShapePlane::CreateVertexData()
 	m_VertexList.resize(4);
 	m_VertexList =
 	{
-	   { PNCT_VERTEX(HVector3(-1.0f, 1.0f, -0.5f),
-		 HVector3(0.0f,0.0f,-1.0f),
-		 HVector4(1.0f,1.0f,1.0f,1.0f),
-		 HVector2(0.0f,0.0f))
+	   { PNCT_VERTEX(Vector3(-1.0f, 1.0f, -1.0f),
+		 Vector3(0.0f,0.0f,-1.0f),
+		 Vector4(1.0f,1.0f,1.0f,1.0f),
+		 Vector2(0.0f,0.0f))
 	   },
 
-	   { PNCT_VERTEX(HVector3(1.0f, 1.0f, -0.5f),
-		 HVector3(0.0f,0.0f,-1.0f),
-		 HVector4(1.0f,1.0f,1.0f,1.0f),
-		 HVector2(1.0f,0.0f)) },
+	   { PNCT_VERTEX(Vector3(1.0f, 1.0f, -1.0f),
+		 Vector3(0.0f,0.0f,-1.0f),
+		 Vector4(1.0f,1.0f,1.0f,1.0f),
+		 Vector2(1.0f,0.0f)) },
 
-	   { PNCT_VERTEX(HVector3(1.0f, -1.0f, -0.5f),
-		 HVector3(0.0f,0.0f,-1.0f),
-		 HVector4(1.0f,1.0f,1.0f,1.0f),
-		 HVector2(1.0f, 1.0f)) },
+	   { PNCT_VERTEX(Vector3(1.0f, -1.0f, -1.0f),
+		 Vector3(0.0f,0.0f,-1.0f),
+		 Vector4(1.0f,1.0f,1.0f,1.0f),
+		 Vector2(1.0f, 1.0f)) },
 
-	   { PNCT_VERTEX(HVector3(-1.0f, -1.0f, -0.5f),
-		 HVector3(0.0f,0.0f,-1.0f),
-		 HVector4(1.0f,1.0f,1.0f,1.0f),
-		 HVector2(0.0f,1.0f)) },
+	   { PNCT_VERTEX(Vector3(-1.0f, -1.0f, -1.0f),
+		 Vector3(0.0f,0.0f,-1.0f),
+		 Vector4(1.0f,1.0f,1.0f,1.0f),
+		 Vector2(0.0f,1.0f)) },
 	};
 
 	return true;
@@ -507,20 +507,20 @@ HShapePlane::~HShapePlane()
 {
 }
 
-bool HShapeLine::Draw(ID3D11DeviceContext * pContext, HVector3 p, HVector3 e, HVector4 c)
+bool HShapeLine::Draw(ID3D11DeviceContext * pContext, Vector3 p, Vector3 e, Vector4 c)
 {
 	m_VertexList = 
 	{
 	   { PNCT_VERTEX(p,
-		 HVector3(0.0f,0.0f,-1.0f),
+		 Vector3(0.0f,0.0f,-1.0f),
 		 c,
-		 HVector2(0,0))
+		 Vector2(0,0))
 	   },
 
 	   { PNCT_VERTEX(e,
-		 HVector3(0.0f,0.0f,-1.0f),
+		 Vector3(0.0f,0.0f,-1.0f),
 		 c,
-		 HVector2(1,0)) },
+		 Vector2(1,0)) },
 	};
 	pContext->UpdateSubresource(m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
 
@@ -532,16 +532,16 @@ bool HShapeLine::CreateVertexData()
 	m_VertexList.resize(2);
 	m_VertexList =
 	{
-	   { PNCT_VERTEX(HVector3(0.0f, 0.0f, 0.0f),
-		 HVector3(0.0f, 0.0f, -1.0f),
-		 HVector4(1.0f ,0.0f ,0.0f ,1.0f),
-		 HVector2(0,0))
+	   { PNCT_VERTEX(Vector3(0.0f, 0.0f, 0.0f),
+		 Vector3(0.0f, 0.0f, -1.0f),
+		 Vector4(1.0f ,0.0f ,0.0f ,1.0f),
+		 Vector2(0,0))
 	   },
 
-	   { PNCT_VERTEX(HVector3(100.0f, 0.0f, 0.0f),
-		 HVector3(0.0f, 0.0f, -1.0f),
-		 HVector4(1.0f ,0.0f ,0.0f ,1.0f),
-		 HVector2(1.0f, 0)) },
+	   { PNCT_VERTEX(Vector3(100.0f, 0.0f, 0.0f),
+		 Vector3(0.0f, 0.0f, -1.0f),
+		 Vector4(1.0f ,0.0f ,0.0f ,1.0f),
+		 Vector2(1.0f, 0)) },
 	};
 
 	return true;

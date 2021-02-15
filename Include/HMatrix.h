@@ -56,9 +56,9 @@ public:
 		}
 		return OutMatrix;
 	}
-	HVector3 operator * (HVector3 const &vector)
+	Vector3 operator * (Vector3 const &vector)
 	{
-		return HVector3(
+		return Vector3(
 			vector.x * _11 + vector.y*_21 + vector.z*_31 + _41,
 			vector.x * _12 + vector.y*_22 + vector.z*_32 + _42,
 			vector.x * _13 + vector.y*_23 + vector.z*_33 + _43);
@@ -81,7 +81,7 @@ public:
 	{
 		return (const float *)&_11;
 	}
-	void Translation(const HVector3 &vector)
+	void Translation(const Vector3 &vector)
 	{
 		_41 = vector.x;
 		_42 = vector.y;
@@ -93,7 +93,7 @@ public:
 		_42 = y;
 		_43 = z;
 	}
-	void Scale(const HVector3 &vector)
+	void Scale(const Vector3 &vector)
 	{
 		_11 = vector.x;
 		_22 = vector.y;
@@ -145,14 +145,14 @@ public:
 	//---------------------------------------------------------
 	//           뷰 행렬 생성 
 	//---------------------------------------------------------
-	HMatrix ViewLookAt(HVector3& vPosition,
-		HVector3& vTarget,
-		HVector3& vUp)
+	HMatrix ViewLookAt(Vector3& vPosition,
+		Vector3& vTarget,
+		Vector3& vUp)
 	{
 		HMatrix matrix;
-		HVector3 vDirection = (vTarget - vPosition).Normal();
-		HVector3 vRightVector = (vUp ^ vDirection).Normal();
-		HVector3 vUpVector = (vDirection ^ vRightVector).Normal();
+		Vector3 vDirection = (vTarget - vPosition).Normal();
+		Vector3 vRightVector = (vUp ^ vDirection).Normal();
+		Vector3 vUpVector = (vDirection ^ vRightVector).Normal();
 
 		_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
 		_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;
@@ -164,15 +164,15 @@ public:
 		memcpy(matrix, this, 16 * sizeof(float));
 		return matrix;
 	}
-	HMatrix CreateViewLook(HVector3& vPosition, HVector3& vTarget, HVector3& vUp)
+	HMatrix CreateViewLook(Vector3& vPosition, Vector3& vTarget, Vector3& vUp)
 	{
 		HMatrix matrix;
-		HVector3 vDirection = vTarget - vPosition;
+		Vector3 vDirection = vTarget - vPosition;
 		vDirection = vDirection.Normal();
 		float fDot = vUp | vDirection;
-		HVector3 vUpVector = vUp - (vDirection * fDot);
+		Vector3 vUpVector = vUp - (vDirection * fDot);
 		vUpVector = vUpVector.Normal();
-		HVector3 vRightVector = vUpVector ^ vDirection;
+		Vector3 vRightVector = vUpVector ^ vDirection;
 
 		_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
 		_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;
@@ -189,17 +189,17 @@ public:
 	//        |  \
 	//        |    ---------------->
 	// 내적의 결과는 직각이 된다.
-	void ObjectLookAt(HVector3& vPosition,
-		HVector3& vTarget,
-		HVector3& vUp)
+	void ObjectLookAt(Vector3& vPosition,
+		Vector3& vTarget,
+		Vector3& vUp)
 	{
-		HVector3 vDirection = vTarget - vPosition;
+		Vector3 vDirection = vTarget - vPosition;
 		vDirection = vDirection.Normal();
 		float fDot = vUp | vDirection;
-		HVector3 vC = vDirection * fDot;
-		HVector3 vUpVector = vUp - (vDirection * fDot);
+		Vector3 vC = vDirection * fDot;
+		Vector3 vUpVector = vUp - (vDirection * fDot);
 		vUpVector = vUpVector.Normal();
-		HVector3 vRightVector = vUpVector ^ vDirection;
+		Vector3 vRightVector = vUpVector ^ vDirection;
 
 		_11 = vRightVector.x;	_12 = vRightVector.y;	_13 = vRightVector.z;
 		_21 = vUpVector.x;		_22 = vUpVector.y;		_23 = vUpVector.z;
@@ -214,9 +214,9 @@ public:
 	HMatrix	Inverse(float *out = NULL);
 
 	// 뷰 행렬 계산
-	HMatrix ComputeViewMatrix(HVector3& vPosition,
-		HVector3& vTarget,
-		HVector3& vUp)
+	HMatrix ComputeViewMatrix(Vector3& vPosition,
+		Vector3& vTarget,
+		Vector3& vUp)
 	{
 		HMatrix matrix;
 		ObjectLookAt(vPosition, vTarget, vUp);
