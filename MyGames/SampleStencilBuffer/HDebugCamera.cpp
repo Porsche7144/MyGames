@@ -15,8 +15,8 @@ void HDebugCamera::Update(Vector4 data)
 
 bool HDebugCamera::Frame()
 {
-	m_vDirValue.y += m_rtOffset.left * g_fSecondPerFrame * 0.01f;
-	m_vDirValue.x += m_rtOffset.bottom * g_fSecondPerFrame * 0.01f;
+	m_vDirValue.y -= m_rtOffset.left * g_fSecondPerFrame * 0.01f;
+	m_vDirValue.x -= m_rtOffset.bottom * g_fSecondPerFrame * 0.01f;
 	Update(m_vDirValue);
 	UpdateVector();
 	

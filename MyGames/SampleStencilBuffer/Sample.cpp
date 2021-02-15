@@ -123,11 +123,11 @@ bool Sample::Frame()
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
-		m_Camera.FrontMovement(-1.0f);
+		m_Camera.FrontMovement(1.0f);
 	}
 	if (g_Input.GetKey('S') == KEY_HOLD)
 	{
-		m_Camera.FrontMovement(1.0f);
+		m_Camera.FrontMovement(-1.0f);
 	}
 	if (g_Input.GetKey('A') == KEY_HOLD)
 	{
@@ -139,11 +139,11 @@ bool Sample::Frame()
 	}
 	if (g_Input.GetKey('Q') == KEY_HOLD)
 	{
-		m_Camera.UpMovement(-1.0f);
+		m_Camera.UpMovement(1.0f);
 	}
 	if (g_Input.GetKey('E') == KEY_HOLD)
 	{
-		m_Camera.UpMovement(1.0f);
+		m_Camera.UpMovement(-1.0f);
 	}
 
 	m_Camera.Frame();
