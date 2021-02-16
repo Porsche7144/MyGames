@@ -86,8 +86,8 @@ bool HCore::GameInit()
 	m_Camera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_Camera.Init();
 	m_pMainCamera = &m_Camera;
-
 	Init();
+
 	PostInit();
 	ShowWindow(m_hWnd, SW_SHOWNORMAL);
 	return true;

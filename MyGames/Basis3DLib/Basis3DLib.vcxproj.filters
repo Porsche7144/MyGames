@@ -25,6 +25,9 @@
     <Filter Include="Camera">
       <UniqueIdentifier>{17745799-f09e-4ae6-a43d-ec2d70a290e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{da253b0c-284c-4da1-b7fb-89dbda1403f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HBasisStd.h">
@@ -102,6 +105,30 @@
     <ClInclude Include="HDebugCamera.h">
       <Filter>Camera</Filter>
     </ClInclude>
+    <ClInclude Include="HBitmap.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HBitmapManager.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HGameUser.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HNpcObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HObjectMgr.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HEffect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HCollision.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -148,6 +175,30 @@
     </ClCompile>
     <ClCompile Include="HDebugCamera.cpp">
       <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="HBitmap.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HBitmapManager.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HGameUser.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HNpcObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HObjectMgr.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HEffect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HCollision.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,28 @@
 #pragma once
 #include "HCore.h"
 #include "HShape.h"
-
+#include "HObject.h"
+#include "HModelViewCamera.h"
 #pragma comment(lib, "directxtk.lib")
+
+class HGameObject : public HObject
+{
+public:
+	HShape* m_pShape;
+public:
+	HGameObject();
+	virtual ~HGameObject();
+};
 
 class Sample : public HCore
 {
 public:
-	HShapeBox m_Box;
-	HShapePlane m_Plane;
-	HShapeLine m_Line;
-	Vector4 m_vDirValue;
+	HShapeBox			m_BoxShape;
+	HShapePlane			m_PlaneShape;
+	HShapeLine			m_LineShape;
+	Vector4				m_vDirValue;
+	HGameObject			m_BoxObj;
+	HModelViewCamera	m_ModelCamera;
 
 public:
 

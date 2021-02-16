@@ -28,11 +28,13 @@
     <ClInclude Include="Dxtk\WICTextureLoader.h" />
     <ClInclude Include="HBasisStd.h" />
     <ClInclude Include="HCamera.h" />
+    <ClInclude Include="HCollision.h" />
     <ClInclude Include="HCore.h" />
     <ClInclude Include="HCoreStd.h" />
     <ClInclude Include="HDebugCamera.h" />
     <ClInclude Include="HDevice.h" />
     <ClInclude Include="HDxState.h" />
+    <ClInclude Include="HEffect.h" />
     <ClInclude Include="HGraphicAPI.h" />
     <ClInclude Include="HInput.h" />
     <ClInclude Include="HMath.h" />
@@ -44,6 +46,12 @@
     <ClInclude Include="HWindow.h" />
     <ClInclude Include="HWrite.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="HBitmap.h" />
+    <ClInclude Include="HBitmapManager.h" />
+    <ClInclude Include="HGameUser.h" />
+    <ClInclude Include="HNpcObject.h" />
+    <ClInclude Include="HObject.h" />
+    <ClInclude Include="HObjectMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dxtk\DDSTextureLoader.cpp" />
@@ -53,6 +61,7 @@
     <ClCompile Include="HDebugCamera.cpp" />
     <ClCompile Include="HDevice.cpp" />
     <ClCompile Include="HDxState.cpp" />
+    <ClCompile Include="HEffect.cpp" />
     <ClCompile Include="HGraphicAPI.cpp" />
     <ClCompile Include="HInput.cpp" />
     <ClCompile Include="HMatrix.cpp" />
@@ -61,6 +70,13 @@
     <ClCompile Include="HVector.cpp" />
     <ClCompile Include="HWindow.cpp" />
     <ClCompile Include="HWrite.cpp" />
+    <ClCompile Include="HBitmap.cpp" />
+    <ClCompile Include="HBitmapManager.cpp" />
+    <ClCompile Include="HGameUser.cpp" />
+    <ClCompile Include="HNpcObject.cpp" />
+    <ClCompile Include="HObject.cpp" />
+    <ClCompile Include="HObjectMgr.cpp" />
+    <ClCompile Include="HCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl" />

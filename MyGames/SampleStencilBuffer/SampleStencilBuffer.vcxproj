@@ -19,9 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HModelViewCamera.cpp" />
+    <ClCompile Include="HTexture.cpp" />
+    <ClCompile Include="HTextureManager.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HModelViewCamera.h" />
+    <ClInclude Include="HTexture.h" />
+    <ClInclude Include="HTextureManager.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>

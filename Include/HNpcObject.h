@@ -1,24 +1,30 @@
-#pragma once
-#include "HStandState.h"
-#include "HMoveState.h"
-#include "HAttackState.h"
-
-class HNpcObject : public HObject
-{
-public:
-	HEnemyState* m_pAction;
-	vector<HEnemyState*>  m_pActionList;
-
-
-public:
-	void FSM();
-	void SetTransition(DWORD dwEvent);
-
-
-	bool Frame() override;
-	HNpcObject()
-	{
-		m_iObjectType = 200;
-	}
-};
-
+//#pragma once
+//
+//#include "HStandState.h"
+//#include "HMoveState.h"
+//#include "HAttackState.h"
+//
+//class TNpcObject : public TObject
+//{
+//public:
+//	TEffect*						m_pProjectile;
+//	std::vector<TProjectileInfo>	m_ProjectileList;
+//	TEnemyState*					m_pAction;
+//	std::vector<TEnemyState*>  m_pActionList;
+//public:
+//	virtual void FSM();
+//	virtual void SetTransition(DWORD dwEevnt);
+//public:
+//	virtual bool Damage()				override;
+//	virtual bool Dead()					override;
+//public:
+//	virtual TObject* Clone() override;
+//	virtual bool Frame() override;
+//	virtual bool Render() override;
+//	virtual bool Release() override;
+//	TNpcObject()
+//	{
+//		m_iObjectType = 200;
+//	}
+//};
+//
