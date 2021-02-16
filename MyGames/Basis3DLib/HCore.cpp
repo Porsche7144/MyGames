@@ -26,7 +26,39 @@ bool	HCore::PostInit()
 {
 
 	return true;
-};
+}
+bool HCore::CameraFrame()
+{
+	if (g_Input.GetKey('W') == KEY_HOLD)
+	{
+		m_pMainCamera->FrontMovement(1.0f);
+	}
+	if (g_Input.GetKey('S') == KEY_HOLD)
+	{
+		m_pMainCamera->FrontMovement(-1.0f);
+	}
+	if (g_Input.GetKey('A') == KEY_HOLD)
+	{
+		m_pMainCamera->RightMovement(-1.0f);
+	}
+	if (g_Input.GetKey('D') == KEY_HOLD)
+	{
+		m_pMainCamera->RightMovement(1.0f);
+	}
+	if (g_Input.GetKey('Q') == KEY_HOLD)
+	{
+		m_pMainCamera->UpMovement(1.0f);
+	}
+	if (g_Input.GetKey('E') == KEY_HOLD)
+	{
+		m_pMainCamera->UpMovement(-1.0f);
+	}
+
+	m_pMainCamera->Frame();
+
+	return true;
+}
+;
 bool HCore::GameInit()
 {
 	PreInit();
@@ -48,6 +80,12 @@ bool HCore::GameInit()
 		g_rtClient.right,
 		g_rtClient.bottom, pBackBuffer);
 	if (pBackBuffer) pBackBuffer->Release();
+
+	m_Camera.CreateViewMatrix({ 0, 10, -10 }, { 0,0,0 });
+	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
+	m_Camera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
+	m_Camera.Init();
+	m_pMainCamera = &m_Camera;
 
 	Init();
 	PostInit();
@@ -73,6 +111,7 @@ bool	HCore::GameFrame()
 	// g_SoundMgr.Frame();
 	Frame();
 	// g_ObjectMgr.Frame();
+	CameraFrame();
 	PostFrame();
 	return true;
 }
@@ -131,4 +170,13 @@ bool HCore::Run()
 	GameRelease();
 	CoUninitialize();
 	return true;
+}
+
+HCore::HCore()
+{
+	m_pMainCamera = nullptr;
+}
+
+HCore::~HCore()
+{
 }

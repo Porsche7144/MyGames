@@ -50,7 +50,9 @@ bool HInput::Init()
 bool HInput::Frame() 
 {
 	GetCursorPos(&m_MousePos); // 화면좌표계
+	HWND hWnd = WindowFromPoint(m_MousePos);
 	ScreenToClient(g_hWnd, &m_MousePos);
+	if (hWnd != g_hWnd) return true;
 
 	if (m_bEnable == false) return true;
 

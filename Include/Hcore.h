@@ -3,11 +3,15 @@
 #include "HTimer.h"
 #include "HInput.h"
 #include "HWrite.h"
+#include "HDebugCamera.h"
 
 class HCore : public HDevice
 {
 public:
-	bool		m_bGameRun;
+	bool			m_bGameRun;
+	HDebugCamera	m_Camera;
+	HCamera*		m_pMainCamera;
+
 public:
 	virtual bool	PreInit();
 	virtual bool	Init();
@@ -16,6 +20,7 @@ public:
 	virtual bool	PreFrame() {
 		return true;
 	};
+	virtual bool	CameraFrame();
 	virtual bool	Frame() {
 		return true;
 	};
@@ -41,5 +46,9 @@ private:
 	bool	GameRun();
 public:
 	bool	Run();
+
+public:
+	HCore();
+	virtual ~HCore();
 };
 

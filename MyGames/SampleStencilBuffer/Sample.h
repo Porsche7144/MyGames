@@ -1,7 +1,6 @@
 #pragma once
 #include "HCore.h"
 #include "HShape.h"
-#include "HDebugCamera.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -11,7 +10,6 @@ public:
 	HShapeBox m_Box;
 	HShapePlane m_Plane;
 	HShapeLine m_Line;
-	HDebugCamera m_Camera;
 	Vector4 m_vDirValue;
 
 public:

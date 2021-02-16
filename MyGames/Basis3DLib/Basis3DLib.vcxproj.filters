@@ -22,6 +22,9 @@
     <Filter Include="dx">
       <UniqueIdentifier>{3de1ff60-534c-4480-8a5d-ca00695f9f93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{17745799-f09e-4ae6-a43d-ec2d70a290e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HBasisStd.h">
@@ -93,6 +96,12 @@
     <ClInclude Include="HMath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="HCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="HDebugCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -133,6 +142,12 @@
     </ClCompile>
     <ClCompile Include="Dxtk\WICTextureLoader.cpp">
       <Filter>dxtk</Filter>
+    </ClCompile>
+    <ClCompile Include="HCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="HDebugCamera.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

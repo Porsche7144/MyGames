@@ -19,13 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HCamera.cpp" />
-    <ClCompile Include="HDebugCamera.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HCamera.h" />
-    <ClInclude Include="HDebugCamera.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>
