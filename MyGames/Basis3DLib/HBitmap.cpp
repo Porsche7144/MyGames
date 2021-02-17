@@ -104,13 +104,13 @@
 //		}
 //	}
 //	m_hMemDC = CreateCompatibleDC(g_hScreenDC);
-//	SelectObject(m_hMemDC, m_hBitmap);
+//	SelecHObject(m_hMemDC, m_hBitmap);
 //
 //	COLORREF bkColor = RGB(255, 0, 0);
 //	HBRUSH m_hbrRed = CreateSolidBrush(bkColor);
-//	SelectObject(m_hMemDC, m_hbrRed);
+//	SelecHObject(m_hMemDC, m_hbrRed);
 //
-//	GetObject(m_hBitmap, sizeof(BITMAP), &m_BitmapInfo);
+//	GeHObject(m_hBitmap, sizeof(BITMAP), &m_BitmapInfo);
 //	if (m_BitmapInfo.bmBitsPixel == 32)
 //	{
 //		m_BlendFunction.AlphaFormat = AC_SRC_ALPHA;
@@ -149,13 +149,13 @@
 //	}*/
 //
 //	m_hMemDC = CreateCompatibleDC(g_hScreenDC);
-//	SelectObject(m_hMemDC, m_hBitmap);
+//	SelecHObject(m_hMemDC, m_hBitmap);
 //
 //	COLORREF bkColor = RGB(255, 0, 255 );
 //	HBRUSH m_hbrRed = CreateSolidBrush(bkColor);
-//	SelectObject(m_hMemDC, m_hbrRed);
+//	SelecHObject(m_hMemDC, m_hbrRed);
 //
-//	GetObject(m_hBitmap, sizeof(BITMAP), &m_BitmapInfo);
+//	GeHObject(m_hBitmap, sizeof(BITMAP), &m_BitmapInfo);
 //	if (m_BitmapInfo.bmBitsPixel == 32)
 //	{
 //		m_BlendFunction.AlphaFormat = AC_SRC_ALPHA;

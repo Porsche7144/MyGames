@@ -143,12 +143,12 @@ namespace HBASIS_CORE_LIB
 
 		bool   CCW(HPoint vLook, HPoint vDir)
 		{
-			//TPoint pTarget, pPos;
+			//HPoint pTarget, pPos;
 			//// Y값은 원점에서 아래로 감소하도록 클라이언트 좌표를 직각 좌표로 변환한다.
 			//pTarget.y *= -1.0f;
 			//pPos.y *= -1.0f;
 			//// 이후 이전 프레임의 벡터와 현재의 벡터의 각을 계산한다.
-			//VectoTPointr2 vDir;
+			//VectoHPointr2 vDir;
 			//vDir.x = pTarget.x - pPos.x;
 			//vDir.y = pTarget.y - pPos.y;
 			//vDir = vDir.Normal();

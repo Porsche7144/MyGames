@@ -53,7 +53,7 @@ void  HObjectManager::CreateObject(std::vector<HObjAttribute>&	list)
 {
 	//for (TObjAttribute& info : list)
 	//{
-	//	TObject* pObj = new TObject;
+	//	HObject* pObj = new HObject;
 	//	pObj->m_szName = info.szName;
 	//	pObj->m_Attribute = info;
 	//	pObj->Init();
@@ -246,9 +246,9 @@ void HObjectManager::AddCollisionExecute(HObject* ownder, CollisionFunction func
 }
 void HObjectManager::AddSelectExecute(HObject* ownder, SelectFunction func)
 {
-	ownder->m_iSelectObjectID = m_iExecuteSelectID++;
-	m_SelectObjectList.insert(make_pair(ownder->m_iSelectObjectID, ownder));
-	g_ObjectMgr.m_fnSelectExecute.insert(make_pair(ownder->m_iSelectObjectID, func));
+	ownder->m_iSelecHObjectID = m_iExecuteSelectID++;
+	m_SelecHObjectList.insert(make_pair(ownder->m_iSelecHObjectID, ownder));
+	g_ObjectMgr.m_fnSelectExecute.insert(make_pair(ownder->m_iSelecHObjectID, func));
 }
 HObject* HObjectManager::Add(HObject* pAddObject)
 {
@@ -322,7 +322,7 @@ bool		HObjectManager::Init()
 }
 bool		HObjectManager::Frame()
 {
-	for (auto src : m_SelectObjectList)
+	for (auto src : m_SelecHObjectList)
 	{
 		HObject* pSrcObj = (HObject*)src.second;		
 		POINT ptMouse = g_Input.GetPos();
@@ -449,10 +449,10 @@ bool		HObjectManager::Release()
 }
 void		HObjectManager::DeleteExecute(HObject* owner)
 {
-	auto obj = m_SelectObjectList.find(owner->m_iSelectObjectID);
-	if (obj != m_SelectObjectList.end())
+	auto obj = m_SelecHObjectList.find(owner->m_iSelecHObjectID);
+	if (obj != m_SelecHObjectList.end())
 	{
-		m_SelectObjectList.erase(obj);
+		m_SelecHObjectList.erase(obj);
 	}
 	obj = m_CollisionObjectList.find(owner->m_iCollisionObjectID);
 	if (obj != m_CollisionObjectList.end())

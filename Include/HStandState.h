@@ -1,11 +1,11 @@
 #pragma once
 #include "HEnemyState.h"
-class HStandState :
-    public HEnemyState
-{
 
+class HStandState :
+	public HEnemyState
+{
 public:
-    void Process(HObject* pPlayer);
-    HStandState(HObject* owner);
+	void Process(HObject* pPlayer);
+	HStandState(HObject* owner);
 };
 

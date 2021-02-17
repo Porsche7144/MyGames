@@ -1,6 +1,7 @@
 #pragma once
 #include "HBitmapManager.h"
 #include "HCollision.h"
+#include "HDxObject.h"
 
 typedef std::vector<RECT>  RECT_ARRAY;
 
@@ -62,15 +63,15 @@ enum HSelectState
 	H_ACTIVE	= 4,	/// 마우스 좌측 버튼을 누르고 있을 때(키 상태의 KEY_HOLD와 같다)	
 	H_SELECTED	= 8, /// T_ACTIVE에서 마우스를 왼쪽 버튼을 위에서 놓았을 때( 이후에는 T_FOCUS가 된다.)
 };
-class HObject
+class HObject : public HDxObject
 {
 public:
 	int			m_iIndex;			 /// 모든 오브젝트에 발급되는 고유한 인덱스	
 	DWORD		m_dwSvrID;			 /// 서버에 등록 된 고유한 인덱스
-	int			m_iObjectType;	     /// TObjectType 오브젝트 타입
+	int			m_iObjectType;	     /// HObjectType 오브젝트 타입
 public:
 	int			m_iCollisionObjectID;/// 오브젝트 메니져에 등록 된 충돌 인덱스
-	int			m_iSelectObjectID;	 /// 오브젝트 메니져에 등록된 마우스 선택 인덱스
+	int			m_iSelecHObjectID;	 /// 오브젝트 메니져에 등록된 마우스 선택 인덱스
 	bool		m_bCollisionEnabled; /// 충돌처리여부 판단(마우스 선택은 처리된다.)
 	int			m_iCollisionType;	 /// TCollisionType에 따라 처리한다.
 	DWORD		m_dwOverlapState;	 /// 오버랩 상태
@@ -114,9 +115,9 @@ public:
 	virtual bool  PreFrame();
 	virtual bool  Frame();
 	virtual bool  PostFrame();
-	virtual bool  PreRender();
-	virtual bool  Render();
-	virtual bool  PostRender();
+	virtual bool  PreRender(ID3D11DeviceContext* pd3dContext);
+	virtual bool  Render(ID3D11DeviceContext* pd3dContext);
+	virtual bool  PostRender(ID3D11DeviceContext*	pd3dContext);
 	virtual bool  Release();
 	virtual void  Update();
 	virtual void  SetDir(float* p);

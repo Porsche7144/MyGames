@@ -7,8 +7,8 @@ bool  HEffect::Init()
 {
 	//m_pMaskBmp = nullptr;
 	//m_pColorBmp = nullptr;
-	//g_ObjectMgr.AddExecute(this, bind(&TObject::HitOverlap, this, std::placeholders::_1));
-	//g_ObjectMgr.m_fnExecute[m_iCollisionObjectID] = bind(&TObject::HitOverlap, this, std::placeholders::_1);
+	//g_ObjectMgr.AddExecute(this, bind(&HObject::HitOverlap, this, std::placeholders::_1));
+	//g_ObjectMgr.m_fnExecute[m_iCollisionObjectID] = bind(&HObject::HitOverlap, this, std::placeholders::_1);
 	return true;
 }
 void   HEffect::SetSprite(std::vector<RECT>& list)

@@ -2,7 +2,7 @@
 //bool TBitmapManager::SaveFile(HBITMAP hBitmap, const TCHAR* strSaveFile)
 //{
 //	BITMAP bitmap;
-//	GetObject(hBitmap, sizeof(BITMAP), &bitmap);
+//	GeHObject(hBitmap, sizeof(BITMAP), &bitmap);
 //
 //	BITMAPINFOHEADER bitHeader;
 //	memset(&bitHeader, 0, sizeof(BITMAPINFOHEADER));

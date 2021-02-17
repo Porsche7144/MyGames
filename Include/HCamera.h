@@ -7,6 +7,7 @@ class HCamera
 public:
 	Vector3		m_vCameraPos = { 10,0,-10 };
 	Vector3		m_vCameraTarget = { 0,0,0 };
+	Matrix		m_matWorld;
 	Matrix		m_matView;
 	Matrix		m_matProject;
 
@@ -41,7 +42,7 @@ public:
 	void RightBase(float fDir);
 	void UpBase(float fDir);
 
-	int WndProc(HWND hWnd, UINT message, WPARAM wParam,	LPARAM lParam);
+	virtual int WndProc(HWND hWnd, UINT message, WPARAM wParam,	LPARAM lParam);
 
 public:
 	HCamera();

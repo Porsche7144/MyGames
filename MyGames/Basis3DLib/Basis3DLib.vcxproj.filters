@@ -28,6 +28,12 @@
     <Filter Include="Object">
       <UniqueIdentifier>{da253b0c-284c-4da1-b7fb-89dbda1403f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{35b413c0-f3cc-4bb8-bdcc-09eee0976328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FSM">
+      <UniqueIdentifier>{370e39ee-b056-44c7-84f1-0048810d8bef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HBasisStd.h">
@@ -129,6 +135,42 @@
     <ClInclude Include="HCollision.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="HScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="HProjectile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HUserInterface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HStandState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HMoveState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HFiniteStateMachine.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HAttackState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HEnemyState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HFiniteState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="HDxObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="HTexture.h">
+      <Filter>dx</Filter>
+    </ClInclude>
+    <ClInclude Include="HTextureManager.h">
+      <Filter>dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -199,6 +241,42 @@
     </ClCompile>
     <ClCompile Include="HCollision.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="HProjectile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HUserInterface.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HStandState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HMoveState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HFiniteStateMachine.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HAttackState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HEnemyState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HFiniteState.cpp">
+      <Filter>FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="HDxObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="HTexture.cpp">
+      <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HTextureManager.cpp">
+      <Filter>dx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -104,17 +104,7 @@ void HCamera::SetTarget(Vector3 p)
 
 void HCamera::Update(Vector4 d)
 {
-	Matrix matRotation;
-	matRotation = Matrix::CreateRotationY(d.y);
-	Vector3 vLocalUp = { 0,1,0 };
-	Vector3 vLocalLook = { 0,0,1 };
-	vLocalUp = Vector3::Transform(vLocalUp, matRotation);
-	vLocalLook = Vector3::Transform(vLocalLook, matRotation);
-	vLocalLook.Normalize();
-	vLocalUp.Normalize();
-	float fHeight = m_vCameraPos.y;
-	m_vCameraPos = m_vCameraTarget - vLocalLook * m_fDistance;
-	m_vCameraPos.y = fHeight;
+
 }
 
 void HCamera::FrontMovement(float fDir)

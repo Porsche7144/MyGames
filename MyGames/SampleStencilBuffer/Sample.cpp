@@ -80,7 +80,7 @@ bool Sample::Init()
 	}
 
 	// 카메라 바꿔치는 부분.
-	m_ModelCamera.CreateViewMatrix({ 0,10,-10 }, { 0,0,0 });
+	m_ModelCamera.CreateViewMatrix({ 0,10,-1 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
@@ -157,7 +157,7 @@ bool Sample::Render()
 	m_pd3dContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
 	m_pd3dContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
 
-	m_BoxShape.SetMatrix(&m_matBoxWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_BoxShape.SetMatrix(&m_pMainCamera->m_matWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_BoxShape.Render(m_pd3dContext);
 
 	Matrix matShadow;
@@ -191,10 +191,3 @@ bool Sample::Release()
 	return true;
 }
 
-HGameObject::HGameObject()
-{
-}
-
-HGameObject::~HGameObject()
-{
-}

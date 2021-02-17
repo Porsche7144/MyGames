@@ -19,12 +19,12 @@
 //	m_hOffScreenDC = CreateCompatibleDC(m_hScreenDC);
 //	m_hOffScreenBitmap = CreateCompatibleBitmap(
 //		m_hScreenDC, g_rtClient.right, g_rtClient.bottom);
-//	SelectObject(m_hOffScreenDC, m_hOffScreenBitmap);
+//	SelecHObject(m_hOffScreenDC, m_hOffScreenBitmap);
 //	g_hOffScreenDC = m_hOffScreenDC;
 //
 //	COLORREF bkColor = RGB(128, 128, 128);
 //	m_hbrRed = CreateSolidBrush(bkColor);
-//	SelectObject(m_hOffScreenDC, m_hbrRed);
+//	SelecHObject(m_hOffScreenDC, m_hbrRed);
 //	return true;
 //};
 //bool	TGraphicAPI::Frame() {

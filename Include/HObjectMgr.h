@@ -35,7 +35,7 @@ private:
 	int		m_iExecuteSelectID = 0;
 	int		m_iExecuteCollisionID = 0;
 	std::map<int ,HObject*>	      m_CollisionObjectList;
-	std::map<int, HObject*>	      m_SelectObjectList;
+	std::map<int, HObject*>	      m_SelecHObjectList;
 
 	typedef std::map<int, SelectFunction>::iterator SelectFuncIterator;
 	std::map<int, SelectFunction>    m_fnSelectExecute;

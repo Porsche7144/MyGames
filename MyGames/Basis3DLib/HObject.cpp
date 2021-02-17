@@ -10,6 +10,7 @@ DWORD HObject::Overlap(int iIndex)
 	}
 	return iter->second;
 }
+
 void HObject::HitOverlap(HObject * pDesk, DWORD dwState)
 {
 #ifdef _DEBUG
@@ -40,6 +41,7 @@ void HObject::HitOverlap(HObject * pDesk, DWORD dwState)
 	OutputDebugString(szMsg.c_str());
 #endif
 }
+
 void HObject::MouseOverlap(POINT ptMouse, DWORD dwState)
 {
 	if (dwState == HSelectState::H_SELECTED)
@@ -75,14 +77,17 @@ void HObject::MouseOverlap(POINT ptMouse, DWORD dwState)
 	////OutputDebugString(szMsg.c_str());
 #endif
 }
+
 HObject* HObject::Clone()
 {
 	return new HObject(*this);
 }
+
 bool  HObject::Reset()
 {
 	return true;
 }
+
 void  HObject::SetSpeed(float fSpeed)
 {
 	m_fSpeed = fSpeed;
@@ -139,9 +144,9 @@ bool  HObject::Init()
 {
 	//m_pMaskBmp		= nullptr;
 	//m_pColorBmp		= nullptr;
-	//g_ObjectMgr.AddCollisionExecute(this, bind(&TObject::HitOverlap, this, std::placeholders::_1, std::placeholders::_2));
-	//g_ObjectMgr.AddSelectExecute(this, bind(&TObject::MouseOverlap, this, std::placeholders::_1, std::placeholders::_2));
-	////g_ObjectMgr.m_fnExecute[m_iCollisionObjectID] = bind(&TObject::HitOverlap, this, std::placeholders::_1);
+	//g_ObjectMgr.AddCollisionExecute(this, bind(&HObject::HitOverlap, this, std::placeholders::_1, std::placeholders::_2));
+	//g_ObjectMgr.AddSelectExecute(this, bind(&HObject::MouseOverlap, this, std::placeholders::_1, std::placeholders::_2));
+	////g_ObjectMgr.m_fnExecute[m_iCollisionObjectID] = bind(&HObject::HitOverlap, this, std::placeholders::_1);
 	return true;
 }
 void  HObject::Update()
@@ -238,54 +243,20 @@ bool  HObject::Release()
 	m_pChildObjects.clear();
 	return true;
 }
-bool HObject::PreRender()
+bool HObject::PreRender(ID3D11DeviceContext* pd3dContext)
 {
 	return true;
 }
-bool  HObject::Render()
+bool  HObject::Render(ID3D11DeviceContext* pd3dContext)
 {	
-	// 부모의 위치에서 상대적으로 위치하게 된다. 
-	//m_rtDraw = m_rtDesk;
-	//if (m_pParentObject != nullptr)
-	//{
-	//	m_rtDraw.left += m_pParentObject->m_rtDesk.left;
-	//	m_rtDraw.top += m_pParentObject->m_rtDesk.top;
-	//}
-	//if (m_pColorBmp)
-	//{
-	//	if (m_bColorKey == true)
-	//	{
-	//		DrawColorKey();
-	//	}
-	//	else
-	//	{
-	//		if (m_pColorBmp->m_BitmapInfo.bmBitsPixel == 32 && m_pMaskBmp == nullptr)
-	//		{
-	//			m_pColorBmp->DrawAlphaBlend(m_rtDraw, m_rtSrc);
-	//		}
-	//		else
-	//		{
-	//			if (m_pMaskBmp != nullptr)
-	//			{
-	//				m_pMaskBmp->Draw(m_rtDraw, m_rtSrc, SRCAND, 0);
-	//				m_pColorBmp->Draw(m_rtDraw, m_rtSrc, SRCINVERT, 0);
-	//				m_pMaskBmp->Draw(m_rtDraw, m_rtSrc, SRCINVERT, 0);
-	//			}
-	//			else
-	//			{
-	//				m_pColorBmp->Draw(m_rtDraw, m_rtSrc, SRCCOPY, 0);
-	//			}
-	//		}
-	//	}
-	//}
-	return PostRender();	
+	
+	return PostRender(pd3dContext);
 }
-bool HObject::PostRender()
+bool HObject::PostRender(ID3D11DeviceContext*	pd3dContext)
 {
-	for (int iChild = 0; iChild < m_pChildObjects.size(); iChild++)
-	{
-		m_pChildObjects[iChild]->Render();
-	}
+	PreRender(pd3dContext);
+	HDxObject::Render(pd3dContext);
+
 	return true;
 }
 void  HObject::DrawColorKey()

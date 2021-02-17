@@ -33,6 +33,7 @@
     <ClInclude Include="HCoreStd.h" />
     <ClInclude Include="HDebugCamera.h" />
     <ClInclude Include="HDevice.h" />
+    <ClInclude Include="HDxObject.h" />
     <ClInclude Include="HDxState.h" />
     <ClInclude Include="HEffect.h" />
     <ClInclude Include="HGraphicAPI.h" />
@@ -41,6 +42,8 @@
     <ClInclude Include="HMatrix.h" />
     <ClInclude Include="HShape.h" />
     <ClInclude Include="HStd.h" />
+    <ClInclude Include="HTexture.h" />
+    <ClInclude Include="HTextureManager.h" />
     <ClInclude Include="HTimer.h" />
     <ClInclude Include="HVector.h" />
     <ClInclude Include="HWindow.h" />
@@ -52,6 +55,15 @@
     <ClInclude Include="HNpcObject.h" />
     <ClInclude Include="HObject.h" />
     <ClInclude Include="HObjectMgr.h" />
+    <ClInclude Include="HScene.h" />
+    <ClInclude Include="HProjectile.h" />
+    <ClInclude Include="HUserInterface.h" />
+    <ClInclude Include="HAttackState.h" />
+    <ClInclude Include="HEnemyState.h" />
+    <ClInclude Include="HFiniteState.h" />
+    <ClInclude Include="HFiniteStateMachine.h" />
+    <ClInclude Include="HMoveState.h" />
+    <ClInclude Include="HStandState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dxtk\DDSTextureLoader.cpp" />
@@ -60,12 +72,15 @@
     <ClCompile Include="HCore.cpp" />
     <ClCompile Include="HDebugCamera.cpp" />
     <ClCompile Include="HDevice.cpp" />
+    <ClCompile Include="HDxObject.cpp" />
     <ClCompile Include="HDxState.cpp" />
     <ClCompile Include="HEffect.cpp" />
     <ClCompile Include="HGraphicAPI.cpp" />
     <ClCompile Include="HInput.cpp" />
     <ClCompile Include="HMatrix.cpp" />
     <ClCompile Include="HShape.cpp" />
+    <ClCompile Include="HTexture.cpp" />
+    <ClCompile Include="HTextureManager.cpp" />
     <ClCompile Include="HTimer.cpp" />
     <ClCompile Include="HVector.cpp" />
     <ClCompile Include="HWindow.cpp" />
@@ -77,6 +92,15 @@
     <ClCompile Include="HObject.cpp" />
     <ClCompile Include="HObjectMgr.cpp" />
     <ClCompile Include="HCollision.cpp" />
+    <ClCompile Include="HScene.cpp" />
+    <ClCompile Include="HProjectile.cpp" />
+    <ClCompile Include="HUserInterface.cpp" />
+    <ClCompile Include="HAttackState.cpp" />
+    <ClCompile Include="HEnemyState.cpp" />
+    <ClCompile Include="HFiniteState.cpp" />
+    <ClCompile Include="HFiniteStateMachine.cpp" />
+    <ClCompile Include="HMoveState.cpp" />
+    <ClCompile Include="HStandState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl" />

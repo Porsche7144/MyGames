@@ -5,15 +5,6 @@
 #include "HModelViewCamera.h"
 #pragma comment(lib, "directxtk.lib")
 
-class HGameObject : public HObject
-{
-public:
-	HShape* m_pShape;
-public:
-	HGameObject();
-	virtual ~HGameObject();
-};
-
 class Sample : public HCore
 {
 public:
@@ -21,8 +12,9 @@ public:
 	HShapePlane			m_PlaneShape;
 	HShapeLine			m_LineShape;
 	Vector4				m_vDirValue;
-	HGameObject			m_BoxObj;
 	HModelViewCamera	m_ModelCamera;
+
+	std::vector<HObject*> m_ObjList;
 
 public:
 
