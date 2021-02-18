@@ -109,6 +109,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleDrawBox", "SampleDraw
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleStencilBuffer", "SampleStencilBuffer\SampleStencilBuffer.vcxproj", "{DFD8B8B7-0E4A-4600-9DA6-4CC6E65D7B93}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMap", "SampleMap\SampleMap.vcxproj", "{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -469,6 +471,14 @@ Global
 		{DFD8B8B7-0E4A-4600-9DA6-4CC6E65D7B93}.Release|x64.Build.0 = Release|x64
 		{DFD8B8B7-0E4A-4600-9DA6-4CC6E65D7B93}.Release|x86.ActiveCfg = Release|Win32
 		{DFD8B8B7-0E4A-4600-9DA6-4CC6E65D7B93}.Release|x86.Build.0 = Release|Win32
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Debug|x64.ActiveCfg = Debug|x64
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Debug|x64.Build.0 = Debug|x64
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Debug|x86.ActiveCfg = Debug|Win32
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Debug|x86.Build.0 = Debug|Win32
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Release|x64.ActiveCfg = Release|x64
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Release|x64.Build.0 = Release|x64
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Release|x86.ActiveCfg = Release|Win32
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -519,6 +529,7 @@ Global
 		{22386F48-DF81-4ABA-A0E1-C2D0D83CEE86} = {982E6880-85FB-4497-82AF-63BF8D395479}
 		{7AEA274B-8E62-4A95-84BD-E77E670FE581} = {982E6880-85FB-4497-82AF-63BF8D395479}
 		{DFD8B8B7-0E4A-4600-9DA6-4CC6E65D7B93} = {982E6880-85FB-4497-82AF-63BF8D395479}
+		{64F9B16A-F1BA-4C07-9BBE-67DF4701476B} = {982E6880-85FB-4497-82AF-63BF8D395479}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1AD7A507-7C58-4956-9D12-56587EDA22DE}

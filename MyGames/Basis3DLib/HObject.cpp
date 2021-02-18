@@ -92,15 +92,15 @@ void  HObject::SetSpeed(float fSpeed)
 {
 	m_fSpeed = fSpeed;
 }
-void  HObject::SetDir(float* p)
+void  HObject::SetDir(float* d)
 {
-	m_ptDirection.x = p[0];
-	m_ptDirection.y = p[1];
+	m_ptDirection.x = d[0];
+	m_ptDirection.y = d[1];
 }
-void  HObject::SetPos(float* d)
+void  HObject::SetPos(float* p)
 {
-	m_ptPos.x = d[0];
-	m_ptPos.y = d[1];
+	m_ptPos.x = p[0];
+	m_ptPos.y = p[1];
 }
 void  HObject::SetDir(HPoint p)
 {

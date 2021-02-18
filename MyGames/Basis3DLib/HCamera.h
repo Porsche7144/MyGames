@@ -30,6 +30,7 @@ public:
 
 public:
 	virtual bool Init();
+	virtual bool PostInit() { return true; };
 	virtual bool Frame();
 	virtual bool CreateViewMatrix(Vector3 p, Vector3 t, Vector3 u = { 0,1,0 });
 	virtual void UpdateVector();
@@ -40,7 +41,7 @@ public:
 
 	void FrontMovement(float fDir = 1.0f);
 	void RightMovement(float fDir = 1.0f);
-	void UpMovement(float fDir);
+	void UpMovement(float fDir = 1.0f);
 	void FrontBase(float fDir);
 	void RightBase(float fDir);
 	void UpBase(float fDir);

@@ -45,6 +45,7 @@ int HCamera::WndProc(
 
 bool HCamera::Init()
 {
+	PostInit();
 	return true;
 }
 
@@ -118,20 +119,20 @@ void HCamera::Update(Vector4 d)
 
 void HCamera::FrontMovement(float fDir)
 {
-	Vector3 vMove = m_vLook * g_fSecondPerFrame * m_fSpeed * fDir;
-	m_vCameraPos += vMove;
+	Vector3 vFrontMove = m_vLook * g_fSecondPerFrame * m_fSpeed * fDir;
+	m_vCameraPos += vFrontMove;
 }
 
 void HCamera::RightMovement(float fDir)
 {
-	Vector3 vMove = m_vRight * g_fSecondPerFrame * m_fSpeed * fDir;
-	m_vCameraPos += vMove;
+	Vector3 vRightMove = m_vRight * g_fSecondPerFrame * m_fSpeed * fDir;
+	m_vCameraPos += vRightMove;
 }
 
 void HCamera::UpMovement(float fDir)
 {
-	Vector3 vMove = m_vUp * g_fSecondPerFrame * m_fSpeed * fDir;
-	m_vCameraPos += vMove;
+	Vector3 vUpMove = m_vUp * g_fSecondPerFrame * m_fSpeed * fDir;
+	m_vCameraPos += vUpMove;
 }
 
 void HCamera::FrontBase(float fDir)

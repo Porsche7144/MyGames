@@ -55,7 +55,7 @@ bool HDxObject::CreateIndexBuffer()
 {
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(P_VERTEX) * m_IndexList.size();
+	bd.ByteWidth = sizeof(DWORD) * m_IndexList.size();
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	// 인덱스 버퍼로 바인딩
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
