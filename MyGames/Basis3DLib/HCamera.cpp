@@ -63,6 +63,15 @@ bool HCamera::CreateViewMatrix(Vector3 p, Vector3 t, Vector3 u)
 	m_vCameraTarget = t;
 	m_fDistance = (m_vCameraPos - m_vCameraTarget).Length();
 	m_matView = Matrix::CreateLookAt(p, t, u);
+	
+
+	Matrix mInvView;
+	mInvView = m_matView.Invert();
+	Vector3* pZBasis = (Vector3*)&m_matView._31;
+
+	m_vDirValue.y = atan2f(pZBasis->x, pZBasis->z);
+	float fLen = sqrtf(pZBasis->z * pZBasis->z + pZBasis->x * pZBasis->x);
+	m_vDirValue.x = -atan2f(pZBasis->y, fLen);
 
 	UpdateVector();
 

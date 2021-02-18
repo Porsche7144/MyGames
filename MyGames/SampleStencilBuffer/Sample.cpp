@@ -84,7 +84,15 @@ bool Sample::Init()
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
-	m_pMainCamera = &m_ModelCamera;
+	// m_pMainCamera = &m_ModelCamera;
+	HMapDesc desc;
+	desc.iNumCols = 9;
+	desc.iNumRows = 9;
+	desc.fCellDistance = 1;
+	desc.szTextFile = L"../../Image/KakaoTalk_20201201_210710448.jpg";
+	desc.szVS = L"VS.txt";
+	desc.szPS = L"PS.txt";
+	m_Map.CreateMap(m_pd3dDevice, desc);
 
 	return true;
 }
@@ -171,8 +179,8 @@ bool Sample::Render()
 	m_BoxShape.SetMatrix(&matShadow, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_BoxShape.Render(m_pd3dContext);
 
-	m_PlaneShape.SetMatrix(&m_matPlaneWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_PlaneShape.Render(m_pd3dContext);
+	m_Map.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_Map.Render(m_pd3dContext);
 
 	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));

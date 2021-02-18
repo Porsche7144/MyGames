@@ -3,11 +3,14 @@
 #include "HShape.h"
 #include "HObject.h"
 #include "HModelViewCamera.h"
+#include "HMap.h"
+
 #pragma comment(lib, "directxtk.lib")
 
 class Sample : public HCore
 {
 public:
+	HMap m_Map;
 	HShapeBox			m_BoxShape;
 	HShapePlane			m_PlaneShape;
 	HShapeLine			m_LineShape;

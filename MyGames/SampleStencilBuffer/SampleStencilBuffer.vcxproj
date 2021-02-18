@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HFrustum.cpp" />
+    <ClCompile Include="HMap.cpp" />
     <ClCompile Include="HModelViewCamera.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HFrustum.h" />
+    <ClInclude Include="HMap.h" />
     <ClInclude Include="HModelViewCamera.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>

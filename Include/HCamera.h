@@ -11,6 +11,9 @@ public:
 	Matrix		m_matView;
 	Matrix		m_matProject;
 
+	Vector4		m_vDirValue;
+	POINT		m_ptPrePosition;
+
 	Vector3		m_vLook;
 	Vector3		m_vUp;
 	Vector3		m_vRight;
