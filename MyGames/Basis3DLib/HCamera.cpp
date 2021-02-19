@@ -58,6 +58,13 @@ bool HCamera::Frame()
 	return true;
 }
 
+bool HCamera::CreateOrthographic(float width, float height, float fN, float fP)
+{
+	m_matProject = Matrix::CreateOrthographic(width, height, fN, fP);
+
+	return true;
+}
+
 bool HCamera::CreateViewMatrix(Vector3 p, Vector3 t, Vector3 u)
 {
 	m_vCameraPos = p;

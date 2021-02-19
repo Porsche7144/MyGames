@@ -19,14 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HDxRT.cpp" />
     <ClCompile Include="HFrustum.cpp" />
     <ClCompile Include="HMap.cpp" />
+    <ClCompile Include="HMinimap.cpp" />
     <ClCompile Include="HModelViewCamera.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HDxRT.h" />
     <ClInclude Include="HFrustum.h" />
     <ClInclude Include="HMap.h" />
+    <ClInclude Include="HMinimap.h" />
     <ClInclude Include="HModelViewCamera.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>

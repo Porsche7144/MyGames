@@ -232,9 +232,15 @@ bool HDxObject::Frame()
 	return true;
 }
 
+bool HDxObject::PreRender(ID3D11DeviceContext * pContext)
+{
+	return true;
+}
+
 bool HDxObject::Render(ID3D11DeviceContext* pContext)
 {
 	Update(pContext);
+	PreRender(pContext);
 	UINT iStride = sizeof(P_VERTEX);
 	UINT iOffset = 0;
 	pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &iStride, &iOffset);
@@ -247,13 +253,21 @@ bool HDxObject::Render(ID3D11DeviceContext* pContext)
 	pContext->VSSetShader(m_pVertexShader, NULL, 0);
 	pContext->PSSetShader(m_pPixelShader, NULL, 0);
 	pContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iTopology);
-	pContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureSRV);
+	if (m_pTexture != nullptr)
+	{
+		pContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureSRV);
+	}
 	// Vertex Draw
 	// m_pd3dContext->Draw(m_VertexList.size(), 0);
 
-	// Index Draw
-	pContext->DrawIndexed(m_IndexList.size(), 0, 0);
+	PostRender(pContext);
 
+	return true;
+}
+
+bool HDxObject::PostRender(ID3D11DeviceContext * pContext)
+{
+	pContext->DrawIndexed(m_IndexList.size(), 0, 0);
 	return true;
 }
 

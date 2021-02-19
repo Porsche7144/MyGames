@@ -61,35 +61,43 @@ bool Sample::Init()
 	HRESULT hr;
 	m_vDirValue = { 0,0,0,0 };
 
+	m_Minimap.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg");
+
 	Matrix matScale, matRotation;
 	matScale = Matrix::CreateScale(100, 100, 0);
 	matRotation = Matrix::CreateRotationX(HBASIS_PI * 0.5f);
 	m_matPlaneWorld = matScale * matRotation;
 
-	if (!m_BoxShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
+	if (!m_BoxShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
-	if (!m_PlaneShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/KakaoTalk_20201201_210710448.jpg"))
+	if (!m_PlaneShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
-	if (!m_LineShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../KakaoTalk_20201201_210710448.jpg"))
+	if (!m_LineShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
 
 	// 카메라 바꿔치는 부분.
-	m_ModelCamera.CreateViewMatrix({ 0,10,-1 }, { 0,0,0 });
+	m_ModelCamera.CreateViewMatrix({ 0,10,-10.0f }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
 	m_pMainCamera = &m_ModelCamera;
+
+	m_TopCamera.CreateViewMatrix({ 0,30,-1.0f }, { 0,0,0 });
+	fAspect = g_rtClient.right / (float)g_rtClient.bottom;
+	m_TopCamera.CreateOrthographic(300, 300, 1.0f, 1000);
+	m_TopCamera.Init();
+
 	HMapDesc desc;
-	desc.iNumCols = 257;
-	desc.iNumRows = 257;
+	desc.iNumCols = 513;
+	desc.iNumRows = 513;
 	desc.fCellDistance = 1;
-	desc.szTextFile = L"../../Image/KakaoTalk_20201201_210710448.jpg";
+	desc.szTextFile = L"../../Image/tileA.jpg";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
 	m_Map.CreateMap(m_pd3dDevice, desc);
@@ -162,6 +170,16 @@ bool Sample::Render()
 	m_pd3dContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
 	m_pd3dContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
 
+	if (m_Minimap.Begin(m_pd3dContext))
+	{
+		m_Map.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+		m_Map.Render(m_pd3dContext);
+		m_BoxShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+		m_BoxShape.Render(m_pd3dContext);
+		m_Minimap.End(m_pd3dContext);
+	}
+
+
 	m_BoxShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_BoxShape.Render(m_pd3dContext);
 
@@ -179,6 +197,9 @@ bool Sample::Render()
 	m_Map.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_Map.Render(m_pd3dContext);
 
+	m_Minimap.SetMatrix(NULL, NULL, NULL);
+	m_Minimap.Render(m_pd3dContext);
+
 	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
 	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
@@ -187,8 +208,16 @@ bool Sample::Render()
 	return true;
 }
 
+bool Sample::PostRender()
+{
+	HCore::PostRender();
+	return true;
+}
+
 bool Sample::Release()
 {
+	m_Minimap.Release();
+	m_Map.Release();
 	m_BoxShape.Release();
 	m_PlaneShape.Release();
 	m_LineShape.Release();

@@ -241,7 +241,7 @@ bool  HObject::Release()
 		delete m_pChildObjects[iChild];
 	}
 	m_pChildObjects.clear();
-	return true;
+	return HDxObject::Release();
 }
 bool HObject::PreRender(ID3D11DeviceContext* pd3dContext)
 {
@@ -249,15 +249,16 @@ bool HObject::PreRender(ID3D11DeviceContext* pd3dContext)
 }
 bool  HObject::Render(ID3D11DeviceContext* pd3dContext)
 {	
-	
-	return PostRender(pd3dContext);
+	return HDxObject::Render(pd3dContext);
 }
+
 bool HObject::PostRender(ID3D11DeviceContext*	pd3dContext)
 {
-	PreRender(pd3dContext);
-	HDxObject::Render(pd3dContext);
-
-	return true;
+	for (int iChild = 0; iChild < m_pChildObjects.size(); iChild++)
+	{
+		m_pChildObjects[iChild]->Render(pd3dContext);
+	}
+	return HDxObject::PostRender(pd3dContext);
 }
 void  HObject::DrawColorKey()
 {

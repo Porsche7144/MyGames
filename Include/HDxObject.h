@@ -111,7 +111,9 @@ public:
 public:
 	virtual bool Init();
 	virtual bool Frame();
+	virtual bool PreRender(ID3D11DeviceContext* pContext);
 	virtual bool Render(ID3D11DeviceContext* pContext);
+	virtual bool PostRender(ID3D11DeviceContext* pContext);
 	virtual bool Release();
 public:
 	HDxObject();

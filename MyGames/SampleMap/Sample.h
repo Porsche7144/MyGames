@@ -4,6 +4,7 @@
 #include "HObject.h"
 #include "HModelViewCamera.h"
 #include "HMap.h"
+#include "HMinimap.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -24,11 +25,14 @@ class Sample : public HCore
 {
 public:
 	HMap m_Map;
+	HMinimap m_Minimap;
 	HBoxUser			m_BoxShape;
 	HShapePlane			m_PlaneShape;
 	HShapeLine			m_LineShape;
 	Vector4				m_vDirValue;
 	HModelViewCamera	m_ModelCamera;
+
+	HCamera m_TopCamera;
 
 	std::vector<HObject*> m_ObjList;
 
@@ -51,6 +55,7 @@ public:
 	bool Init() override;
 	bool Frame() override;
 	bool Render() override;
+	bool PostRender() override;
 	bool Release() override;
 
 public:
