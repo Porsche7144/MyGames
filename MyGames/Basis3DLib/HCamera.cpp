@@ -58,9 +58,9 @@ bool HCamera::Frame()
 	return true;
 }
 
-bool HCamera::CreateOrthographic(float width, float height, float fN, float fP)
+bool HCamera::CreateOrthographic(float width, float height, float fN, float fF)
 {
-	m_matProject = Matrix::CreateOrthographic(width, height, fN, fP);
+	m_matProject = Matrix::CreateOrthographic(width, height, fN, fF);
 
 	return true;
 }

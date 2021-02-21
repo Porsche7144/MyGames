@@ -26,7 +26,7 @@ HRESULT	HDxRT::SetRenderTargetView()
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	hr = m_pd3dDevice->CreateTexture2D(&textureDesc, NULL, &pTexture);
 	if (FAILED(hr))
 	{
@@ -128,11 +128,11 @@ bool HDxRT::Begin(ID3D11DeviceContext * pd3dContext)
 bool HDxRT::End(ID3D11DeviceContext * pd3dContext)
 {
 	UINT iNumView = 1;
-	pd3dContext->RSSetViewports(iNumView, &m_SaveVIewPort);
 	pd3dContext->OMSetRenderTargets(1, &m_pSaveRTV, m_pSaveDSV);
+	pd3dContext->RSSetViewports(iNumView, &m_SaveVIewPort);
 
-	m_pSaveDSV->Release();
 	m_pSaveRTV->Release();
+	m_pSaveDSV->Release();
 
 	return true;
 }

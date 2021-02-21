@@ -36,12 +36,7 @@ bool HMinimap::CreateVertexData()
 
 bool HMinimap::CreateIndexData()
 {
-		m_IndexList.resize(6);
-		m_IndexList =
-		{
-			0, 1, 2,
-			0, 2, 3,
-		};
+	HShapePlane::CreateIndexData();
 
 	return true;
 }
