@@ -90,7 +90,7 @@ bool Sample::Init()
 
 	m_TopCamera.CreateViewMatrix({ 0,30,-1.0f }, { 0,0,0 });
 	fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_TopCamera.CreateOrthographic(300, 300, 1.0f, 1000);
+	m_TopCamera.CreateOrthographic(100, 100, 1.0f, 1000);
 	m_TopCamera.Init();
 
 	HMapDesc desc;

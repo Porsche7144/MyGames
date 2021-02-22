@@ -26,7 +26,7 @@ HRESULT	HDxRT::SetRenderTargetView()
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	hr = m_pd3dDevice->CreateTexture2D(&textureDesc, NULL, &pTexture);
 	if (FAILED(hr))
 	{
