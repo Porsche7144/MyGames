@@ -44,9 +44,12 @@ public:
 	virtual void Update(Vector4 d) override;
 
 public:
+	virtual bool CreateFrustum(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dContext);
 	virtual bool PostInit() override;
 	virtual bool Frame() override;
-
+	virtual bool FrameFrustum(ID3D11DeviceContext*	pd3dContext);
+	virtual bool DrawFrustum(ID3D11DeviceContext* pd3dContext, Matrix* pmatView, Matrix*  pmatProj);
+	virtual void UpdateVector();
 public:
 	HModelViewCamera();
 	virtual ~HModelViewCamera();

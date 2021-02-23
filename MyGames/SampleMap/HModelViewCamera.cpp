@@ -113,6 +113,20 @@ void HModelViewCamera::Update(Vector4 d)
 
 }
 
+bool HModelViewCamera::CreateFrustum(ID3D11Device * pd3dDevice, ID3D11DeviceContext * pd3dContext)
+{
+	m_Frustum.Create(pd3dDevice);
+	return true;
+}
+
+bool HModelViewCamera::DrawFrustum(ID3D11DeviceContext* pd3dContext, Matrix* pmatView, Matrix*  pmatProj)
+{
+	m_Frustum.m_FrustumObj.SetMatrix(NULL, pmatView, pmatProj);
+	m_Frustum.m_FrustumObj.Render(pd3dContext);
+
+	return true;
+}
+
 bool HModelViewCamera::PostInit()
 {
 	Matrix matInvView = m_matView.Invert();
@@ -166,10 +180,34 @@ bool HModelViewCamera::Frame()
 	return true;
 }
 
+bool HModelViewCamera::FrameFrustum(ID3D11DeviceContext * pd3dContext)
+{
+	Matrix matInvViewProj = m_matView * m_matProject;
+	matInvViewProj = matInvViewProj.Invert();
+	for (int iVertex = 0; iVertex < 24; iVertex++)
+	{
+		Vector3& v = m_Frustum.m_VertexList[iVertex].p;
+		m_Frustum.m_FrustumObj.m_VertexList[iVertex].p = Vector3::Transform(v, matInvViewProj);// *matInvViewProj;
+	}
+	pd3dContext->UpdateSubresource(m_Frustum.m_FrustumObj.m_pVertexBuffer, 0, NULL,
+								  &m_Frustum.m_FrustumObj.m_VertexList.at(0), 0, 0);
+
+	m_Frustum.Frame();
+
+
+	return true;
+}
+
+void HModelViewCamera::UpdateVector()
+{
+	HCamera::UpdateVector();
+}
+
 HModelViewCamera::HModelViewCamera()
 {
 }
 
 HModelViewCamera::~HModelViewCamera()
 {
+	m_Frustum.m_FrustumObj.Release();
 }

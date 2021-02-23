@@ -65,6 +65,11 @@ bool HCamera::CreateOrthographic(float width, float height, float fN, float fF)
 	return true;
 }
 
+bool HCamera::DrawFrustum(ID3D11DeviceContext * pd3dContext, Matrix * pmatView, Matrix * pmatProj)
+{
+	return true;
+}
+
 bool HCamera::CreateViewMatrix(Vector3 p, Vector3 t, Vector3 u)
 {
 	m_vCameraPos = p;

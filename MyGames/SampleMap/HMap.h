@@ -28,6 +28,7 @@ public:
 	virtual bool CreateVertexData();
 	virtual bool CreateIndexData();
 	virtual bool Frame();
+	virtual bool PostRender(ID3D11DeviceContext* pd3dContext);
 
 public:
 	HMap();
