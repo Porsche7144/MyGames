@@ -80,7 +80,7 @@ bool Sample::Init()
 	{
 		return false;
 	}
-
+	
 	// 카메라 바꿔치는 부분.
 	m_ModelCamera.CreateViewMatrix({ 0,10,-10.0f }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
