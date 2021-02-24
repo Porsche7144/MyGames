@@ -39,6 +39,11 @@ public:
 	virtual void SetTarget(Vector3 p);
 	virtual void Update(Vector4 d);
 	virtual bool CreateOrthographic(float width, float height, float fN, float fF);
+	virtual bool DrawFrustum(ID3D11DeviceContext* pd3dContext, Matrix* pmatView, Matrix*  pmatProj);
+	virtual bool FrameFrustum(ID3D11DeviceContext* pd3dContext)
+	{
+		return true;
+	}
 
 	void FrontMovement(float fDir = 1.0f);
 	void RightMovement(float fDir = 1.0f);
@@ -46,6 +51,7 @@ public:
 	void FrontBase(float fDir);
 	void RightBase(float fDir);
 	void UpBase(float fDir);
+
 
 	virtual int WndProc(HWND hWnd, UINT message, WPARAM wParam,	LPARAM lParam);
 

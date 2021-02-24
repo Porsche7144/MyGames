@@ -2,6 +2,8 @@
 
 bool HMap::CreateVertexData()
 {
+	// 정점 가로/세로 = 2N승+1
+
 	m_VertexList.resize(m_iNumVertices);
 	float fHalfCols = (m_iNumCols - 1) / 2.0f;
 	float fHalfRows = (m_iNumRows - 1) / 2.0f;
@@ -17,8 +19,8 @@ bool HMap::CreateVertexData()
 			m_VertexList[iIndex].p.x = (iCol-fHalfCols) * m_fCellDistance;
 			m_VertexList[iIndex].p.y = 0.0f;
 			m_VertexList[iIndex].p.z = (iRow - fHalfRows) * m_fCellDistance*-1.0f;
-			m_VertexList[iIndex].t.x = iCol * fOffsetU;
-			m_VertexList[iIndex].t.y = iRow * fOffsetV;
+			m_VertexList[iIndex].t.x = iCol * fOffsetU * 1;
+			m_VertexList[iIndex].t.y = iRow * fOffsetV * 1;
 
 			m_VertexList[iIndex].n = { 0,1,0 };
 			m_VertexList[iIndex].c = { 1,1,1,1 };
@@ -51,11 +53,20 @@ bool HMap::CreateIndexData()
 		}
 	}
 
+	m_iNumFaces = m_IndexList.size() / 3;
+
 	return true;
 }
 
 bool HMap::Frame()
 {
+	return true;
+}
+
+bool HMap::PostRender(ID3D11DeviceContext * pd3dContext)
+{
+	pd3dContext->DrawIndexed(m_iNumFaces*3, 0, 0);
+
 	return true;
 }
 
