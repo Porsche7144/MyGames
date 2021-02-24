@@ -38,7 +38,7 @@ public:
 	virtual void SetPos(Vector3 p);
 	virtual void SetTarget(Vector3 p);
 	virtual void Update(Vector4 d);
-	virtual bool CreateOrthographic(float width, float height, float fN, float fP);
+	virtual bool CreateOrthographic(float width, float height, float fN, float fF);
 
 	void FrontMovement(float fDir = 1.0f);
 	void RightMovement(float fDir = 1.0f);

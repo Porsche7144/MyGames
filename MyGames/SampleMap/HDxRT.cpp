@@ -128,11 +128,11 @@ bool HDxRT::Begin(ID3D11DeviceContext * pd3dContext)
 bool HDxRT::End(ID3D11DeviceContext * pd3dContext)
 {
 	UINT iNumView = 1;
-	pd3dContext->RSSetViewports(iNumView, &m_SaveVIewPort);
 	pd3dContext->OMSetRenderTargets(1, &m_pSaveRTV, m_pSaveDSV);
+	pd3dContext->RSSetViewports(iNumView, &m_SaveVIewPort);
 
-	m_pSaveDSV->Release();
 	m_pSaveRTV->Release();
+	m_pSaveDSV->Release();
 
 	return true;
 }

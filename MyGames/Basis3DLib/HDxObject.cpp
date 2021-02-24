@@ -34,7 +34,7 @@ bool HDxObject::CreateVertexBuffer()
 	UINT CPUAccessFlags;
 	UINT MiscFlags;
 	UINT StructureByteStride;*/
-	bd.ByteWidth = sizeof(P_VERTEX) * m_VertexList.size();
+	bd.ByteWidth = sizeof(PNCT_VERTEX) * m_VertexList.size();
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	// Vertex 버퍼로 바인딩
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -241,7 +241,7 @@ bool HDxObject::Render(ID3D11DeviceContext* pContext)
 {
 	Update(pContext);
 	PreRender(pContext);
-	UINT iStride = sizeof(P_VERTEX);
+	UINT iStride = sizeof(PNCT_VERTEX);
 	UINT iOffset = 0;
 	pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &iStride, &iOffset);
 	pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
