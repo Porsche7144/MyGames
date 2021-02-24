@@ -86,14 +86,20 @@ bool HCore::GameInit()
 	m_Camera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_Camera.Init();
 	m_pMainCamera = &m_Camera;
-	Init();
+	if (!m_LineShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	{
+		return false;
+	}
 
+	Init();
 	PostInit();
 	ShowWindow(m_hWnd, SW_SHOWNORMAL);
 	return true;
 }
 bool HCore::GameRelease()
 {
+	m_LineShape.Release();
+
 	Release();
 	g_Timer.Release();
 	g_Input.Release();
@@ -122,6 +128,11 @@ bool	HCore::PreRender()
 }
 bool	HCore::PostRender()
 {
+	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
+	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
+	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
+
 	g_Timer.Render();
 	g_Input.Render();
 	// g_SoundMgr.Render();

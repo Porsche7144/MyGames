@@ -11,6 +11,7 @@ public:
 	bool			m_bGameRun;
 	HDebugCamera	m_Camera;
 	HCamera*		m_pMainCamera;
+	HShapeLine			m_LineShape;
 
 public:
 	virtual bool	PreInit();

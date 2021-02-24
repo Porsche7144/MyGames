@@ -59,8 +59,25 @@ Matrix Sample::CreateMatrixShadow(
 bool Sample::Init()
 {
 	HRESULT hr;
+
+	// 높이맵 생성
+	if (!m_Map.CreateHeightMap(m_pd3dDevice, m_pd3dContext, L"../../Image/data/map/HEIGHT_CASTLE.bmp"))
+	{
+		return false;
+	}
+
+	HMapDesc desc;
+	desc.iNumCols = m_Map.m_iNumCols;
+	desc.iNumRows = m_Map.m_iNumRows;
+	desc.fCellDistance = 1;
+	desc.szTextFile = L"../../Image/data/map/castle.jpg";
+	desc.szVS = L"VS.txt";
+	desc.szPS = L"PS.txt";
+	m_Map.CreateMap(m_pd3dDevice, desc);
+
 	m_vDirValue = { 0,0,0,0 };
 
+	// 미니맵 생성
 	m_Minimap.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg");
 
 	Matrix matScale, matRotation;
@@ -76,10 +93,7 @@ bool Sample::Init()
 	{
 		return false;
 	}
-	if (!m_LineShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
-	{
-		return false;
-	}
+
 	
 	// 카메라 바꿔치는 부분.
 	m_ModelCamera.CreateViewMatrix({ 0,10,-10 }, { 0,0,0 });
@@ -91,17 +105,9 @@ bool Sample::Init()
 
 	m_TopCamera.CreateViewMatrix({ 0,30,-0.1f }, { 0,0,0 });
 	fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_TopCamera.CreateOrthographic(8, 8, 1.0f, 1000);
+	m_TopCamera.CreateOrthographic(desc.iNumCols, desc.iNumRows, 1.0f, 1000);
 	m_TopCamera.Init();
 
-	HMapDesc desc;
-	desc.iNumCols = 9;
-	desc.iNumRows = 9;
-	desc.fCellDistance = 1;
-	desc.szTextFile = L"../../Image/tileA.jpg";
-	desc.szVS = L"VS.txt";
-	desc.szPS = L"PS.txt";
-	m_Map.CreateMap(m_pd3dDevice, desc);
 
 	return true;
 }
@@ -174,6 +180,8 @@ bool Sample::Render()
 
 	// Culling
 	std::vector<DWORD> visibleIB;
+	visibleIB.resize(m_Map.m_IndexList.size());
+	m_Map.m_iNumFaces = 0;
 	for (int iFace = 0; iFace < m_Map.m_IndexList.size() / 3; iFace++)
 	{
 		int a = m_Map.m_IndexList[iFace * 3 + 0];
@@ -194,9 +202,13 @@ bool Sample::Render()
 			BOOL bVisiable = pCamera->m_Frustum.ClassifyPoint(v[iV]);
 			if (bVisiable)
 			{
-				visibleIB.push_back(a);
+				/*visibleIB.push_back(a);
 				visibleIB.push_back(b);
-				visibleIB.push_back(c);
+				visibleIB.push_back(c);*/
+				visibleIB[m_Map.m_iNumFaces * 3 + 0] = a;
+				visibleIB[m_Map.m_iNumFaces * 3 + 1] = b;
+				visibleIB[m_Map.m_iNumFaces * 3 + 2] = c;
+				m_Map.m_iNumFaces++;
 				break;
 			}
 		}
@@ -257,11 +269,6 @@ bool Sample::Render()
 	m_Minimap.SetMatrix(NULL, NULL, NULL);
 	m_Minimap.Render(m_pd3dContext);
 
-	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
-	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
-	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
-
 	return true;
 }
 
@@ -277,7 +284,6 @@ bool Sample::Release()
 	m_Map.Release();
 	m_BoxShape.Release();
 	m_PlaneShape.Release();
-	m_LineShape.Release();
 
 	return true;
 }

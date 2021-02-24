@@ -3,7 +3,7 @@
 #include "HShape.h"
 #include "HObject.h"
 #include "HModelViewCamera.h"
-#include "HMap.h"
+#include "HheightMap.h"
 #include "HMinimap.h"
 
 #pragma comment(lib, "directxtk.lib")
@@ -24,11 +24,10 @@ public:
 class Sample : public HCore
 {
 public:
-	HMap m_Map;
+	HheightMap m_Map;
 	HMinimap m_Minimap;
 	HBoxUser			m_BoxShape;
 	HShapePlane			m_PlaneShape;
-	HShapeLine			m_LineShape;
 	Vector4				m_vDirValue;
 	HModelViewCamera	m_ModelCamera;
 

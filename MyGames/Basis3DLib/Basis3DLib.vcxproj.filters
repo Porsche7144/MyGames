@@ -34,6 +34,9 @@
     <Filter Include="FSM">
       <UniqueIdentifier>{370e39ee-b056-44c7-84f1-0048810d8bef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="map">
+      <UniqueIdentifier>{666dcef8-b1a1-4c6b-894f-7bc4b18e22f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HBasisStd.h">
@@ -171,6 +174,21 @@
     <ClInclude Include="HTextureManager.h">
       <Filter>dx</Filter>
     </ClInclude>
+    <ClInclude Include="HDxRT.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="HFrustum.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="HMap.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="HMinimap.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="HModelViewCamera.h">
+      <Filter>map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -277,6 +295,21 @@
     </ClCompile>
     <ClCompile Include="HTextureManager.cpp">
       <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HDxRT.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="HFrustum.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="HMap.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="HMinimap.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="HModelViewCamera.cpp">
+      <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
