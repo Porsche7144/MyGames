@@ -29,6 +29,31 @@ bool	HCore::PostInit()
 }
 bool HCore::CameraFrame()
 {
+
+	if (g_Input.GetKey('1') == KEY_PUSH)
+	{
+		HDxState::m_FillMode = D3D11_FILL_WIREFRAME;
+		HDxState::SetRasterState(m_pd3dDevice);
+	}
+
+	if (g_Input.GetKey('2') == KEY_PUSH)
+	{
+		HDxState::m_FillMode = D3D11_FILL_SOLID;
+		HDxState::SetRasterState(m_pd3dDevice);
+	}
+
+	if (g_Input.GetKey('3') == KEY_PUSH)
+	{
+		HDxState::m_CullMode = D3D11_CULL_BACK;
+		HDxState::SetRasterState(m_pd3dDevice);
+	}
+
+	if (g_Input.GetKey('4') == KEY_PUSH)
+	{
+		HDxState::m_CullMode = D3D11_CULL_FRONT;
+		HDxState::SetRasterState(m_pd3dDevice);
+	}
+
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
 		m_pMainCamera->FrontMovement(1.0f);
