@@ -5,6 +5,8 @@
 struct HPlane
 {
 	// 평행사변형
+	// 평면의 방정식
+	// ax + by + cz +d = 0
 	float a, b, c, d;
 
 	// 정점 3개
@@ -21,7 +23,7 @@ struct HPlane
 		d = -n.Dot(v0);
 	}
 
-	// 정점과 노말
+	// 노말과 한 점
 	void Create(Vector3 n, Vector3 v)
 	{
 		n.Normalize();

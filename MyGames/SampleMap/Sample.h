@@ -11,8 +11,6 @@
 class HBoxUser : public HShapeBox
 {
 public:
-	bool PreFrame() override;
-	void UpdateVector();
 	void FrontMovement(float fDir);
 	void RightMovement(float fDir);
 	void UpMovement(float fDir);

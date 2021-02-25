@@ -3,7 +3,7 @@
 float HheightMap::GetHeight(UINT index)
 {
 	// 원본의 높이값이 너무 높으므로 여기서 조절.
-	return m_fHeightList[index] / 10.0f;
+	return m_fHeightList[index] / m_MapDesc.fScaleHeight;
 }
 
 bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const TCHAR* pFilename)

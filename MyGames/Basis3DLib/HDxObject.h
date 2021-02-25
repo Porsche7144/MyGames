@@ -68,6 +68,8 @@ public:
 	Matrix						m_matWorld;
 	Matrix						m_matView;
 	Matrix						m_matProject;
+	Matrix						m_matScale;
+	Matrix						m_matRotation;
 
 	HTexture* m_pTexture;
 
@@ -92,6 +94,13 @@ public:
 	UINT iNumVertex;
 	UINT iNumIndex;
 	UINT m_iTopology;
+
+	Vector3		m_vPos = { 0,0,0 };
+	Vector3		m_vTarget = { 0,0,0 };
+	Vector3		m_vLook;
+	Vector3		m_vUp;
+	Vector3		m_vRight;
+	
 
 public:
 	virtual bool Create(ID3D11Device* pDevice, T_STR vs, T_STR ps, T_STR texture);

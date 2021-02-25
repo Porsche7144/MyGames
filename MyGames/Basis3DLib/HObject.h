@@ -91,12 +91,6 @@ public:
 	bool		m_bColorKey;	/// 컬러키 사용 유무
 	DWORD		m_dwColorKey;	/// 컬러키 컬러 값
 	int			m_iSortValue;	/// Z값 정렬됨
-public:
-	Vector3		m_vPos = { 0,0,0 };
-	Vector3		m_vTarget = { 0,0,0 };
-	Vector3		m_vLook;
-	Vector3		m_vUp;
-	Vector3		m_vRight;
 
 public:	
 	HPoint		m_ptPos;
