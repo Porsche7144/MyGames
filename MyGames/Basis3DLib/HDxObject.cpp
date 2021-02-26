@@ -10,7 +10,7 @@ void HDxObject::CompilerCheck(ID3DBlob* ErrorMsg)
 
 bool HDxObject::Create(ID3D11Device * pDevice, T_STR vs, T_STR ps, T_STR texture)
 {
-	m_pd3dDevice = pDevice;
+	g_pd3dDevice = pDevice;
 
 	CreateVertexData();
 	CreateVertexBuffer();
@@ -42,7 +42,7 @@ bool HDxObject::CreateVertexBuffer()
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
 	sd.pSysMem = &m_VertexList.at(0);
-	HRESULT hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer);
+	HRESULT hr = g_pd3dDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer);
 	if (FAILED(hr))
 	{
 		return false;
@@ -63,7 +63,7 @@ bool HDxObject::CreateIndexBuffer()
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
 	sd.pSysMem = &m_IndexList.at(0);
-	HRESULT hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer);
+	HRESULT hr = g_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer);
 	if (FAILED(hr))
 	{
 		return false;
@@ -85,7 +85,7 @@ bool HDxObject::CreateConstantBuffer()
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
 	sd.pSysMem = &m_cbData;
-	HRESULT hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_ConstantBuffer);
+	HRESULT hr = g_pd3dDevice->CreateBuffer(&bd, &sd, &m_ConstantBuffer);
 	if (FAILED(hr))
 	{
 		return false;
@@ -115,7 +115,7 @@ bool HDxObject::CreateInputLayOut()
 		{ "TEXTURE",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 40,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT iNumElement = sizeof(layout) / sizeof(layout[0]);
-	HRESULT hr = m_pd3dDevice->CreateInputLayout(layout, iNumElement, pVSObj->GetBufferPointer(),
+	HRESULT hr = g_pd3dDevice->CreateInputLayout(layout, iNumElement, pVSObj->GetBufferPointer(),
 		pVSObj->GetBufferSize(), &m_pInputLayout);
 	if (FAILED(hr))
 	{
@@ -163,7 +163,7 @@ bool HDxObject::LoadShader(T_STR vs, T_STR ps)
 		CompilerCheck(pErrorMsg);
 		return false;
 	}
-	hr = m_pd3dDevice->CreateVertexShader(pVSObj->GetBufferPointer(), pVSObj->GetBufferSize(), NULL,
+	hr = g_pd3dDevice->CreateVertexShader(pVSObj->GetBufferPointer(), pVSObj->GetBufferSize(), NULL,
 		&m_pVertexShader);
 	if (FAILED(hr))
 	{
@@ -176,7 +176,7 @@ bool HDxObject::LoadShader(T_STR vs, T_STR ps)
 		CompilerCheck(pErrorMsg);
 		return false;
 	}
-	hr = m_pd3dDevice->CreatePixelShader(pPSObj->GetBufferPointer(), pPSObj->GetBufferSize(), NULL,
+	hr = g_pd3dDevice->CreatePixelShader(pPSObj->GetBufferPointer(), pPSObj->GetBufferSize(), NULL,
 		&m_pPixelShader);
 	if (FAILED(hr))
 	{
@@ -194,7 +194,7 @@ bool HDxObject::LoadShader(T_STR vs, T_STR ps)
 bool HDxObject::LoadTexture(T_STR texture)
 {
 	// 텍스쳐 로드
-	m_pTexture = g_TextureMgr.Load(m_pd3dDevice, texture.c_str());
+	m_pTexture = g_TextureMgr.Load(g_pd3dDevice, texture.c_str());
 	if (m_pTexture == nullptr) return false;
 
 	return true;
@@ -279,7 +279,7 @@ bool HDxObject::Render(ID3D11DeviceContext* pContext)
 		pContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureSRV);
 	}
 	// Vertex Draw
-	// m_pd3dContext->Draw(m_VertexList.size(), 0);
+	// g_pImmediateContext->Draw(m_VertexList.size(), 0);
 
 	PostRender(pContext);
 

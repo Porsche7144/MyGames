@@ -44,7 +44,7 @@ bool HMinimap::CreateIndexData()
 bool HMinimap::Create(ID3D11Device* pd3dDevice, T_STR szVS, T_STR szPS, T_STR filename)
 {
 	m_HDxRT.Set(pd3dDevice);
-	m_pd3dDevice = pd3dDevice;
+	g_pd3dDevice = pd3dDevice;
 	m_HDxRT.SetRenderTargetView();
 	m_HDxRT.SetDepthStencilView();
 	m_HDxRT.SetViewport();

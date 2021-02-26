@@ -75,7 +75,7 @@ public:
 
 public:
 	ID3DBlob*					pVSObj;
-	ID3D11Device*				m_pd3dDevice;
+	ID3D11Device*				g_pd3dDevice;
 
 	HDataCB						m_cbData;
 

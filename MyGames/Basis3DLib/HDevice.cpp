@@ -1,5 +1,12 @@
 #include "HDevice.h"
 
+namespace HBASIS_CORE_LIB
+{
+	ID3D11Device* g_pd3dDevice = nullptr;
+	// 즉시 Context
+	ID3D11DeviceContext* g_pImmediateContext = nullptr;
+}
+
 void	HDevice::SetMode(bool bFullScreen)
 {
 	m_bFullScreen = bFullScreen;
@@ -11,12 +18,14 @@ void	HDevice::SetMode(bool bFullScreen)
 }
 void HDevice::ResizeDevice(UINT w, UINT h)
 {
-	if (m_pd3dDevice == NULL)  return;
+	if (m_pd3dDevice.Get() == NULL)  return;
 
 	DeleteDXResource();
 
 	m_pd3dContext->OMSetRenderTargets(0, NULL, NULL);
-	if (m_pRednerTargetView) m_pRednerTargetView->Release();
+	if (m_pRednerTargetView.Get()) m_pRednerTargetView->Release();
+	if (m_pDSV.Get()) m_pDSV->Release();
+
 	DXGI_SWAP_CHAIN_DESC pSwapChainDesc;
 	m_pSwapChain->GetDesc(&pSwapChainDesc);
 	m_pSwapChain->ResizeBuffers(
@@ -27,6 +36,7 @@ void HDevice::ResizeDevice(UINT w, UINT h)
 		pSwapChainDesc.Flags);
 
 	SetRenderTargetView();
+	SetDepthStencilView();
 	SetViewport();
 
 	CreateDXResource(w, h);
@@ -41,18 +51,16 @@ HRESULT HDevice::CreateDXResource(UINT w, UINT h)
 }
 HRESULT HDevice::CreateGIFactory()
 {
-	if (m_pd3dDevice == NULL) return E_FAIL;
+	if (m_pd3dDevice.Get() == NULL) return E_FAIL;
 	HRESULT hr;
-	IDXGIDevice * pDXGIDevice;
-	hr = m_pd3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
+	ComPtr<IDXGIDevice> pDXGIDevice;
+	hr = m_pd3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)pDXGIDevice.GetAddressOf());
 
-	IDXGIAdapter * pDXGIAdapter;
-	hr = pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter);
+	ComPtr<IDXGIAdapter> pDXGIAdapter;
+	hr = pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)pDXGIAdapter.GetAddressOf());
 
-	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&m_pGIFactory);
+	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)m_pGIFactory.GetAddressOf());
 
-	pDXGIDevice->Release();
-	pDXGIAdapter->Release();
 	return S_OK;
 }
 HRESULT		HDevice::CreateDevice()
@@ -94,15 +102,19 @@ HRESULT		HDevice::CreateDevice()
 			pFeatureLevels,
 			FeatureLevels,
 			SDKVersion,
-			&m_pd3dDevice,
+			m_pd3dDevice.GetAddressOf(),
 			&OutputFeatureLevel,
-			&m_pd3dContext);
+			m_pd3dContext.GetAddressOf());
 
 		if (SUCCEEDED(hr))
 		{
 			break;
 		}
 	}
+
+	g_pd3dDevice = m_pd3dDevice.Get();
+	g_pImmediateContext = m_pd3dContext.Get();
+
 	return hr;
 }
 HRESULT		HDevice::CreateSwapChain()
@@ -123,26 +135,26 @@ HRESULT		HDevice::CreateSwapChain()
 	pSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	HRESULT hr = m_pGIFactory->CreateSwapChain(
-		m_pd3dDevice,
+		m_pd3dDevice.Get(),
 		&pSwapChainDesc,
-		&m_pSwapChain);
+		m_pSwapChain.GetAddressOf());
 	return hr;
 }
 HRESULT		HDevice::SetRenderTargetView()
 {
-	ID3D11Texture2D* pBackBuffer = nullptr;
+	ComPtr<ID3D11Texture2D> pBackBuffer = nullptr;
 	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
-		(LPVOID*)&pBackBuffer);
-	HRESULT hr = m_pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL,
-		&m_pRednerTargetView);
-	if (pBackBuffer) pBackBuffer->Release();
+		(LPVOID*)pBackBuffer.GetAddressOf());
+	HRESULT hr = m_pd3dDevice->CreateRenderTargetView(pBackBuffer.Get(), NULL,
+		m_pRednerTargetView.GetAddressOf());
+
 	return hr;
 }
 HRESULT HDevice::SetDepthStencilView()
 {
 	// Depth Texture 생성
 
-	ID3D11Texture2D* pTexture = nullptr;
+	ComPtr<ID3D11Texture2D> pTexture = nullptr;
 	D3D11_TEXTURE2D_DESC textureDesc;
 	ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 	//UINT Width;
@@ -164,7 +176,7 @@ HRESULT HDevice::SetDepthStencilView()
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	HRESULT hr = m_pd3dDevice->CreateTexture2D(&textureDesc, NULL, &pTexture);
+	HRESULT hr = m_pd3dDevice->CreateTexture2D(&textureDesc, NULL, pTexture.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -175,15 +187,15 @@ HRESULT HDevice::SetDepthStencilView()
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
-	hr = m_pd3dDevice->CreateDepthStencilView(pTexture, &dsvDesc, &m_pDSV);
+	hr = m_pd3dDevice->CreateDepthStencilView(pTexture.Get(), &dsvDesc, m_pDSV.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
 	}
-	if (pTexture)
-	{
-		pTexture->Release();
-	}
+	//if (pTexture.Get())
+	//{
+	//	pTexture->Release();
+	//}
 
 	return true;
 }
@@ -226,7 +238,7 @@ bool HDevice::Init()
 		return false;
 	}
 
-	HDxState::Set(m_pd3dDevice);
+	HDxState::Set(m_pd3dDevice.Get());
 
 	if (FAILED(m_pGIFactory->MakeWindowAssociation(m_hWnd,
 		DXGI_MWA_NO_WINDOW_CHANGES |
@@ -242,16 +254,16 @@ bool HDevice::Frame()
 }
 bool HDevice::PreRender()
 {
-	if (m_pd3dContext)
+	if (m_pd3dContext.Get())
 	{
 		m_pd3dContext->RSSetViewports(1, &m_ViewPort);
-		m_pd3dContext->OMSetRenderTargets(1, &m_pRednerTargetView, m_pDSV);
+		m_pd3dContext->OMSetRenderTargets(1, m_pRednerTargetView.GetAddressOf(), m_pDSV.Get());
 		/*float clearColor[] = { cosf(g_fGameTimer)*0.5f + 0.5f,
 								-cosf(g_fGameTimer)*0.5f + 0.5f,
 								sinf(g_fGameTimer)*0.5f + 0.5f,1 };*/
 		float clearColor[] = { 0,0,0,1 };
-		m_pd3dContext->ClearRenderTargetView(m_pRednerTargetView, clearColor);
-		m_pd3dContext->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+		m_pd3dContext->ClearRenderTargetView(m_pRednerTargetView.Get(), clearColor);
+		m_pd3dContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	}
 	return true;
 }
@@ -261,7 +273,7 @@ bool HDevice::Render()
 }
 bool HDevice::PostRender()
 {
-	if (m_pSwapChain)
+	if (m_pSwapChain.Get())
 	{
 		m_pSwapChain->Present(0, 0);
 	}
@@ -270,12 +282,6 @@ bool HDevice::PostRender()
 bool HDevice::Release()
 {
 	HDxState::Release();
-	m_pDSV->Release();
-	m_pRednerTargetView->Release();
-	m_pSwapChain->Release();
-	m_pd3dContext->Release();
-	m_pd3dDevice->Release();
-	m_pGIFactory->Release();
 	return true;
 }
 HDevice::HDevice()

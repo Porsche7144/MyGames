@@ -1,5 +1,8 @@
 #pragma once
 #include "HBasisStd.h"
+#include <d3d11.h>
+#include <wrl.h>
+
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -9,6 +12,7 @@
 #pragma comment (lib, "Basis3DLib_D.lib")
 #endif
 
+using namespace Microsoft::WRL;
 using namespace std;
 
 namespace HBASIS_CORE_LIB
@@ -26,6 +30,8 @@ namespace HBASIS_CORE_LIB
 		bool   m_bNumLock;
 	};
 
+	extern ID3D11Device* g_pd3dDevice;
+	extern ID3D11DeviceContext* g_pImmediateContext;
 	extern HKeyMap  g_KeyMap;
 	extern float	g_fGameTimer;
 	extern float    g_fSecondPerFrame;

@@ -33,25 +33,25 @@ bool HCore::CameraFrame()
 	if (g_Input.GetKey('1') == KEY_PUSH)
 	{
 		HDxState::m_FillMode = D3D11_FILL_WIREFRAME;
-		HDxState::SetRasterState(m_pd3dDevice);
+		HDxState::SetRasterState(g_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('2') == KEY_PUSH)
 	{
 		HDxState::m_FillMode = D3D11_FILL_SOLID;
-		HDxState::SetRasterState(m_pd3dDevice);
+		HDxState::SetRasterState(g_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('3') == KEY_PUSH)
 	{
 		HDxState::m_CullMode = D3D11_CULL_BACK;
-		HDxState::SetRasterState(m_pd3dDevice);
+		HDxState::SetRasterState(g_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('4') == KEY_PUSH)
 	{
 		HDxState::m_CullMode = D3D11_CULL_FRONT;
-		HDxState::SetRasterState(m_pd3dDevice);
+		HDxState::SetRasterState(g_pd3dDevice);
 	}
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
@@ -111,7 +111,7 @@ bool HCore::GameInit()
 	m_Camera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_Camera.Init();
 	m_pMainCamera = &m_Camera;
-	if (!m_LineShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	if (!m_LineShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
@@ -154,9 +154,9 @@ bool	HCore::PreRender()
 bool	HCore::PostRender()
 {
 	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
-	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
-	m_LineShape.Draw(m_pd3dContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
+	m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
+	m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
+	m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
 
 	g_Timer.Render();
 	g_Input.Render();

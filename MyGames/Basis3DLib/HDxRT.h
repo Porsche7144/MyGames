@@ -4,7 +4,7 @@
 class HDxRT
 {
 public:
-	ID3D11Device* m_pd3dDevice;
+	ID3D11Device* g_pd3dDevice;
 	ID3D11RenderTargetView* m_pRTV;
 	ID3D11ShaderResourceView* m_pSRV;
 	ID3D11DepthStencilView* m_pDSV;

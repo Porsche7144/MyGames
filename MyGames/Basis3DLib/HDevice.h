@@ -6,13 +6,14 @@
 class HDevice : public HWindow
 {
 public:
-	IDXGIFactory*			m_pGIFactory;
-	ID3D11Device*			m_pd3dDevice;
-	ID3D11DeviceContext*	m_pd3dContext;
-	IDXGISwapChain*			m_pSwapChain;
-	ID3D11RenderTargetView* m_pRednerTargetView;
+	Microsoft::WRL::ComPtr<IDXGIFactory>	m_pGIFactory;
+	ComPtr<ID3D11Device> 					m_pd3dDevice;
+	ComPtr<ID3D11DeviceContext> 			m_pd3dContext;
+	ComPtr<IDXGISwapChain> 					m_pSwapChain;
+	ComPtr<ID3D11RenderTargetView>			m_pRednerTargetView;
+	ComPtr<ID3D11DepthStencilView>			m_pDSV;
+
 	D3D11_VIEWPORT			m_ViewPort;
-	ID3D11DepthStencilView* m_pDSV;
 
 public:
 	HRESULT		CreateGIFactory();
