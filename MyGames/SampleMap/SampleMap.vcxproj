@@ -20,10 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HheightMap.cpp" />
+    <ClCompile Include="HNode.cpp" />
+    <ClCompile Include="HQuadTree.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HheightMap.h" />
+    <ClInclude Include="HNode.h" />
+    <ClInclude Include="HQuadTree.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>

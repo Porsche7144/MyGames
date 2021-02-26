@@ -27,30 +27,6 @@ bool Sample::Init()
 bool Sample::Frame()
 {
 
-	if (g_Input.GetKey('1') == KEY_PUSH)
-	{
-		HDxState::m_FillMode = D3D11_FILL_WIREFRAME;
-		HDxState::SetRasterState(g_pd3dDevice);
-	}
-
-	if (g_Input.GetKey('2') == KEY_PUSH)
-	{
-		HDxState::m_FillMode = D3D11_FILL_SOLID;
-		HDxState::SetRasterState(g_pd3dDevice);
-	}
-
-	if (g_Input.GetKey('3') == KEY_PUSH)
-	{
-		HDxState::m_CullMode = D3D11_CULL_BACK;
-		HDxState::SetRasterState(g_pd3dDevice);
-	}
-
-	if (g_Input.GetKey('4') == KEY_PUSH)
-	{
-		HDxState::m_CullMode = D3D11_CULL_FRONT;
-		HDxState::SetRasterState(g_pd3dDevice);
-	}
-
 	float t = cosf(g_fGameTimer * 0.5f);
 	for (int z = 0; z < m_CustomMap.m_iNumRows; z++)
 	{
@@ -73,11 +49,6 @@ bool Sample::Frame()
 
 bool Sample::Render()
 {
-
-	g_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	g_pImmediateContext->RSSetState(HDxState::m_pRS);
-	g_pImmediateContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
-	g_pImmediateContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
 
 	m_CustomMap.SetMatrix(&m_pMainCamera->m_matWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_CustomMap.Render(g_pImmediateContext);

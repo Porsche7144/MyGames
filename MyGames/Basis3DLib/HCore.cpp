@@ -136,6 +136,11 @@ bool HCore::GameRelease()
 }
 bool	HCore::GameFrame()
 {
+	g_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	g_pImmediateContext->RSSetState(HDxState::m_pRS);
+	g_pImmediateContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
+	g_pImmediateContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
+
 	PreFrame();
 	g_Timer.Frame();
 	g_Input.Frame();

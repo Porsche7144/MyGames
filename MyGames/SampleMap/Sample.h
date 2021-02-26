@@ -5,6 +5,7 @@
 #include "HModelViewCamera.h"
 #include "HheightMap.h"
 #include "HMinimap.h"
+#include "HQuadTree.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -24,6 +25,7 @@ class Sample : public HCore
 public:
 	HheightMap m_Map;
 	HMinimap m_Minimap;
+	HQuadTree m_QuadTree;
 	HBoxUser			m_BoxShape;
 	HShapePlane			m_PlaneShape;
 	Vector4				m_vDirValue;
@@ -47,6 +49,7 @@ public:
 		Vector4* pPlane,
 		Vector4* pLight);
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	bool DrawQuadLine(HNode* pNode);
 
 public:
 	bool Init() override;

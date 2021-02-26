@@ -56,12 +56,59 @@ Matrix Sample::CreateMatrixShadow(
 	return mat;
 }
 
+bool Sample::DrawQuadLine(HNode* pNode)
+{
+	if (pNode == NULL) return true;
+
+	if (m_QuadTree.m_iRenderDepth >= pNode->m_dwDepth)
+		//if (4 >= pNode->m_dwDepth)
+	{
+		m_LineShape.SetMatrix(NULL,
+			&m_pMainCamera->m_matView,
+			&m_pMainCamera->m_matProject);
+
+		Vector4 vColor = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+		if (pNode->m_dwDepth == 0) vColor = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		if (pNode->m_dwDepth == 1) vColor = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+		if (pNode->m_dwDepth == 2) vColor = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+		if (pNode->m_dwDepth == 3) vColor = Vector4(1.0f, 0.0f, 1.0f, 1.0f);
+		if (pNode->m_dwDepth == 4) vColor = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+		if (pNode->m_dwDepth == 5) vColor = Vector4(0.0f, 0.5f, 1.0f, 1.0f);
+		if (pNode->m_dwDepth == 6) vColor = Vector4(1.0f, 0.5f, 0.0f, 1.0f);
+		if (pNode->m_dwDepth == 7) vColor = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		if (pNode->m_dwDepth == 8) vColor = Vector4(1.0f, 0.5f, 0.5f, 1.0f);
+		if (pNode->m_dwDepth == 9) vColor = Vector4(1.0f, 0.5f, 1.0f, 1.0f);
+
+		Vector3 vPoint[4];
+		vPoint[0] = Vector3(pNode->m_hBox.vMin.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMax.z);
+		vPoint[0].y -= 1.0f * pNode->m_dwDepth;
+		vPoint[1] = Vector3(pNode->m_hBox.vMax.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMax.z);
+		vPoint[1].y -= 1.0f * pNode->m_dwDepth;
+		vPoint[2] = Vector3(pNode->m_hBox.vMin.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMin.z);
+		vPoint[2].y -= 1.0f * pNode->m_dwDepth;
+		vPoint[3] = Vector3(pNode->m_hBox.vMax.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMin.z);
+		vPoint[3].y -= 1.0f * pNode->m_dwDepth;
+
+		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[0], vPoint[1], vColor);
+		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[1], vPoint[3], vColor);
+		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[2], vPoint[3], vColor);
+		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[0], vPoint[2], vColor);
+	}
+	for (int iNode = 0; iNode < pNode->m_ChildList.size(); iNode++)
+	{
+		DrawQuadLine(pNode->m_ChildList[iNode]);
+	}
+	return true;
+}
+
 bool Sample::Init()
 {
 	HRESULT hr;
 
+	m_QuadTree.Build(65, 65);
+
 	// ³ôÀÌ¸Ê »ý¼º
-	if (!m_Map.CreateHeightMap(m_pd3dDevice, m_pd3dContext, L"../../Image/data/map/HEIGHT_CASTLE.bmp"))
+	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/HEIGHT_CASTLE.bmp"))
 	{
 		return false;
 	}
@@ -74,23 +121,23 @@ bool Sample::Init()
 	desc.szTextFile = L"../../Image/data/map/castle.jpg";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
-	m_Map.CreateMap(m_pd3dDevice, desc);
+	m_Map.CreateMap(g_pd3dDevice, desc);
 
 	m_vDirValue = { 0,0,0,0 };
 
 	// ¹Ì´Ï¸Ê »ý¼º
-	m_Minimap.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg");
+	m_Minimap.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg");
 
 	Matrix matScale, matRotation;
 	matScale = Matrix::CreateScale(100, 100, 0);
 	matRotation = Matrix::CreateRotationX(HBASIS_PI * 0.5f);
 	m_matPlaneWorld = matScale * matRotation;
 
-	if (!m_BoxShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	if (!m_BoxShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
-	if (!m_PlaneShape.Create(m_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	if (!m_PlaneShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
@@ -101,7 +148,7 @@ bool Sample::Init()
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
-	m_ModelCamera.CreateFrustum(m_pd3dDevice, m_pd3dContext);
+	m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
 	m_pMainCamera = &m_ModelCamera;
 
 	m_TopCamera.CreateViewMatrix({ 0,30,-0.1f }, { 0,0,0 });
@@ -115,30 +162,6 @@ bool Sample::Init()
 
 bool Sample::Frame()
 {
-
-	if (g_Input.GetKey('1') == KEY_PUSH)
-	{
-		HDxState::m_FillMode = D3D11_FILL_WIREFRAME;
-		HDxState::SetRasterState(m_pd3dDevice);
-	}
-
-	if (g_Input.GetKey('2') == KEY_PUSH)
-	{
-		HDxState::m_FillMode = D3D11_FILL_SOLID;
-		HDxState::SetRasterState(m_pd3dDevice);
-	}
-
-	if (g_Input.GetKey('3') == KEY_PUSH)
-	{
-		HDxState::m_CullMode = D3D11_CULL_BACK;
-		HDxState::SetRasterState(m_pd3dDevice);
-	}
-
-	if (g_Input.GetKey('4') == KEY_PUSH)
-	{
-		HDxState::m_CullMode = D3D11_CULL_FRONT;
-		HDxState::SetRasterState(m_pd3dDevice);
-	}
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
@@ -169,7 +192,7 @@ bool Sample::Frame()
 	m_BoxShape.m_vPos.y = m_Map.GetHeightMap(m_BoxShape.m_matWorld._41, m_BoxShape.m_matWorld._43);
 
 	m_pMainCamera->m_vCameraTarget = m_BoxShape.m_vPos;
-	m_pMainCamera->FrameFrustum(m_pd3dContext);
+	m_pMainCamera->FrameFrustum(g_pImmediateContext);
 
 	m_BoxShape.m_matRotation = m_pMainCamera->m_matWorld;
 
@@ -178,10 +201,7 @@ bool Sample::Frame()
 
 bool Sample::Render()
 {
-	m_pd3dContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_pd3dContext->RSSetState(HDxState::m_pRS);
-	m_pd3dContext->PSSetSamplers(0, 1, &HDxState::m_pWrapLinear);
-	m_pd3dContext->OMSetDepthStencilState(HDxState::m_pDSS, 0);
+	DrawQuadLine(m_QuadTree.m_pRootNode);
 
 	// Culling
 	//std::vector<DWORD> visibleIB;
@@ -231,10 +251,10 @@ bool Sample::Render()
 	//}
 
 
-	if (m_Minimap.Begin(m_pd3dContext))
+	if (m_Minimap.Begin(g_pImmediateContext))
 	{
 		m_Map.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
-		m_Map.Render(m_pd3dContext);
+		m_Map.Render(g_pImmediateContext);
 
 		Matrix matWorld;
 		matWorld._41 = m_TopCamera.m_vCameraPos.x;
@@ -242,7 +262,7 @@ bool Sample::Render()
 		matWorld._43 = m_TopCamera.m_vCameraPos.z;
 
 		m_BoxShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
-		m_BoxShape.Render(m_pd3dContext);
+		m_BoxShape.Render(g_pImmediateContext);
 
 		// ¹Ì´Ï¸Ê Áß¾Ó¿¡ ¹èÄ¡
 		/*Vector3 vPos = m_BoxShape.m_vPos - m_BoxShape.m_vLook;
@@ -250,12 +270,12 @@ bool Sample::Render()
 		m_TopCamera.CreateViewMatrix(vPos, m_BoxShape.m_vPos);
 		m_pMainCamera->DrawFrustum(m_pd3dContext, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);*/
 
-		m_Minimap.End(m_pd3dContext);
+		m_Minimap.End(g_pImmediateContext);
 	}
 
 
 	m_Map.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_Map.Render(m_pd3dContext);
+	m_Map.Render(g_pImmediateContext);
 
 	//Matrix matShadow;
 	//Vector4 PLANE = Vector4(0, 1, 0, -0.1f);
@@ -269,10 +289,10 @@ bool Sample::Render()
 	//m_BoxShape.Render(m_pd3dContext);
 
 	m_BoxShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_BoxShape.Render(m_pd3dContext);
+	m_BoxShape.Render(g_pImmediateContext);
 
 	m_Minimap.SetMatrix(NULL, NULL, NULL);
-	m_Minimap.Render(m_pd3dContext);
+	m_Minimap.Render(g_pImmediateContext);
 
 	return true;
 }
@@ -285,6 +305,7 @@ bool Sample::PostRender()
 
 bool Sample::Release()
 {
+	m_QuadTree.Release();
 	m_Minimap.Release();
 	m_Map.Release();
 	m_BoxShape.Release();
