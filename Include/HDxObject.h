@@ -76,7 +76,6 @@ struct H_BOX
 
 	// OBB
 	Vector3 vAxis[3];
-	// ≈©±‚/≥–¿Ã
 	float fExtent[3];
 };
 

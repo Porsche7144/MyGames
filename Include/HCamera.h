@@ -1,10 +1,12 @@
 #pragma once
 #include "HStd.h"
 #include "HShape.h"
+#include "HFrustum.h"
 
 class HCamera
 {
 public:
+	HFrustum	m_Frustum;
 	Vector3		m_vCameraPos = { 10,0,-10 };
 	Vector3		m_vCameraTarget = { 0,0,0 };
 	Matrix		m_matWorld;

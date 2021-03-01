@@ -159,6 +159,7 @@ HNode* HQuadTree::FindNode(HNode* pNode, HBaseObj* pObj)
 			if (pNode->m_ChildList[dwChild] && CheckRect(pNode->m_ChildList[dwChild], pObj))
 			{
 				m_pQuadTreeQueue.push(pNode->m_ChildList[dwChild]);
+				break;
 			}
 		}
 
@@ -344,7 +345,7 @@ HQuadTree::HQuadTree(void)
 {
 	m_iRenderDepth = 0;
 	m_iMaxDepth = 0;
-	m_iMaxDepthLimit = 4;
+	m_iMaxDepthLimit = 1;
 	m_fMinDivideSize = 2;
 	m_bUsedIndexList = false;
 	m_pd3dDevice = 0;

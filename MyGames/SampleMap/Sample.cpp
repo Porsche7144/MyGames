@@ -1,4 +1,5 @@
 #include "Sample.h"
+#define NUM_OBJECTS 10
 
 LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -101,11 +102,28 @@ bool Sample::DrawQuadLine(HNode* pNode)
 	return true;
 }
 
+void Sample::DrawObject(Matrix* pView, Matrix* pProj)
+{
+	for (int iBox = 0; iBox < NUM_OBJECTS; iBox++)
+	{
+		m_pObject[iBox].m_matWorld._42 =
+			m_Map.GetHeightMap(m_pObject[iBox].m_matWorld._41,
+				m_pObject[iBox].m_matWorld._43);
+
+		m_BoxShape.SetMatrix(&m_pObject[iBox].m_matWorld,
+			pView,
+			pProj);
+		// OBB와 프로스텀 박스의 제외처리( 걸쳐 있어도 TRUE가 됨. )
+		if (m_pMainCamera->m_Frustum.CheckOBBInPlane(&m_pObject[iBox].m_hBox))
+		{
+			m_BoxShape.Render(g_pImmediateContext);
+		}
+	}
+}
+
 bool Sample::Init()
 {
 	HRESULT hr;
-
-	m_QuadTree.Build(65, 65);
 
 	// 높이맵 생성
 	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/HEIGHT_CASTLE.bmp"))
@@ -123,6 +141,8 @@ bool Sample::Init()
 	desc.szPS = L"PS.txt";
 	m_Map.CreateMap(g_pd3dDevice, desc);
 
+	m_QuadTree.Build(65, 65);
+
 	m_vDirValue = { 0,0,0,0 };
 
 	// 미니맵 생성
@@ -137,6 +157,13 @@ bool Sample::Init()
 	{
 		return false;
 	}
+
+	SAFE_NEW_ARRAY(m_pObject, H_BoxObject, NUM_OBJECTS);
+	for (int iBox = 0; iBox < NUM_OBJECTS; iBox++)
+	{
+		m_QuadTree.AddObject(&m_pObject[iBox]);
+	}
+
 	if (!m_PlaneShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
@@ -201,7 +228,6 @@ bool Sample::Frame()
 
 bool Sample::Render()
 {
-	DrawQuadLine(m_QuadTree.m_pRootNode);
 
 	// Culling
 	//std::vector<DWORD> visibleIB;
@@ -264,6 +290,8 @@ bool Sample::Render()
 		m_BoxShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
 		m_BoxShape.Render(g_pImmediateContext);
 
+		DrawObject(&m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+
 		// 미니맵 중앙에 배치
 		/*Vector3 vPos = m_BoxShape.m_vPos - m_BoxShape.m_vLook;
 		vPos.y = 30.0f;
@@ -294,6 +322,10 @@ bool Sample::Render()
 	m_Minimap.SetMatrix(NULL, NULL, NULL);
 	m_Minimap.Render(g_pImmediateContext);
 
+	DrawQuadLine(m_QuadTree.m_pRootNode);
+	DrawObject(&m_pMainCamera->m_matView,
+		&m_pMainCamera->m_matProject);
+
 	return true;
 }
 
@@ -305,6 +337,7 @@ bool Sample::PostRender()
 
 bool Sample::Release()
 {
+	SAFE_DELETE_ARRAY(m_pObject);
 	m_QuadTree.Release();
 	m_Minimap.Release();
 	m_Map.Release();

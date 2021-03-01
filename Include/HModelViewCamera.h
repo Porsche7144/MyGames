@@ -1,6 +1,5 @@
 #pragma once
 #include "HCamera.h"
-#include "HFrustum.h"
 
 class HArcBall
 {
@@ -31,9 +30,6 @@ public:
 
 class HModelViewCamera : public HCamera
 {
-public:
-	HFrustum m_Frustum;
-
 public:
 	HArcBall m_WorldArcBall;
 	HArcBall m_ViewArcBall;

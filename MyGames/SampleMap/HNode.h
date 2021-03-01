@@ -11,6 +11,16 @@ public:
 	virtual ~HBaseObj() {};
 };
 
+class H_BoxObject : public HBaseObj
+{
+public:
+	Matrix			m_matWorld;
+	Vector3			m_vPosition;
+	Vector4			m_vColor;
+public:
+	H_BoxObject();
+};
+
 class HNode
 {
 public:

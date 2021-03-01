@@ -23,9 +23,12 @@ public:
 class Sample : public HCore
 {
 public:
+	HQuadTree		m_QuadTree;
+	H_BoxObject*	m_pObject;
+	H_BOX			m_TBoxBase;
+
 	HheightMap m_Map;
 	HMinimap m_Minimap;
-	HQuadTree m_QuadTree;
 	HBoxUser			m_BoxShape;
 	HShapePlane			m_PlaneShape;
 	Vector4				m_vDirValue;
@@ -50,6 +53,7 @@ public:
 		Vector4* pLight);
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	bool DrawQuadLine(HNode* pNode);
+	void DrawObject(Matrix* pView, Matrix* pProj);
 
 public:
 	bool Init() override;

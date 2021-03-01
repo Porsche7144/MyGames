@@ -1,6 +1,5 @@
 #pragma once
 #include "HCamera.h"
-#include "HFrustum.h"
 
 class HArcBall
 {
