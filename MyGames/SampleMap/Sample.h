@@ -30,6 +30,7 @@ public:
 	HheightMap m_Map;
 	HMinimap m_Minimap;
 	HBoxUser			m_BoxShape;
+	HBoxUser			m_UserShape;
 	HShapePlane			m_PlaneShape;
 	Vector4				m_vDirValue;
 	HModelViewCamera	m_ModelCamera;

@@ -125,8 +125,14 @@ bool Sample::Init()
 {
 	HRESULT hr;
 
+	if (!m_UserShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	{
+		return false;
+	}
+
+
 	// 높이맵 생성
-	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/HEIGHT_CASTLE.bmp"))
+	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/HEIGHT_MOUNDS.bmp"))
 	{
 		return false;
 	}
@@ -136,12 +142,10 @@ bool Sample::Init()
 	desc.iNumRows = m_Map.m_iNumRows;
 	desc.fCellDistance = 1;
 	desc.fScaleHeight = 10.0f;
-	desc.szTextFile = L"../../Image/data/map/castle.jpg";
+	desc.szTextFile = L"../../Image/data/map/HEIGHT_MOUNDS.bmp";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
 	m_Map.CreateMap(g_pd3dDevice, desc);
-
-	m_QuadTree.Build(65, 65);
 
 	m_vDirValue = { 0,0,0,0 };
 
@@ -158,6 +162,8 @@ bool Sample::Init()
 		return false;
 	}
 
+	// 쿼드트리 공간분할
+	m_QuadTree.Build(65, 65);
 	SAFE_NEW_ARRAY(m_pObject, H_BoxObject, NUM_OBJECTS);
 	for (int iBox = 0; iBox < NUM_OBJECTS; iBox++)
 	{
@@ -192,36 +198,36 @@ bool Sample::Frame()
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
-		m_BoxShape.FrontMovement(1.0f);
+		m_UserShape.FrontMovement(1.0f);
 	}
 	if (g_Input.GetKey('S') == KEY_HOLD)
 	{
-		m_BoxShape.FrontMovement(-1.0f);
+		m_UserShape.FrontMovement(-1.0f);
 	}
 	if (g_Input.GetKey('A') == KEY_HOLD)
 	{
-		m_BoxShape.RightMovement(-1.0f);
+		m_UserShape.RightMovement(-1.0f);
 	}
 	if (g_Input.GetKey('D') == KEY_HOLD)
 	{
-		m_BoxShape.RightMovement(1.0f);
+		m_UserShape.RightMovement(1.0f);
 	}
 	if (g_Input.GetKey('Q') == KEY_HOLD)
 	{
-		m_BoxShape.UpMovement(1.0f);
+		m_UserShape.UpMovement(1.0f);
 	}
 	if (g_Input.GetKey('E') == KEY_HOLD)
 	{
-		m_BoxShape.UpMovement(-1.0f);
+		m_UserShape.UpMovement(-1.0f);
 	}
 
-	m_BoxShape.Frame();
-	m_BoxShape.m_vPos.y = m_Map.GetHeightMap(m_BoxShape.m_matWorld._41, m_BoxShape.m_matWorld._43);
+	m_UserShape.Frame();
+	m_UserShape.m_vPos.y = m_Map.GetHeightMap(m_UserShape.m_matWorld._41, m_UserShape.m_matWorld._43);
 
-	m_pMainCamera->m_vCameraTarget = m_BoxShape.m_vPos;
+	m_pMainCamera->m_vCameraTarget = m_UserShape.m_vPos;
 	m_pMainCamera->FrameFrustum(g_pImmediateContext);
 
-	m_BoxShape.m_matRotation = m_pMainCamera->m_matWorld;
+	m_UserShape.m_matRotation = m_pMainCamera->m_matWorld;
 
 	return true;
 }
@@ -287,6 +293,9 @@ bool Sample::Render()
 		matWorld._42 = m_TopCamera.m_vCameraPos.y;
 		matWorld._43 = m_TopCamera.m_vCameraPos.z;
 
+		m_UserShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+		m_UserShape.Render(g_pImmediateContext);
+
 		m_BoxShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
 		m_BoxShape.Render(g_pImmediateContext);
 
@@ -316,8 +325,8 @@ bool Sample::Render()
 	//m_BoxShape.SetMatrix(&matShadow, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	//m_BoxShape.Render(m_pd3dContext);
 
-	m_BoxShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_BoxShape.Render(g_pImmediateContext);
+	m_UserShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_UserShape.Render(g_pImmediateContext);
 
 	m_Minimap.SetMatrix(NULL, NULL, NULL);
 	m_Minimap.Render(g_pImmediateContext);
@@ -341,6 +350,7 @@ bool Sample::Release()
 	m_QuadTree.Release();
 	m_Minimap.Release();
 	m_Map.Release();
+	m_UserShape.Release();
 	m_BoxShape.Release();
 	m_PlaneShape.Release();
 
