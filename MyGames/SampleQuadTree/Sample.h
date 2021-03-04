@@ -24,7 +24,6 @@ class Sample : public HCore
 {
 public:
 	HQuadTree		m_QuadTree;
-	H_BoxObject*	m_pObject;
 	H_BOX			m_TBoxBase;
 
 	HheightMap			m_Map;

@@ -57,7 +57,7 @@ bool Sample::Init()
 	}
 
 	// 쿼드트리 공간분할
-	m_QuadTree.Build(m_Map);
+	m_QuadTree.Build(&m_Map);
 
 	if (!m_PlaneShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
@@ -148,7 +148,7 @@ bool Sample::Render()
 
 
 	m_Map.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_Map.Render(g_pImmediateContext);
+	// m_Map.Render(g_pImmediateContext);
 
 	m_UserShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_UserShape.Render(g_pImmediateContext);
@@ -169,7 +169,6 @@ bool Sample::PostRender()
 
 bool Sample::Release()
 {
-	SAFE_DELETE_ARRAY(m_pObject);
 	m_Minimap.Release();
 	m_Map.Release();
 	m_UserShape.Release();
