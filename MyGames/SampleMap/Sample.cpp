@@ -57,50 +57,7 @@ Matrix Sample::CreateMatrixShadow(
 	return mat;
 }
 
-bool Sample::DrawQuadLine(HNode* pNode)
-{
-	if (pNode == NULL) return true;
 
-	if (m_QuadTree.m_iRenderDepth >= pNode->m_dwDepth)
-		//if (4 >= pNode->m_dwDepth)
-	{
-		m_LineShape.SetMatrix(NULL,
-			&m_pMainCamera->m_matView,
-			&m_pMainCamera->m_matProject);
-
-		Vector4 vColor = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-		if (pNode->m_dwDepth == 0) vColor = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-		if (pNode->m_dwDepth == 1) vColor = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-		if (pNode->m_dwDepth == 2) vColor = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-		if (pNode->m_dwDepth == 3) vColor = Vector4(1.0f, 0.0f, 1.0f, 1.0f);
-		if (pNode->m_dwDepth == 4) vColor = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
-		if (pNode->m_dwDepth == 5) vColor = Vector4(0.0f, 0.5f, 1.0f, 1.0f);
-		if (pNode->m_dwDepth == 6) vColor = Vector4(1.0f, 0.5f, 0.0f, 1.0f);
-		if (pNode->m_dwDepth == 7) vColor = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-		if (pNode->m_dwDepth == 8) vColor = Vector4(1.0f, 0.5f, 0.5f, 1.0f);
-		if (pNode->m_dwDepth == 9) vColor = Vector4(1.0f, 0.5f, 1.0f, 1.0f);
-
-		Vector3 vPoint[4];
-		vPoint[0] = Vector3(pNode->m_hBox.vMin.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMax.z);
-		vPoint[0].y -= 1.0f * pNode->m_dwDepth;
-		vPoint[1] = Vector3(pNode->m_hBox.vMax.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMax.z);
-		vPoint[1].y -= 1.0f * pNode->m_dwDepth;
-		vPoint[2] = Vector3(pNode->m_hBox.vMin.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMin.z);
-		vPoint[2].y -= 1.0f * pNode->m_dwDepth;
-		vPoint[3] = Vector3(pNode->m_hBox.vMax.x, pNode->m_hBox.vMax.y, pNode->m_hBox.vMin.z);
-		vPoint[3].y -= 1.0f * pNode->m_dwDepth;
-
-		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[0], vPoint[1], vColor);
-		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[1], vPoint[3], vColor);
-		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[2], vPoint[3], vColor);
-		m_LineShape.Draw(HBASIS_CORE_LIB::g_pImmediateContext, vPoint[0], vPoint[2], vColor);
-	}
-	for (int iNode = 0; iNode < pNode->m_ChildList.size(); iNode++)
-	{
-		DrawQuadLine(pNode->m_ChildList[iNode]);
-	}
-	return true;
-}
 
 void Sample::DrawObject(Matrix* pView, Matrix* pProj)
 {
@@ -125,14 +82,19 @@ bool Sample::Init()
 {
 	HRESULT hr;
 
+	/////////////////////////////////////////////////////////////////////////////
+	// 유저 생성
+	/////////////////////////////////////////////////////////////////////////////
 	if (!m_UserShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
 
 
+	/////////////////////////////////////////////////////////////////////////////
 	// 높이맵 생성
-	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/HEIGHT_MOUNDS.bmp"))
+	/////////////////////////////////////////////////////////////////////////////
+	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/heightMap513.bmp"))
 	{
 		return false;
 	}
@@ -140,16 +102,18 @@ bool Sample::Init()
 	HMapDesc desc;
 	desc.iNumCols = m_Map.m_iNumCols;
 	desc.iNumRows = m_Map.m_iNumRows;
-	desc.fCellDistance = 1;
-	desc.fScaleHeight = 10.0f;
-	desc.szTextFile = L"../../Image/data/map/HEIGHT_MOUNDS.bmp";
+	desc.fCellDistance = 1.0f;
+	desc.fScaleHeight = 3.0f;
+	desc.szTextFile = L"../../Image/data/map/detail.bmp";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
 	m_Map.CreateMap(g_pd3dDevice, desc);
 
 	m_vDirValue = { 0,0,0,0 };
 
+	/////////////////////////////////////////////////////////////////////////////
 	// 미니맵 생성
+	/////////////////////////////////////////////////////////////////////////////
 	m_Minimap.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg");
 
 	Matrix matScale, matRotation;
@@ -163,12 +127,7 @@ bool Sample::Init()
 	}
 
 	// 쿼드트리 공간분할
-	m_QuadTree.Build(65, 65);
-	SAFE_NEW_ARRAY(m_pObject, H_BoxObject, NUM_OBJECTS);
-	for (int iBox = 0; iBox < NUM_OBJECTS; iBox++)
-	{
-		m_QuadTree.AddObject(&m_pObject[iBox]);
-	}
+	m_QuadTree.Build(m_Map);
 
 	if (!m_PlaneShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
@@ -181,6 +140,7 @@ bool Sample::Init()
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
+	// 프러스텀 생성
 	m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
 	m_pMainCamera = &m_ModelCamera;
 
@@ -228,6 +188,7 @@ bool Sample::Frame()
 	m_pMainCamera->FrameFrustum(g_pImmediateContext);
 
 	m_UserShape.m_matRotation = m_pMainCamera->m_matWorld;
+
 
 	return true;
 }
@@ -282,7 +243,6 @@ bool Sample::Render()
 	//	m_Map.m_iNumFaces = 0;
 	//}
 
-
 	if (m_Minimap.Begin(g_pImmediateContext))
 	{
 		m_Map.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
@@ -299,7 +259,7 @@ bool Sample::Render()
 		m_BoxShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
 		m_BoxShape.Render(g_pImmediateContext);
 
-		DrawObject(&m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+		// DrawObject(&m_TopCamera.m_matView, &m_TopCamera.m_matProject);
 
 		// 미니맵 중앙에 배치
 		/*Vector3 vPos = m_BoxShape.m_vPos - m_BoxShape.m_vLook;
@@ -331,9 +291,9 @@ bool Sample::Render()
 	m_Minimap.SetMatrix(NULL, NULL, NULL);
 	m_Minimap.Render(g_pImmediateContext);
 
-	DrawQuadLine(m_QuadTree.m_pRootNode);
-	DrawObject(&m_pMainCamera->m_matView,
-		&m_pMainCamera->m_matProject);
+	//DrawQuadLine(m_QuadTree.m_pRootNode);
+	// DrawObject(&m_pMainCamera->m_matView,
+	// 	&m_pMainCamera->m_matProject);
 
 	return true;
 }
@@ -347,7 +307,6 @@ bool Sample::PostRender()
 bool Sample::Release()
 {
 	SAFE_DELETE_ARRAY(m_pObject);
-	m_QuadTree.Release();
 	m_Minimap.Release();
 	m_Map.Release();
 	m_UserShape.Release();

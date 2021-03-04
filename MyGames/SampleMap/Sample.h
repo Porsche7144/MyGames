@@ -35,6 +35,8 @@ public:
 	Vector4				m_vDirValue;
 	HModelViewCamera	m_ModelCamera;
 
+	ComPtr<ID3D11ShaderResourceView> m_pTexture[4];
+
 	HCamera m_TopCamera;
 
 	std::vector<HObject*> m_ObjList;
