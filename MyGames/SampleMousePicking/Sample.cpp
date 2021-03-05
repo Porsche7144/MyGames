@@ -24,7 +24,7 @@ bool Sample::Init()
 	/////////////////////////////////////////////////////////////////////////////
 	// 높이맵 생성
 	/////////////////////////////////////////////////////////////////////////////
-	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/heightMap513.bmp"))
+	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/129.jpg"))
 	{
 		return false;
 	}
@@ -33,8 +33,8 @@ bool Sample::Init()
 	desc.iNumCols = m_Map.m_iNumCols;
 	desc.iNumRows = m_Map.m_iNumRows;
 	desc.fCellDistance = 1.0f;
-	desc.fScaleHeight = 3.0f;
-	desc.szTextFile = L"../../Image/data/map/detail.bmp";
+	desc.fScaleHeight = 10.0f;
+	desc.szTextFile = L"../../Image/data/map/grass_2.jpg";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
 	m_Map.CreateMap(g_pd3dDevice, desc);
@@ -85,6 +85,66 @@ bool Sample::Init()
 
 bool Sample::Frame()
 {
+	// Mouse Picking
+	if (g_Input.GetKey(VK_LBUTTON))
+	{
+		POINT cursor;
+		GetCursorPos(&cursor);
+		ScreenToClient(g_hWnd, &cursor);
+		Matrix matProj = m_pMainCamera->m_matProject;
+
+		Vector3 v;
+		// 화면 -> 투영 -> 뷰
+		v.x = (((2.0f*cursor.x) / g_rtClient.right) - 1) / matProj._11;
+		v.y = -(((2.0f*cursor.y) / g_rtClient.bottom) - 1) / matProj._22;
+		v.z = 1.0f;
+
+		Matrix matInvView = m_pMainCamera->m_matView;
+		matInvView = matInvView.Invert();
+
+		// 방법 1) 직접 정점 변환
+		vPickRayDir.x = v.x * matInvView._11 + v.y * matInvView._21 + v.z * matInvView._31;
+		vPickRayDir.y = v.x * matInvView._12 + v.y * matInvView._22 + v.z * matInvView._32;
+		vPickRayDir.z = v.x * matInvView._13 + v.y * matInvView._23 + v.z * matInvView._33;
+		vPickRayDir.Normalize();
+
+		vPickRayOrigin.x = matInvView._41;
+		vPickRayOrigin.y = matInvView._42;
+		vPickRayOrigin.z = matInvView._43;
+
+		// 방법 2 함수 사용 정점 변환
+		//vPickRayOrigin = Vector3{ 0.0f, 0.0f, 0.0f };
+		//vPickRayDir = v;
+		//vPickRayOrigin = Vector3::Transform(vPickRayOrigin, matInvView);
+		//vPickRayDir = Vector3::TransformNormal(vPickRayDir, matInvView);
+		//vPickRayDir.Normalize();
+
+		// face list
+
+		for (int face = 0; face < m_Map.m_IndexList.size() / 3; face++)
+		{
+			v0 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 0]].p;
+			v1 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 1]].p;
+			v2 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 2]].p;
+
+			vEnd = vPickRayOrigin + vPickRayDir * 100.0f;
+			vNormal = (v1 - v0).Cross(v2 - v0);
+			vNormal.Normalize();
+
+			if (m_Picking.GetIntersection(vPickRayOrigin, vEnd, vNormal, v0, v1, v2))
+			{
+				if (m_Picking.PointInPolygon(m_Picking.m_vInterSection, vNormal, v0, v1, v2))
+				{
+					list[0] = v0;
+					list[1] = v1;
+					list[2] = v2;
+				}
+			}
+
+		}
+	}
+
+
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
@@ -156,6 +216,12 @@ bool Sample::Render()
 	m_Minimap.Render(g_pImmediateContext);
 
 	m_QuadTree.Render(g_pImmediateContext);
+
+	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_LineShape.Draw(g_pImmediateContext, vPickRayOrigin, vPickRayOrigin + vPickRayDir * 100.0f);
+	m_LineShape.Draw(g_pImmediateContext, list[0], list[1]);
+	m_LineShape.Draw(g_pImmediateContext, list[1], list[2]);
+	m_LineShape.Draw(g_pImmediateContext, list[2], list[0]);
 
 	return true;
 }
