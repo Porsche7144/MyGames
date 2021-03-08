@@ -292,8 +292,8 @@ bool Sample::Render()
 	m_Minimap.Render(g_pImmediateContext);
 
 	//DrawQuadLine(m_QuadTree.m_pRootNode);
-	// DrawObject(&m_pMainCamera->m_matView,
-	// 	&m_pMainCamera->m_matProject);
+	DrawObject(&m_pMainCamera->m_matView,
+	 	&m_pMainCamera->m_matProject);
 
 	return true;
 }

@@ -47,3 +47,48 @@ bool HPicking::PointInPolygon(Vector3 vert, Vector3 faceNormal, Vector3 v0, Vect
 
 	return true;
 }
+
+// UV 매개변수를 사용한 교점과 교점 포함 테스트 동시에 처리 하는 방법(평면 노말 필요X).
+bool HPicking::IntersectTriangle(Vector3 Origin, Vector3 Dir, Vector3 v0, Vector3 v1, Vector3 v2, float t, float u, float v)
+{
+	Vector3 edge1 = v1 - v0;
+	Vector3 edge2 = v2 - v0;
+
+	// 행렬식 계산
+	Vector3 Pvec = Dir.Cross(edge2);
+	float det = edge1.Dot(Pvec);
+
+	Vector3 Tvec;
+
+	if (det > 0)
+	{
+		Tvec = Origin - v0;
+	}
+	else
+	{
+		Tvec = v0 - Origin;
+		det = -det;
+	}
+	if (det < 0) return false;
+
+
+	// u 계산
+	u = Tvec.Dot(Pvec);
+	if (u < 0 || u > det) return false;
+
+	// v 계산
+	Vector3 Qvec = Tvec.Cross(edge1);
+	v = Dir.Dot(Qvec);
+	if (v < 0 || u + v > det) return false;
+
+	// t 계산
+	t = edge2.Dot(Qvec);
+
+	// 행렬 곱셈
+	float fInvDet = 1.0f / det;
+	t *= fInvDet;
+	u *= fInvDet;
+	v *= fInvDet;
+
+	return true;
+}

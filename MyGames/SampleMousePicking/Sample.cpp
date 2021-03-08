@@ -68,8 +68,9 @@ bool Sample::Init()
 	// 카메라 바꿔치는 부분.
 	m_ModelCamera.CreateViewMatrix({ 0,10,-10 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
+	m_ModelCamera.CreateProjectionMatrix(1, 150, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
+
 	// 프러스텀 생성
 	m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
 	m_pMainCamera = &m_ModelCamera;
@@ -85,6 +86,7 @@ bool Sample::Init()
 
 bool Sample::Frame()
 {
+
 	// Mouse Picking
 	if (g_Input.GetKey(VK_LBUTTON))
 	{
@@ -93,34 +95,34 @@ bool Sample::Frame()
 		ScreenToClient(g_hWnd, &cursor);
 		Matrix matProj = m_pMainCamera->m_matProject;
 
-		Vector3 v;
+		Vector3 vec;
 		// 화면 -> 투영 -> 뷰
-		v.x = (((2.0f*cursor.x) / g_rtClient.right) - 1) / matProj._11;
-		v.y = -(((2.0f*cursor.y) / g_rtClient.bottom) - 1) / matProj._22;
-		v.z = 1.0f;
+		vec.x = (((2.0f*cursor.x) / g_rtClient.right) - 1) / matProj._11;
+		vec.y = -(((2.0f*cursor.y) / g_rtClient.bottom) - 1) / matProj._22;
+		vec.z = 1.0f;
 
 		Matrix matInvView = m_pMainCamera->m_matView;
 		matInvView = matInvView.Invert();
 
 		// 방법 1) 직접 정점 변환
-		vPickRayDir.x = v.x * matInvView._11 + v.y * matInvView._21 + v.z * matInvView._31;
-		vPickRayDir.y = v.x * matInvView._12 + v.y * matInvView._22 + v.z * matInvView._32;
-		vPickRayDir.z = v.x * matInvView._13 + v.y * matInvView._23 + v.z * matInvView._33;
+		vPickRayDir.x = vec.x * matInvView._11 + vec.y * matInvView._21 + vec.z * matInvView._31;
+		vPickRayDir.y = vec.x * matInvView._12 + vec.y * matInvView._22 + vec.z * matInvView._32;
+		vPickRayDir.z = vec.x * matInvView._13 + vec.y * matInvView._23 + vec.z * matInvView._33;
 		vPickRayDir.Normalize();
 
 		vPickRayOrigin.x = matInvView._41;
 		vPickRayOrigin.y = matInvView._42;
 		vPickRayOrigin.z = matInvView._43;
 
-		// 방법 2 함수 사용 정점 변환
+		// 방법 2) 함수 사용 정점 변환
 		//vPickRayOrigin = Vector3{ 0.0f, 0.0f, 0.0f };
 		//vPickRayDir = v;
 		//vPickRayOrigin = Vector3::Transform(vPickRayOrigin, matInvView);
 		//vPickRayDir = Vector3::TransformNormal(vPickRayDir, matInvView);
 		//vPickRayDir.Normalize();
 
-		// face list
 
+		// face list
 		for (int face = 0; face < m_Map.m_IndexList.size() / 3; face++)
 		{
 			v0 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 0]].p;
@@ -131,14 +133,24 @@ bool Sample::Frame()
 			vNormal = (v1 - v0).Cross(v2 - v0);
 			vNormal.Normalize();
 
-			if (m_Picking.GetIntersection(vPickRayOrigin, vEnd, vNormal, v0, v1, v2))
+			// 방법 1) 외적을 사용하는 방법
+			//if (m_Picking.GetIntersection(vPickRayOrigin, vEnd, vNormal, v0, v1, v2))
+			//{
+			//	if (m_Picking.PointInPolygon(m_Picking.m_vInterSection, vNormal, v0, v1, v2))
+			//	{
+			//		list[0] = v0;
+			//		list[1] = v1;
+			//		list[2] = v2;
+			//	}
+			//}
+
+			// 방법 2) UV 매개변수를 사용한 교점과 교점 포함 테스트를
+			//         동시에 처리 하는 방법(평면 노말 필요X).
+			if (m_Picking.IntersectTriangle(vPickRayOrigin, vPickRayDir, v0, v1, v2, t, u, v))
 			{
-				if (m_Picking.PointInPolygon(m_Picking.m_vInterSection, vNormal, v0, v1, v2))
-				{
-					list[0] = v0;
-					list[1] = v1;
-					list[2] = v2;
-				}
+				list[0] = v0;
+				list[1] = v1;
+				list[2] = v2;
 			}
 
 		}

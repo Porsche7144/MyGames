@@ -48,10 +48,12 @@ class HQuadTree
 	};
 
 public:
+	HDxObject m_DXObj;
 	HMap* m_pMap;
 	ID3D11Device* m_pd3dDevice;
 	HNode* m_pParentNode;
 	LTRB_POSITION m_ltPos[4];
+	std::vector<HNode*> m_leafList;
 
 	float m_DivideSize;
 
@@ -62,7 +64,7 @@ public:
 	bool SetChildTree(HNode* pNode);
 	void DrawNode(ID3D11DeviceContext * pContext, HNode* pNode);
 	void CreateIndexNode(HNode* pNode);
-	//void CreateVertexNode(HNode* pNode);
+	void CreateVertexNode(HNode* pNode);
 	bool Render(ID3D11DeviceContext* pContext);
 	bool Release();
 

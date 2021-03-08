@@ -41,44 +41,35 @@ void HQuadTree::CreateIndexNode(HNode* pNode)
 
 }
 
-//void HQuadTree::CreateVertexNode(HNode* pNode)
-//{
-//	vector<DWORD> VertexList;
-//	DWORD dwTL = pNode->m_CornerIndex[0];
-//	DWORD dwTR = pNode->m_CornerIndex[1];
-//	DWORD dwBL = pNode->m_CornerIndex[2];
-//	DWORD dwBR = pNode->m_CornerIndex[3];
-//
-//	DWORD dwSize = (dwTR - dwTL)*(dwTR - dwTL) * 2 * 3;
-//	pNode->m_VertexList.resize(dwSize);
-//	int dwCurentIndex = 0;
-//	DWORD m_dwWidth = m_pMap->m_iNumCols;
-//	DWORD dwStartRow = dwTL / m_dwWidth;
-//	DWORD dwEndRow = dwBL / m_dwWidth;
-//
-//	DWORD dwStartCol = dwTL % m_dwWidth;
-//	DWORD dwEndCol = dwTR % m_dwWidth;
-//	//  0      
-//	for (DWORD dwRow = dwStartRow; dwRow < dwEndRow; dwRow++)
-//	{
-//		for (DWORD dwCol = dwStartCol; dwCol < dwEndCol; dwCol++)
-//		{
-//			//0	1    4   
-//			//2	   3 5
-//			DWORD dwNextRow = dwRow + 1;
-//			DWORD dwNextCol = dwCol + 1;
-//			pNode->m_IndexList[dwCurentIndex++] = dwRow * m_dwWidth + dwCol;
-//			pNode->m_IndexList[dwCurentIndex++] = dwRow * m_dwWidth + dwNextCol;
-//			pNode->m_IndexList[dwCurentIndex++] = dwNextRow * m_dwWidth + dwCol;
-//			pNode->m_IndexList[dwCurentIndex++] = dwNextRow * m_dwWidth + dwCol;
-//			pNode->m_IndexList[dwCurentIndex++] = dwRow * m_dwWidth + dwNextCol;
-//			pNode->m_IndexList[dwCurentIndex++] = dwNextRow * m_dwWidth + dwNextCol;
-//		}
-//	}
-//
-//	pNode->m_pVertexBuffer = CreateVertexBuffer(g_pd3dDevice, &pNode->m_VertexList.at(0),
-//		pNode->m_VertexList.size(), sizeof(DWORD));
-//}
+void HQuadTree::CreateVertexNode(HNode* pNode)
+{
+	vector<DWORD> VertexList;
+	DWORD dwTL = pNode->m_CornerIndex[0];
+	DWORD dwTR = pNode->m_CornerIndex[1];
+	DWORD dwBL = pNode->m_CornerIndex[2];
+	DWORD dwBR = pNode->m_CornerIndex[3];
+
+	DWORD dwSize = ((dwTR - dwTL) +1)*((dwTR - dwTL) +1);
+	pNode->m_VertexList.resize(dwSize);
+	int dwCurentIndex = 0;
+	DWORD m_dwWidth = m_pMap->m_iNumCols;
+	DWORD dwStartRow = dwTL / m_dwWidth;
+	DWORD dwEndRow = dwBL / m_dwWidth;
+
+	DWORD dwStartCol = dwTL % m_dwWidth;
+	DWORD dwEndCol = dwTR % m_dwWidth;
+
+	for (DWORD dwRow = dwStartRow; dwRow < dwEndRow; dwRow++)
+	{
+		for (DWORD dwCol = dwStartCol; dwCol < dwEndCol; dwCol++)
+		{
+			pNode->m_VertexList[dwCurentIndex++] = m_pMap->m_VertexList[dwRow * m_dwWidth + dwCol];
+		}
+	}
+
+	pNode->m_pVertexBuffer = CreateVertexBuffer(g_pd3dDevice, &pNode->m_VertexList.at(0),
+		pNode->m_VertexList.size(), sizeof(DWORD));
+}
 
  // 0 31 63
 
@@ -124,6 +115,7 @@ bool HQuadTree::SetChildTree(HNode* pNode)
 		return true;
 	}
 	pNode->m_isLeaf = TRUE;
+	m_leafList.push_back(pNode);
 
 	return false;
 }
@@ -288,10 +280,13 @@ void HQuadTree::DrawNode(ID3D11DeviceContext * pContext, HNode* pNode)
 		return;
 	}
 
-	DrawNode(pContext, pNode->m_Child[0]);
-	DrawNode(pContext, pNode->m_Child[1]);
-	DrawNode(pContext, pNode->m_Child[2]);
-	//DrawNode(pContext, pNode->m_Child[3]);
+	for (int iNode = 0; iNode < m_leafList.size(); iNode++)
+	{
+		DrawNode(pContext, pNode->m_Child[iNode]);
+		/*DrawNode(pContext, pNode->m_Child[1]);
+		DrawNode(pContext, pNode->m_Child[2]);
+		DrawNode(pContext, pNode->m_Child[3]);*/
+	}
 
 }
 

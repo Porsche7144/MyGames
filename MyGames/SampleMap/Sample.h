@@ -55,7 +55,7 @@ public:
 		Vector4* pPlane,
 		Vector4* pLight);
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	bool DrawQuadLine(HNode* pNode);
+	//bool DrawQuadLine(HNode* pNode);
 	void DrawObject(Matrix* pView, Matrix* pProj);
 
 public:

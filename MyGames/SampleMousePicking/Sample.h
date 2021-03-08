@@ -2,11 +2,11 @@
 #include "HCore.h"
 #include "HShape.h"
 #include "HObject.h"
-#include "HModelViewCamera.h"
 #include "HheightMap.h"
 #include "HMinimap.h"
 #include "HQuadTree.h"
 #include "HPicking.h"
+#include "HModelViewCamera.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -43,6 +43,8 @@ public:
 	Vector3 v0, v1, v2, vNormal, vEnd;
 	Vector3 list[3];
 
+	float t, u, v;
+
 	std::vector<HObject*> m_ObjList;
 
 public:
@@ -61,6 +63,13 @@ public:
 public:
 	void SetRasterState();
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+public:
+	Sample() 
+	{
+		t, u, v = 0;
+	};
+	~Sample() {};
 
 };
 
