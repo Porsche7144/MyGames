@@ -189,6 +189,15 @@
     <ClInclude Include="HModelViewCamera.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="HheightMap.h">
+      <Filter>dx</Filter>
+    </ClInclude>
+    <ClInclude Include="HPicking.h">
+      <Filter>dx</Filter>
+    </ClInclude>
+    <ClInclude Include="HQuadTree.h">
+      <Filter>dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -310,6 +319,15 @@
     </ClCompile>
     <ClCompile Include="HModelViewCamera.cpp">
       <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="HheightMap.cpp">
+      <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HPicking.cpp">
+      <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HQuadTree.cpp">
+      <Filter>dx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

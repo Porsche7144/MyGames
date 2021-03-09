@@ -19,15 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HheightMap.cpp" />
-    <ClCompile Include="HPicking.cpp" />
-    <ClCompile Include="HQuadTree.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HheightMap.h" />
-    <ClInclude Include="HPicking.h" />
-    <ClInclude Include="HQuadTree.h" />
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>
