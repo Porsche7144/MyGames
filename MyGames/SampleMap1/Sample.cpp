@@ -17,12 +17,12 @@ bool Sample::GetIntersection(HNode* pNode)
 		v1 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 1]].p;
 		v2 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 2]].p;
 
-		vEnd = vPickRayOrigin + vPickRayDir * 1000.0f;
+		vEnd = m_Picking.m_Ray.vOrigin + m_Picking.m_Ray.vDir * 1000.0f;
 		vNormal = (v1 - v0).Cross(v2 - v0);
 		vNormal.Normalize();
 
 		// 방법 1) 외적을 사용하는 방법
-		if (m_Picking.GetIntersection(vPickRayOrigin, vEnd, vNormal, v0, v1, v2))
+		if (m_Picking.GetIntersection(m_Picking.m_Ray.vOrigin, vEnd, vNormal, v0, v1, v2))
 		{
 			if (m_Picking.PointInPolygon(m_Picking.m_vInterSection, vNormal, v0, v1, v2))
 			{
@@ -91,7 +91,7 @@ bool Sample::Frame()
 {
 	m_bSelect = false;
 	// Mouse Picking
-	if (g_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
+	if (g_Input.GetKey(VK_LBUTTON) == KEY_UP)
 	{
 		m_bSelect = true;
 		POINT cursor;
@@ -120,7 +120,7 @@ bool Sample::Frame()
 
 		// 방법 2) 함수 사용 정점 변환
 		//vPickRayOrigin = Vector3{ 0.0f, 0.0f, 0.0f };
-		//vPickRayDir = v;
+		//vPickRayDir = vec;
 		//vPickRayOrigin = Vector3::Transform(vPickRayOrigin, matInvView);
 		//vPickRayDir = Vector3::TransformNormal(vPickRayDir, matInvView);
 		//vPickRayDir.Normalize();
@@ -209,13 +209,14 @@ bool Sample::Render()
 		for (int i = 0; i < m_Map.m_VertexList.size(); i++)
 		{
 			float fDist = (m_Map.m_VertexList[i].p - pick).Length();
-			if (fDist > fRadius)
+			if (fDist < fRadius)
 			{
 				Vector3 v = m_Map.m_VertexList[i].p;
 				m_Map.m_VertexList[i].p.y = v.y + 1.0f - cosf((fDist / fRadius));
 			}
 
 		}
+
 		g_pImmediateContext->UpdateSubresource(m_Map.m_pVertexBuffer, 0, NULL, &m_Map.m_VertexList.at(0), 0, 0);
 	}
 
@@ -251,8 +252,6 @@ bool Sample::Release()
 	m_Minimap.Release();
 	m_Map.Release();
 	m_UserShape.Release();
-	m_BoxShape.Release();
-	m_PlaneShape.Release();
 
 	return true;
 }

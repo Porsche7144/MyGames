@@ -8,6 +8,8 @@ struct HNode
 	DWORD   m_dwDepth;
 	BOOL	m_isLeaf;
 	UINT    m_CornerIndex[4];
+	H_BOX m_hBox;
+	H_SPHERE m_Sphere;
 	HNode*  m_Child[4];
 	std::vector<DWORD>      m_IndexList;
 	std::vector<PNCT_VERTEX> m_VertexList;

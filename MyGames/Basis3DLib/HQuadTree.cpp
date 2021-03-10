@@ -36,6 +36,47 @@ void HQuadTree::CreateIndexNode(HNode* pNode)
 		}
 	}
 
+	// box
+	pNode->m_hBox.vMin = { 9999,9999,9999, };
+	pNode->m_hBox.vMax = { -9999,-9999,-9999, };
+	for (DWORD dwIndex = 0; dwIndex < pNode->m_IndexList.size();
+		dwIndex++)
+	{
+		Vector3 v = m_pMap->m_VertexList[pNode->m_IndexList[dwIndex]].p;
+		if (v.x > pNode->m_hBox.vMax.x)
+		{
+			pNode->m_hBox.vMax.x = v.x;
+		}
+		if (v.y > pNode->m_hBox.vMax.y)
+		{
+			pNode->m_hBox.vMax.y = v.y;
+		}
+		if (v.z > pNode->m_hBox.vMax.z)
+		{
+			pNode->m_hBox.vMax.z = v.z;
+		}
+
+		if (v.x < pNode->m_hBox.vMin.x)
+		{
+			pNode->m_hBox.vMin.x = v.x;
+		}
+		if (v.y < pNode->m_hBox.vMin.y)
+		{
+			pNode->m_hBox.vMin.y = v.y;
+		}
+		if (v.z < pNode->m_hBox.vMin.z)
+		{
+			pNode->m_hBox.vMin.z = v.z;
+		}
+	}
+
+	pNode->m_hBox.vCenter = (pNode->m_hBox.vMin + pNode->m_hBox.vMax) / 2.0f;
+
+	pNode->m_Sphere.vCenter = pNode->m_hBox.vCenter;
+	pNode->m_Sphere.fRadius =
+		(pNode->m_hBox.vMax - pNode->m_hBox.vCenter).Length();
+
+
 	pNode->m_pIndexBuffer = CreateIndexBuffer(g_pd3dDevice, &pNode->m_IndexList.at(0),
 		pNode->m_IndexList.size(), sizeof(DWORD));
 

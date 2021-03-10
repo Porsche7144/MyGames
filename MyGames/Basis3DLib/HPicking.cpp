@@ -95,6 +95,8 @@ bool HPicking::IntersectTriangle(Vector3 Origin, Vector3 Dir, Vector3 v0, Vector
 
 bool HPicking::IntersectBox(H_BOX* pBox, H_RAY* pRay)
 {
+	if (pRay == NULL) pRay = &m_Ray;
+
 	Vector3 dir = pRay->vDir;
 	Vector3 tMin, tMax;
 
@@ -123,7 +125,7 @@ bool HPicking::IntersectBox(H_BOX* pBox, H_RAY* pRay)
 
 	if (minmax >= maxmin)
 	{
-		m_vInterSection = pRay->vOrigin + pRay->vDir * maxmin;
+		m_vInterSection = pRay->vOrigin + dir * maxmin;
 		return true;
 	}
 
