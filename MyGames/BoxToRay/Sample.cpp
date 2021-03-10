@@ -118,12 +118,25 @@ bool Sample::Frame()
 bool Sample::Render()
 {
 	Matrix matWorld, matScale;
+	Vector3 vCenter = (m_HBox.vMax + m_HBox.vMin) / 2.0f;
+
+	{
+		Vector3 scale;
+		scale.x = m_HBox.vMax.x - vCenter.x;
+		scale.y = m_HBox.vMax.y - vCenter.y;
+		scale.z = m_HBox.vMax.z - vCenter.z;
+
+		matScale = matScale.CreateScale(scale);
+		matScale._41 = m_HBox.vCenter.x;
+		matScale._42 = m_HBox.vCenter.y;
+		matScale._43 = m_HBox.vCenter.z;
+
+		m_ShapeBox.SetMatrix(&matScale, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+		m_ShapeBox.Render(g_pImmediateContext);
+	}
 
 
 	m_UserShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-
-	m_ShapeBox.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_ShapeBox.Render(g_pImmediateContext);
 
 	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_LineShape.Draw(g_pImmediateContext, m_Select.m_Ray.vOrigin, m_Select.m_Ray.vOrigin + m_Select.m_Ray.vDir * 100.0f);
