@@ -55,14 +55,14 @@ bool Sample::Frame()
 		matInvView = matInvView.Invert();
 
 		// 방법 1) 직접 정점 변환
-		m_Select.m_Ray.vDir.x = vec.x * matInvView._11 + vec.y * matInvView._21 + vec.z * matInvView._31;
-		m_Select.m_Ray.vDir.y = vec.x * matInvView._12 + vec.y * matInvView._22 + vec.z * matInvView._32;
-		m_Select.m_Ray.vDir.z = vec.x * matInvView._13 + vec.y * matInvView._23 + vec.z * matInvView._33;
-		m_Select.m_Ray.vDir.Normalize();
+		m_Select.m_Picking.m_Ray.vDir.x = vec.x * matInvView._11 + vec.y * matInvView._21 + vec.z * matInvView._31;
+		m_Select.m_Picking.m_Ray.vDir.y = vec.x * matInvView._12 + vec.y * matInvView._22 + vec.z * matInvView._32;
+		m_Select.m_Picking.m_Ray.vDir.z = vec.x * matInvView._13 + vec.y * matInvView._23 + vec.z * matInvView._33;
+		m_Select.m_Picking.m_Ray.vDir.Normalize();
 
-		m_Select.m_Ray.vOrigin.x = matInvView._41;
-		m_Select.m_Ray.vOrigin.y = matInvView._42;
-		m_Select.m_Ray.vOrigin.z = matInvView._43;
+		m_Select.m_Picking.m_Ray.vOrigin.x = matInvView._41;
+		m_Select.m_Picking.m_Ray.vOrigin.y = matInvView._42;
+		m_Select.m_Picking.m_Ray.vOrigin.z = matInvView._43;
 
 		// 방법 2) 함수 사용 정점 변환
 		//vPickRayOrigin = Vector3{ 0.0f, 0.0f, 0.0f };
@@ -71,7 +71,7 @@ bool Sample::Frame()
 		//vPickRayDir = Vector3::TransformNormal(vPickRayDir, matInvView);
 		//vPickRayDir.Normalize();
 
-		if (m_Select.IntersectBox(&m_HBox, &m_Select.m_Ray))
+		if (m_Select.IntersectBox(&m_HBox, &m_Select.m_Picking.m_Ray))
 		{
 			MessageBox(0, _T("충돌"), _T("충돌"), MB_OK);
 		}
@@ -139,7 +139,8 @@ bool Sample::Render()
 	m_UserShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 
 	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	m_LineShape.Draw(g_pImmediateContext, m_Select.m_Ray.vOrigin, m_Select.m_Ray.vOrigin + m_Select.m_Ray.vDir * 100.0f);
+	m_LineShape.Draw(g_pImmediateContext, m_Select.m_Picking.m_Ray.vOrigin, 
+					m_Select.m_Picking.m_Ray.vOrigin + m_Select.m_Picking.m_Ray.vDir * 100.0f);
 	m_LineShape.Draw(g_pImmediateContext, list[0], list[1]);
 	m_LineShape.Draw(g_pImmediateContext, list[1], list[2]);
 	m_LineShape.Draw(g_pImmediateContext, list[2], list[0]);

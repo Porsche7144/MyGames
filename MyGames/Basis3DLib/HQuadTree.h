@@ -63,6 +63,7 @@ public:
 	bool NodeDivide(HNode* pNode);
 	bool SetChildTree(HNode* pNode);
 	void DrawNode(ID3D11DeviceContext * pContext, HNode* pNode);
+	void Draw(ID3D11DeviceContext * pContext, HNode* pNode);
 	void CreateIndexNode(HNode* pNode);
 	void CreateVertexNode(HNode* pNode);
 	bool Render(ID3D11DeviceContext* pContext);

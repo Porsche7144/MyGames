@@ -9,6 +9,7 @@ struct HNode
 	BOOL	m_isLeaf;
 	UINT    m_CornerIndex[4];
 	HNode*  m_Child[4];
+	H_BOX m_hBox;
 	std::vector<DWORD>      m_IndexList;
 	std::vector<PNCT_VERTEX> m_VertexList;
 	ComPtr<ID3D11Buffer>	m_pIndexBuffer;
@@ -63,6 +64,7 @@ public:
 	bool NodeDivide(HNode* pNode);
 	bool SetChildTree(HNode* pNode);
 	void DrawNode(ID3D11DeviceContext * pContext, HNode* pNode);
+	void Draw(ID3D11DeviceContext * pContext, HNode* pNode);
 	void CreateIndexNode(HNode* pNode);
 	void CreateVertexNode(HNode* pNode);
 	bool Render(ID3D11DeviceContext* pContext);

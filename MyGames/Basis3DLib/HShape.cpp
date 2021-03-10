@@ -146,3 +146,23 @@ HShapeLine::HShapeLine()
 HShapeLine::~HShapeLine()
 {
 }
+
+bool HShapeSphere::CreateVertexData()
+{
+	
+	return true;
+}
+
+bool HShapeSphere::CreateIndexData()
+{
+
+	return true;
+}
+
+HShapeSphere::HShapeSphere()
+{
+}
+
+HShapeSphere::~HShapeSphere()
+{
+}

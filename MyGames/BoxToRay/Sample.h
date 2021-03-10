@@ -25,7 +25,7 @@ public:
 class Sample : public HCore
 {
 public:
-	HSelect m_Select;
+	HSelect			m_Select;
 	HQuadTree		m_QuadTree;
 	H_BOX			m_HBox;
 	HPicking		m_Picking;

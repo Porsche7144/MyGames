@@ -8,6 +8,16 @@ public:
 	virtual ~HShape();
 };
 
+class HShapeSphere : public HShape
+{
+public:
+	bool CreateVertexData() override;
+	bool CreateIndexData() override;
+public:
+	HShapeSphere();
+	virtual ~HShapeSphere();
+};
+
 class HShapeBox : public HShape
 {
 public:

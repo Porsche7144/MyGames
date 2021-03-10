@@ -1,6 +1,6 @@
 #include "HSelect.h"
 
-bool HSelect::IntersectBox(H_BOX* pBox, H_Ray* pRay)
+bool HSelect::IntersectBox(H_BOX* pBox, H_RAY* pRay)
 {
 	Vector3 dir = pRay->vDir;
 	Vector3 tMin, tMax;

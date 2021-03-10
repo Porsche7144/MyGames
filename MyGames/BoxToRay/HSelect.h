@@ -1,22 +1,11 @@
 #pragma once
 #include "HShape.h"
-
-struct H_Ray
-{
-	float fExtent;
-	Vector3 vOrigin;
-	Vector3 vDir;
-	H_Ray()
-	{
-		// fExtent > 0;  세그먼트
-		fExtent = -1;
-	}
-};
+#include "HPicking.h"
 
 class HSelect
 {
 public:
-	H_Ray m_Ray;
+	HPicking m_Picking;
 	Vector3 m_vIntersection;
 
 public:
@@ -26,6 +15,6 @@ public:
 	Vector3						m_vCenter;
 
 public:
-	bool IntersectBox(H_BOX* pBox, H_Ray* pRay);
+	bool IntersectBox(H_BOX* pBox, H_RAY* pRay);
 };
 

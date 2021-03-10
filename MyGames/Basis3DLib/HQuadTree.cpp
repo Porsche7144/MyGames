@@ -107,6 +107,7 @@ bool HQuadTree::SetChildTree(HNode* pNode)
 	if ((pNode->m_CornerIndex[1] - pNode->m_CornerIndex[0] <= 1))
 	{
 		pNode->m_isLeaf = TRUE;
+		m_leafList.push_back(pNode);
 		return false;
 	}
 	if (iDepth < 4)
@@ -287,6 +288,39 @@ void HQuadTree::DrawNode(ID3D11DeviceContext * pContext, HNode* pNode)
 		DrawNode(pContext, pNode->m_Child[2]);
 		DrawNode(pContext, pNode->m_Child[3]);*/
 	}
+
+}
+
+void HQuadTree::Draw(ID3D11DeviceContext * pContext, HNode* pNode)
+{
+	if (pNode == nullptr)
+	{
+		return;
+	}
+
+	HDxObject* pObject = (HDxObject*)m_pMap;
+	pObject->Update(pContext);
+	m_pMap->PreRender(pContext);
+	UINT iStride = sizeof(PNCT_VERTEX);
+	UINT iOffset = 0;
+	pContext->IASetVertexBuffers(0, 1, &m_pMap->m_pVertexBuffer, &iStride, &iOffset);
+	pContext->IASetIndexBuffer(
+		pNode->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	pContext->IASetInputLayout(m_pMap->m_pInputLayout);
+	pContext->VSSetConstantBuffers(0, 1, &m_pMap->m_ConstantBuffer);
+	pContext->PSSetConstantBuffers(0, 1, &m_pMap->m_ConstantBuffer);
+	pContext->VSSetShader(m_pMap->m_pVertexShader, NULL, 0);
+	pContext->PSSetShader(m_pMap->m_pPixelShader, NULL, 0);
+	pContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_pMap->m_iTopology);
+	if (m_pMap->m_pTexture != nullptr)
+	{
+		pContext->PSSetShaderResources(0, 1,
+			&m_pMap->m_pTexture->m_pTextureSRV);
+	}
+	pContext->DrawIndexed(pNode->m_IndexList.size(), 0, 0);
+
+	return;
 
 }
 
