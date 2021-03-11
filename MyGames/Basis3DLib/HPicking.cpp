@@ -101,13 +101,13 @@ bool HPicking::IntersectBox(H_BOX* pBox, H_RAY* pRay)
 	Vector3 tMin, tMax;
 
 	// 0.0001f로 나누는 이유는 0으로 나눠지는 것을 방지하기 위해.
-	tMin.x = (pBox->vMin.x - pRay->vOrigin.x) / (dir.x + 0.0001f);
+	tMin.x = (pBox->vMin.x - pRay->vOrigin.x) / (dir.x + 0.001f);
 	tMin.y = (pBox->vMin.y - pRay->vOrigin.y) / (dir.y + 0.0001f);
 	tMin.z = (pBox->vMin.z - pRay->vOrigin.z) / (dir.z + 0.0001f);
 
-	tMax.x = (pBox->vMax.x - pRay->vOrigin.x) / (dir.x + 0.0001f);
-	tMax.y = (pBox->vMax.y - pRay->vOrigin.y) / (dir.y + 0.0001f);
-	tMax.z = (pBox->vMax.z - pRay->vOrigin.z) / (dir.z + 0.0001f);
+	tMax.x = (pBox->vMax.x - pRay->vOrigin.x) / (dir.x + 0.001f);
+	tMax.y = (pBox->vMax.y - pRay->vOrigin.y) / (dir.y + 0.001f);
+	tMax.z = (pBox->vMax.z - pRay->vOrigin.z) / (dir.z + 0.001f);
 
 	Vector3 real_min, real_max;
 	// min(a,b)            (((a) < (b)) ? (a) : (b))

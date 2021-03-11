@@ -1,6 +1,6 @@
 #include "HQuadTree.h"
 
-void HQuadTree::CreateIndexNode(HNode* pNode)
+HNode* HQuadTree::CreateIndexNode(HNode* pNode)
 {
 	
 	vector<DWORD> Indexlist;
@@ -80,6 +80,8 @@ void HQuadTree::CreateIndexNode(HNode* pNode)
 	pNode->m_pIndexBuffer = CreateIndexBuffer(g_pd3dDevice, &pNode->m_IndexList.at(0),
 		pNode->m_IndexList.size(), sizeof(DWORD));
 
+	return pNode;
+
 }
 
 void HQuadTree::CreateVertexNode(HNode* pNode)
@@ -127,7 +129,7 @@ bool HQuadTree::Build(HMap* map)
 	m_ltPos->BottomLeft = map->m_iNumVertices - map->m_iNumCols;
 	m_ltPos->BottomeRight = Vertices - 1;
 
-	m_pParentNode = CreateTreeNode(m_ltPos->TopRight, m_ltPos->TopLeft,
+	m_pParentNode = CreateTreeNode(NULL, m_ltPos->TopRight, m_ltPos->TopLeft,
 								m_ltPos->BottomLeft, m_ltPos->BottomeRight);
 
 	m_pParentNode->m_dwDepth = 0;
@@ -145,7 +147,7 @@ bool HQuadTree::SetChildTree(HNode* pNode)
 	UINT iDepth = pNode->m_dwDepth + 1;
 	pNode->m_isLeaf = FALSE;
 
-	if ((pNode->m_CornerIndex[1] - pNode->m_CornerIndex[0] <= 1))
+	if ((pNode->m_CornerIndex[1] - pNode->m_CornerIndex[0]) <= 1)
 	{
 		pNode->m_isLeaf = TRUE;
 		m_leafList.push_back(pNode);
@@ -239,16 +241,16 @@ bool HQuadTree::NodeDivide(HNode* pNode)
 		//m_ltPos[3].BottomeRight = pNode->m_CornerList[TOP_LEFT].z - fHalfHeight;
 
 
-		pNode->m_Child[0] = CreateTreeNode(
+		pNode->m_Child[0] = CreateTreeNode(pNode,
 			pNode->m_CornerIndex[TOP_LEFT], e0, e1, e2);
 
-		pNode->m_Child[1] = CreateTreeNode(
+		pNode->m_Child[1] = CreateTreeNode(pNode,
 			e0, pNode->m_CornerIndex[TOP_RIGHT], e2, e3);
 
-		pNode->m_Child[2] = CreateTreeNode(
+		pNode->m_Child[2] = CreateTreeNode(pNode,
 			e1, e2, pNode->m_CornerIndex[BOTTOM_LEFT], e4);
 
-		pNode->m_Child[3] = CreateTreeNode(
+		pNode->m_Child[3] = CreateTreeNode(pNode,
 			e2, e3, e4, pNode->m_CornerIndex[BOTTOM_RIGHT]);
 
 		NodeDivide(pNode->m_Child[0]);
@@ -260,10 +262,14 @@ bool HQuadTree::NodeDivide(HNode* pNode)
 	return true;
 }
 
-HNode* HQuadTree::CreateTreeNode(float topLeft, float topRight, float bottomLeft, float bottomRight)
+HNode* HQuadTree::CreateTreeNode(HNode* pParentNode, float topLeft, float topRight, float bottomLeft, float bottomRight)
 {
 	HNode* pNode = new HNode;
 
+	if (pParentNode != nullptr)
+	{
+		pNode->m_dwDepth = pParentNode->m_dwDepth + 1;
+	}
 	//float vCenter = 0.0f;
 	//Vector3 Max = Vector3{ topRight, vCenter, bottomRight };
 	//Vector3 Min = Vector3{ topLeft, vCenter, bottomLeft };
@@ -283,7 +289,7 @@ HNode* HQuadTree::CreateTreeNode(float topLeft, float topRight, float bottomLeft
 	//pNode->m_hBox.vMin = Min;
 	//pNode->m_hBox.vCenter = Center;
 
-	CreateIndexNode(pNode);
+	pNode = CreateIndexNode(pNode);
 
 	return pNode;
 }

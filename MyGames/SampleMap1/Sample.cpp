@@ -11,11 +11,11 @@ LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 bool Sample::GetIntersection(HNode* pNode)
 {
 	// face list
-	for (int face = 0; face < m_Map.m_IndexList.size() / 3; face++)
+	for (int face = 0; face < pNode->m_IndexList.size() / 3; face++)
 	{
-		v0 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 0]].p;
-		v1 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 1]].p;
-		v2 = m_Map.m_VertexList[m_Map.m_IndexList[face * 3 + 2]].p;
+		v0 = m_Map.m_VertexList[pNode->m_IndexList[face * 3 + 0]].p;
+		v1 = m_Map.m_VertexList[pNode->m_IndexList[face * 3 + 1]].p;
+		v2 = m_Map.m_VertexList[pNode->m_IndexList[face * 3 + 2]].p;
 
 		vEnd = m_Picking.m_Ray.vOrigin + m_Picking.m_Ray.vDir * 1000.0f;
 		vNormal = (v1 - v0).Cross(v2 - v0);
@@ -61,8 +61,9 @@ bool Sample::Init()
 	desc.szTextFile = L"../../Image/data/map/grass_2.jpg";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
+	
+	
 	m_Map.CreateMap(g_pd3dDevice, desc);
-
 
 	// 쿼드트리 공간분할
 	m_QuadTree.Build(&m_Map);
@@ -91,7 +92,7 @@ bool Sample::Frame()
 {
 	m_bSelect = false;
 	// Mouse Picking
-	if (g_Input.GetKey(VK_LBUTTON) == KEY_UP)
+	if (g_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
 	{
 		m_bSelect = true;
 		POINT cursor;
@@ -187,7 +188,6 @@ bool Sample::Render()
 
 	Vector3 pick;
 	float fMaxDist = 99999;
-	bool update = false;
 	for (int select = 0; select < m_SelectNode.size(); select++)
 	{
 		HNode* pNode = m_SelectNode[select];
@@ -198,7 +198,6 @@ bool Sample::Render()
 			{
 				pick = m_Picking.m_vInterSection;
 				fMaxDist = fDistance;
-				update = true;
 			}
 		}
 	}
