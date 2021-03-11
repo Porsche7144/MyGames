@@ -38,3 +38,40 @@ bool HSelect::IntersectBox(H_BOX* pBox, H_RAY* pRay)
 
 }
 
+bool HSelect::IntersectRayToSphere(H_SPHERE* pSphere, H_RAY* pRay)
+{
+	if (pRay == NULL) pRay = &m_Picking.m_Ray;
+
+	// p0 - c
+	Vector3 vDir = pRay->vOrigin - pSphere->vCenter;
+	// B = 2(u dot (p0 - c ))
+	float  fProj = vDir.Dot(pRay->vDir);
+	// 제한된 길이(세그먼트) 제외처리
+	if (pRay->fExtent > -1.0f && pRay->fExtent < fabs(fProj)) return false;
+
+	float b = 2.0f * fProj;
+	// C= (p0-c) dot (p0-c) - r*r
+	float c = vDir.Dot(vDir) - (pSphere->fRadius * pSphere->fRadius);
+	// D = B*B - 4*AC;
+	float fDiscriminant = (b*b) - (4.0f*c);
+	if (fDiscriminant < 0.0f)
+	{
+		return false;
+	}
+	fDiscriminant = sqrtf(fDiscriminant);
+	float t0 = (-b + fDiscriminant) / 2.0f;
+	float t1 = (-b - fDiscriminant) / 2.0f;
+
+	if (t0 >= 0.0f)
+	{
+		m_vIntersection = pRay->vOrigin + pRay->vDir * t0;
+		return true;
+	}
+	if (t1 >= 0.0f)
+	{
+		m_vIntersection = pRay->vOrigin + pRay->vDir * t1;
+		return true;
+	}
+	return false;
+}
+

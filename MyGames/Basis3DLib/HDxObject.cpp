@@ -678,13 +678,15 @@ namespace HBASIS_CORE_LIB
 
 		D3D11_SUBRESOURCE_DATA sd;
 		ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-		sd.pSysMem = &m_IndexList.at(0);
-		HRESULT hr = g_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer);
-		if (FAILED(hr))
+		if (m_IndexList.size() > 0)
 		{
-			return false;
+			sd.pSysMem = &m_IndexList.at(0);
+			HRESULT hr = g_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer);
+			if (FAILED(hr))
+			{
+				return false;
+			}
 		}
-
 		return true;
 	}
 

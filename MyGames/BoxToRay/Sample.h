@@ -27,10 +27,10 @@ class Sample : public HCore
 public:
 	HSelect			m_Select;
 	HQuadTree		m_QuadTree;
-	H_BOX			m_HBox;
+	H_SPHERE		m_HSphere;
 	HPicking		m_Picking;
 
-	HShapeBox			m_ShapeBox;
+	HShapeSphere		m_ShapeSphere;
 	HheightMap			m_Map;
 	HMinimap			m_Minimap;
 	HBoxUser			m_UserShape;

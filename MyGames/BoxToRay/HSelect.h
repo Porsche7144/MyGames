@@ -16,5 +16,6 @@ public:
 
 public:
 	bool IntersectBox(H_BOX* pBox, H_RAY* pRay);
+	bool IntersectRayToSphere(H_SPHERE* pSphere, H_RAY* pRay);
 };
 

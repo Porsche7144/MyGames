@@ -12,11 +12,11 @@ bool Sample::Init()
 {
 	HRESULT hr;
 
-	m_HBox.vMin = Vector3{ -20.0f, -5.0f, -5.0f };
-	m_HBox.vMax = Vector3{ -10.0f, 5.0f, 5.0f };
-	m_HBox.vCenter = (m_HBox.vMax + m_HBox.vMin) / 2.0f;
+	m_HSphere.vCenter = Vector3(-10.0f, 0.0f, 0.0f);
+	m_HSphere.fRadius = 5.0f;
 
-	if (!m_ShapeBox.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+
+	if (!m_ShapeSphere.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
 		return false;
 	}
@@ -71,7 +71,7 @@ bool Sample::Frame()
 		//vPickRayDir = Vector3::TransformNormal(vPickRayDir, matInvView);
 		//vPickRayDir.Normalize();
 
-		if (m_Select.IntersectBox(&m_HBox, &m_Select.m_Picking.m_Ray))
+		if (m_Select.IntersectRayToSphere(&m_HSphere, &m_Select.m_Picking.m_Ray))
 		{
 			MessageBox(0, _T("충돌"), _T("충돌"), MB_OK);
 		}
@@ -118,21 +118,20 @@ bool Sample::Frame()
 bool Sample::Render()
 {
 	Matrix matWorld, matScale;
-	Vector3 vCenter = (m_HBox.vMax + m_HBox.vMin) / 2.0f;
 
 	{
 		Vector3 scale;
-		scale.x = m_HBox.vMax.x - vCenter.x;
-		scale.y = m_HBox.vMax.y - vCenter.y;
-		scale.z = m_HBox.vMax.z - vCenter.z;
+		scale.x = m_HSphere.fRadius;
+		scale.y = m_HSphere.fRadius;
+		scale.z = m_HSphere.fRadius;
 
-		matScale = matScale.CreateScale(scale);
-		matScale._41 = m_HBox.vCenter.x;
-		matScale._42 = m_HBox.vCenter.y;
-		matScale._43 = m_HBox.vCenter.z;
+		matWorld = matScale.CreateScale(scale);
+		matWorld._41 = m_HSphere.vCenter.x;
+		matWorld._42 = m_HSphere.vCenter.y;
+		matWorld._43 = m_HSphere.vCenter.z;
 
-		m_ShapeBox.SetMatrix(&matScale, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-		m_ShapeBox.Render(g_pImmediateContext);
+		m_ShapeSphere.SetMatrix(&matWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+		m_ShapeSphere.Draw(g_pImmediateContext);
 	}
 
 
