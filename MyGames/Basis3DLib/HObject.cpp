@@ -249,7 +249,10 @@ bool HObject::PreRender(ID3D11DeviceContext* pd3dContext)
 }
 bool  HObject::Render(ID3D11DeviceContext* pd3dContext)
 {	
-	return HDxObject::Render(pd3dContext);
+	HDxObject::Render(pd3dContext);
+	pd3dContext->Draw(m_VertexList.size(), 0);
+
+	return true;
 }
 
 bool HObject::PostRender(ID3D11DeviceContext*	pd3dContext)

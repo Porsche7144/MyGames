@@ -335,4 +335,8 @@
       <Filter>math</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="PS.txt" />
+    <Text Include="VS.txt" />
+  </ItemGroup>
 </Project>

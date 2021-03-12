@@ -27,10 +27,6 @@
     <ClInclude Include="Sample.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="PS.txt" />
-    <Text Include="VS.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Basis3DLib\Basis3DLib.vcxproj">
       <Project>{0f7e36e1-230f-437b-931b-4ec17b4505e5}</Project>
     </ProjectReference>
@@ -41,6 +37,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>BoxToRay</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <ProjectName>SphereToRay</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,7 +87,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../../output/Debug/</OutDir>
-    <IntDir>../../output/Debug/SampleCB1</IntDir>
+    <IntDir>../../output/Debug/BoxToRay</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>

@@ -61,7 +61,6 @@ bool HShapeBox::CreateIndexData()
 	m_IndexList[iIndex++] = 12; m_IndexList[iIndex++] = 13; m_IndexList[iIndex++] = 14; m_IndexList[iIndex++] = 12;	m_IndexList[iIndex++] = 14; m_IndexList[iIndex++] = 15;
 	m_IndexList[iIndex++] = 16; m_IndexList[iIndex++] = 17; m_IndexList[iIndex++] = 18; m_IndexList[iIndex++] = 16;	m_IndexList[iIndex++] = 18; m_IndexList[iIndex++] = 19;
 	m_IndexList[iIndex++] = 20; m_IndexList[iIndex++] = 21; m_IndexList[iIndex++] = 22; m_IndexList[iIndex++] = 20;	m_IndexList[iIndex++] = 22; m_IndexList[iIndex++] = 23;
-	return true;
 
 	return true;
 }
@@ -151,12 +150,12 @@ bool HShapeSphere::CreateVertexData()
 {
 	CreateSphere(40, 1.0f);
 
+	
 	return true;
 }
 
 bool HShapeSphere::CreateIndexData()
 {
-
 	return true;
 }
 
@@ -180,24 +179,12 @@ void HShapeSphere::MakeSpherePoint(std::vector<Vector3> &spherePoints, UINT Slic
 	}
 }
 
-
-bool HShapeSphere::Draw(ID3D11DeviceContext * pContext)
-{
-	CreateSphere(40, 1.0f);
-	pContext->UpdateSubresource(
-		m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
-
-	return Render(pContext);
-}
-
 void HShapeSphere::CreateSphere(UINT Slices, float fRadius)
 {
 	const double PI = 3.141592653589793238462643383279502884197;
 	int iPos = 0;
 	vector<Vector3> VertexArray;
 	MakeSpherePoint(VertexArray, Slices, fRadius, Vector3(0, 0, 0));
-
-	//m_VertexList.resize(VertexArray.size());
 
 	int iNext = 0;
 	for (DWORD j = 0; j < Slices; j++)
@@ -228,12 +215,12 @@ void HShapeSphere::CreateSphere(UINT Slices, float fRadius)
 			v4.p.Normalize(v4.n);
 			v5.p.Normalize(v5.n);
 
-			v0.c = Vector4(1, 1, 1, 1.0f); //TVector4(v0.n.x, v0.n.y, v0.n.z, 1.0f);
-			v1.c = Vector4(1, 1, 1, 1.0f); //TVector4(v1.n.x, v1.n.y, v1.n.z, 1.0f);
-			v2.c = Vector4(1, 1, 1, 1.0f); //TVector4(v2.n.x, v2.n.y, v2.n.z, 1.0f);
-			v3.c = Vector4(1, 1, 1, 1.0f); //TVector4(v3.n.x, v3.n.y, v3.n.z, 1.0f);
-			v4.c = Vector4(1, 1, 1, 1.0f); //TVector4(v4.n.x, v4.n.y, v4.n.z, 1.0f);
-			v5.c = Vector4(1, 1, 1, 1.0f); //TVector4(v5.n.x, v5.n.y, v5.n.z, 1.0f);
+			v0.c = Vector4(1, 1, 1, 1.0f);
+			v1.c = Vector4(1, 1, 1, 1.0f);
+			v2.c = Vector4(1, 1, 1, 1.0f);
+			v3.c = Vector4(1, 1, 1, 1.0f);
+			v4.c = Vector4(1, 1, 1, 1.0f);
+			v5.c = Vector4(1, 1, 1, 1.0f);
 
 			// 구 텍스처 좌표
 			v0.t = Vector2((FLOAT)(atan2(v0.n.z, v0.n.x) / (PI*2.0f) + 0.5f), (FLOAT)(asinf(-v0.n.y) / PI + 0.5f));

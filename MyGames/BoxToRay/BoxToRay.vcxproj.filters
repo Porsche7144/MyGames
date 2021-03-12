@@ -30,8 +30,4 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="PS.txt" />
-    <Text Include="VS.txt" />
-  </ItemGroup>
 </Project>

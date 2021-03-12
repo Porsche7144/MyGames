@@ -19,7 +19,6 @@ public:
 	bool CreateIndexData() override;
 	void CreateSphere(UINT Slices, float fRadius);
 	void MakeSpherePoint(std::vector<Vector3> &spherePoints, UINT Slices, double fRadius, Vector3 center);
-	bool Draw(ID3D11DeviceContext * pContext);
 public:
 	HShapeSphere();
 	virtual ~HShapeSphere();

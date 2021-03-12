@@ -14,7 +14,7 @@ bool Sample::Init()
 
 	m_HSphere.vCenter = Vector3(-10.0f, 0.0f, 0.0f);
 	m_HSphere.fRadius = 5.0f;
-
+	m_ModelCamera.m_matWorld = Matrix::Identity;
 
 	if (!m_ShapeSphere.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
 	{
@@ -131,7 +131,7 @@ bool Sample::Render()
 		matWorld._43 = m_HSphere.vCenter.z;
 
 		m_ShapeSphere.SetMatrix(&matWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-		m_ShapeSphere.Draw(g_pImmediateContext);
+		m_ShapeSphere.Render(g_pImmediateContext);
 	}
 
 
