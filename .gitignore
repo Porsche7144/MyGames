@@ -6,6 +6,7 @@
 .obj/
 
 /.vs
+/FBX_SDK
 /MyGames/.vs/MyGames/v15
 MyGames\MyProject\MyGames\.vs
 \MyGames\MyProject\MyGames\.vs
