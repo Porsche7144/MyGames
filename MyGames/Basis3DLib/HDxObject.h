@@ -7,6 +7,8 @@
 using namespace DirectX;
 using namespace SimpleMath;
 
+
+
 struct P_VERTEX
 {
 	Vector3 p;
@@ -79,6 +81,14 @@ struct H_BOX
 	float fExtent[3];
 };
 
+struct HTriangle
+{
+	PNCT_VERTEX vVertex[3];
+	Vector3 vNormal;
+	int iSubIndex;
+	HTriangle(int Index) : iSubIndex(Index) {}
+	HTriangle() : iSubIndex(-1) {}
+};
 
 namespace HBASIS_CORE_LIB
 {
@@ -123,6 +133,7 @@ namespace HBASIS_CORE_LIB
 		Matrix						m_matRotation;
 
 		HTexture* m_pTexture;
+		std::vector<HTriangle> m_TriangleList;
 
 	public:
 		ID3DBlob*					pVSObj;

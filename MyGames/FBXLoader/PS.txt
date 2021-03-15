@@ -29,7 +29,7 @@ PS_OUTPUT PS( VS_OUTPUT vIn)
 {
 	PS_OUTPUT vOut;
 	float4 vTexture = g_txDiffuse.Sample( g_Sample, vIn.t);
-	vOut.c = vTexture*vIn.c;
+	vOut.c = vIn.c; //vTexture*vIn.c;
 	return vOut;
 }
 
