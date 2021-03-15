@@ -18,9 +18,9 @@ bool HFbxObj::LoadFBX(std::string FileName)
 		return false;
 	}
 
-	FbxNode* pFbxRootNode = m_pFbxScene->GetRootNode();
-	PreProcess(pFbxRootNode);
-	ParseNode(pFbxRootNode, Matrix::Identity);
+	m_pFbxRootNode = m_pFbxScene->GetRootNode();
+	PreProcess(m_pFbxRootNode);
+	ParseNode(m_pFbxRootNode, Matrix::Identity);
 	ParseAnimation(m_pFbxScene);
 
 	return true;
@@ -205,5 +205,13 @@ HFbxObj::HFbxObj()
 {
 	m_pFbxImporter = nullptr;
 	m_pFbxScene = nullptr;
+}
+
+HFbxObj::~HFbxObj()
+{
+	g_pSDKManager->Destroy();
+	m_pFbxImporter->Destroy();
+	m_pFbxScene->Destroy();
+	m_pFbxRootNode->Destroy();
 }
 

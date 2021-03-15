@@ -12,6 +12,7 @@ public:
 	static FbxManager*	g_pSDKManager;
 	FbxImporter*		m_pFbxImporter;
 	FbxScene*			m_pFbxScene;
+	FbxNode*			m_pFbxRootNode;
 	std::unordered_map<std::string, Matrix> m_dxMatrixMap;
 	hMeshMap m_hMeshMap;
 
@@ -27,5 +28,6 @@ public:
 
 public:
 	HFbxObj();
+	virtual ~HFbxObj();
 };
 
