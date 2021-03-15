@@ -209,9 +209,9 @@ HFbxObj::HFbxObj()
 
 HFbxObj::~HFbxObj()
 {
-	g_pSDKManager->Destroy();
-	m_pFbxImporter->Destroy();
-	m_pFbxScene->Destroy();
-	m_pFbxRootNode->Destroy();
+	if (m_pFbxImporter) { m_pFbxImporter->Destroy(); }
+	if (m_pFbxScene) { m_pFbxScene->Destroy(); }
+	// if (m_pFbxRootNode) { m_pFbxRootNode->Destroy(); }
+	if (g_pSDKManager) { g_pSDKManager->Destroy(); }
 }
 
