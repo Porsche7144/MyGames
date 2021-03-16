@@ -25,6 +25,8 @@ public:
 	void ParseAnimation(FbxScene * pScene);
 	void ParseMash(FbxNode* pNode, FbxMesh* pMesh, HObject* pObj);
 	Matrix ParseTransform(FbxNode* pNode, Matrix& matParentWorld);
+	void ReadTextureCoord(FbxMesh* pFbxMesh, FbxLayerElementUV* pUVSet,	int vertexIndex, int uvIndex, FbxVector2& uv);
+	std::string ParseMaterial(FbxSurfaceMaterial* pMtrl);
 
 public:
 	HFbxObj();

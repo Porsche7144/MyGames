@@ -110,6 +110,80 @@ Matrix HFbxObj::ParseTransform(FbxNode* pNode, Matrix& matParentWorld)
 	return matWorld;
 }
 
+void HFbxObj::ReadTextureCoord(FbxMesh * pFbxMesh, FbxLayerElementUV * pUVSet, int vertexIndex, int uvIndex, FbxVector2 & uv)
+{
+	FbxLayerElementUV* pFbxLayerElementUV = pUVSet;
+
+	if (pFbxLayerElementUV == nullptr)
+	{
+		return;
+	}
+
+	switch (pFbxLayerElementUV->GetMappingMode())
+	{
+		case FbxLayerElementUV::eByControlPoint:
+		{
+			switch (pFbxLayerElementUV->GetReferenceMode())
+			{
+				case FbxLayerElementUV::eDirect:
+				{
+					FbxVector2 FbxUV = pFbxLayerElementUV->GetDirectArray().GetAt(vertexIndex);
+					uv.mData[0] = FbxUV.mData[0];
+					uv.mData[1] = FbxUV.mData[1];
+					break;
+				}
+				case FbxLayerElementUV::eIndexToDirect:
+				{
+					int id = pFbxLayerElementUV->GetIndexArray().GetAt(vertexIndex);
+					FbxVector2 FbxUV = pFbxLayerElementUV->GetDirectArray().GetAt(id);
+					uv.mData[0] = FbxUV.mData[0];
+					uv.mData[1] = FbxUV.mData[1];
+					break;
+				}
+			}
+			break;
+		}
+
+		case FbxLayerElementUV::eByPolygonVertex:
+		{
+			switch (pFbxLayerElementUV->GetReferenceMode())
+			{
+				case FbxLayerElementUV::eDirect:
+				{
+
+				}
+				case FbxLayerElementUV::eIndexToDirect:
+				{
+					uv.mData[0] = pFbxLayerElementUV->GetDirectArray().GetAt(uvIndex).mData[0];
+					uv.mData[1] = pFbxLayerElementUV->GetDirectArray().GetAt(uvIndex).mData[1];
+					break;
+				}				
+			}
+			break;
+		}
+	}
+}
+
+std::string HFbxObj::ParseMaterial(FbxSurfaceMaterial * pMtrl)
+{
+	std::string name = pMtrl->GetName();
+
+	// sDiffuse 를 찾음.
+	auto Property = pMtrl->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+	if (Property.IsValid())
+	{
+		const FbxFileTexture* texture = Property.GetSrcObject<FbxFileTexture>(0);
+		if (texture != nullptr)
+		{
+			// sDiffuse 리턴
+			return texture->GetFileName();
+		}
+	}
+
+	return std::string("");
+}
+
 void HFbxObj::ParseNode(FbxNode * pNode, Matrix matParent)
 {
 	HObject* Obj = new HObject;
@@ -140,10 +214,35 @@ void HFbxObj::ParseAnimation(FbxScene * pScene)
 
 void HFbxObj::ParseMash(FbxNode * pNode, FbxMesh * pMesh, HObject * pObj)
 {
+	std::vector<FbxLayerElementUV*> VertexUVSet;
+	int iLayerCount = pMesh->GetLayerCount();
+	for (int iLayer = 0; iLayer < iLayerCount; iLayer++)
+	{
+		FbxLayer* pLayer = pMesh->GetLayer(iLayer);
+		
+		// 버텍스 컬러
+		if (pLayer->GetVertexColors() != NULL)
+		{
+
+		}
+
+		// UV
+		if (pLayer->GetUVs() != NULL)
+		{
+			VertexUVSet.push_back(pLayer->GetUVs());
+		}
+	}
+
+	std::vector<std::string> FbxMaterialList;
 	int iNumMtrl = pNode->GetMaterialCount();
 	for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
 	{
-
+		FbxSurfaceMaterial* pMtrl = pNode->GetMaterial(iMtrl);
+		if (pMtrl == nullptr)
+		{
+			continue;
+		}
+		FbxMaterialList.push_back(ParseMaterial(pMtrl));
 	}
 
 	// 폴리곤 수
@@ -175,10 +274,10 @@ void HFbxObj::ParseMash(FbxNode * pNode, FbxMesh * pMesh, HObject * pObj)
 			pMesh->GetPolygonVertexNormal(iPolyIndex, iVertIndex[1], vNormals[1]);
 			pMesh->GetPolygonVertexNormal(iPolyIndex, iVertIndex[2], vNormals[2]);
 			
-			int uv[3];
-			uv[0] = pMesh->GetTextureUVIndex(iPolyIndex, iVertIndex[0]);
-			uv[1] = pMesh->GetTextureUVIndex(iPolyIndex, iVertIndex[1]);
-			uv[2] = pMesh->GetTextureUVIndex(iPolyIndex, iVertIndex[2]);
+			int u[3];
+			u[0] = pMesh->GetTextureUVIndex(iPolyIndex, iVertIndex[0]);
+			u[1] = pMesh->GetTextureUVIndex(iPolyIndex, iVertIndex[1]);
+			u[2] = pMesh->GetTextureUVIndex(iPolyIndex, iVertIndex[2]);
 
 			for (int iIndex = 0; iIndex < 3; iIndex++)
 			{
@@ -192,6 +291,16 @@ void HFbxObj::ParseMash(FbxNode * pNode, FbxMesh * pMesh, HObject * pObj)
 				v.n.x = vNormals[iCornerIndices[iIndex]].mData[0];
 				v.n.y = vNormals[iCornerIndices[iIndex]].mData[2];
 				v.n.z = vNormals[iCornerIndices[iIndex]].mData[1];
+
+				for (int iUVIndex = 0; iUVIndex < VertexUVSet.size(); ++iUVIndex)
+				{
+					FbxLayerElementUV* pUVSet = VertexUVSet[iUVIndex];
+					FbxVector2 uv(0, 0);
+					ReadTextureCoord(pMesh, pUVSet, iCornerIndices[iIndex], u[iIndex], uv);
+
+					v.t.x = uv.mData[0];
+					v.t.y = 1.0f - uv.mData[1];
+				}
 
 				Triangle.vVertex[iIndex] = v;
 			}
