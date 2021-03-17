@@ -8,6 +8,9 @@ public:
 	HFbxObj		m_FbxObj;
 
 public:
+	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+public:
 	bool Init() override;
 	bool Frame() override;
 	bool Render() override;

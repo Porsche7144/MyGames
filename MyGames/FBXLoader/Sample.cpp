@@ -1,12 +1,22 @@
 #include "Sample.h"
 
+LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	if (m_pMainCamera == nullptr) return -1;
+	m_pMainCamera->WndProc(hWnd, message, wParam, lParam);
+
+	return -1;
+}
+
 bool Sample::Init()
 {
-	m_FbxObj.Load("../../Image/FBX_Image/Card.fbx");
+	m_Camera.CreateViewMatrix({ 0,50,-50 }, { 0,0,0 });
+
+	m_FbxObj.Load("../../Image/FBX_Image/sphereBox.fbx");
 
 	for (auto data : m_FbxObj.m_hMeshMap)
 	{
-		HObject* pObj = (HObject*)data.second;
+		HModelObject* pObj = (HModelObject*)data.second;
 		if (pObj->m_TriangleList.empty()) continue;
 
 		pObj->m_VertexList.resize(pObj->m_TriangleList.size() * 3);
@@ -18,7 +28,10 @@ bool Sample::Init()
 			pObj->m_VertexList[iIndex +2] = pObj->m_TriangleList[iFace].vVertex[2];
 		}
 
-		if (!pObj->Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+		T_STR LoadTexName = L"../../Image/";
+		LoadTexName += pObj->FbxMaterialList[0];
+
+		if (!pObj->Create(g_pd3dDevice, L"VS.txt", L"PS.txt", LoadTexName))
 		{
 			return false;
 		}

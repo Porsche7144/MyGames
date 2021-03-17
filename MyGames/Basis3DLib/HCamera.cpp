@@ -36,7 +36,7 @@ int HCamera::WndProc(
 		}break;
 		case WM_MOUSEWHEEL:
 		{
-			m_fWheelDelta += GET_WHEEL_DELTA_WPARAM(wParam) / 120.0f;
+			m_fWheelDelta += GET_WHEEL_DELTA_WPARAM(wParam) / 60.0f;
 		}break;
 
 	}

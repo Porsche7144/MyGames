@@ -177,7 +177,16 @@ std::string HFbxObj::ParseMaterial(FbxSurfaceMaterial * pMtrl)
 		if (texture != nullptr)
 		{
 			// sDiffuse 리턴
-			return texture->GetFileName();
+			const char* szFilename = texture->GetFileName();
+			char drive[MAX_PATH];
+			char dir[MAX_PATH];
+			char name[MAX_PATH];
+			char ext[MAX_PATH];
+			_splitpath_s(szFilename, drive, dir, name, ext);
+			std::string texName = name;
+			texName += ext;
+
+			return texName;
 		}
 	}
 
@@ -186,7 +195,7 @@ std::string HFbxObj::ParseMaterial(FbxSurfaceMaterial * pMtrl)
 
 void HFbxObj::ParseNode(FbxNode * pNode, Matrix matParent)
 {
-	HObject* Obj = new HObject;
+	HModelObject* Obj = new HModelObject;
 	Obj->m_szName = to_mw(pNode->GetName());
 	m_hMeshMap[pNode] = Obj;
 	
@@ -197,7 +206,7 @@ void HFbxObj::ParseNode(FbxNode * pNode, Matrix matParent)
 	if (pNode->GetMesh() != nullptr)
 	{
 		// vb, ib
-		ParseMash(pNode, pNode->GetMesh(), Obj);
+		ParseMesh(pNode, pNode->GetMesh(), Obj);
 	}
 
 	int iChild = pNode->GetChildCount();
@@ -212,7 +221,7 @@ void HFbxObj::ParseAnimation(FbxScene * pScene)
 {
 }
 
-void HFbxObj::ParseMash(FbxNode * pNode, FbxMesh * pMesh, HObject * pObj)
+void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 {
 	std::vector<FbxLayerElementUV*> VertexUVSet;
 	int iLayerCount = pMesh->GetLayerCount();
@@ -242,8 +251,23 @@ void HFbxObj::ParseMash(FbxNode * pNode, FbxMesh * pMesh, HObject * pObj)
 		{
 			continue;
 		}
-		FbxMaterialList.push_back(ParseMaterial(pMtrl));
+		pObj->FbxMaterialList.push_back(to_mw(ParseMaterial(pMtrl)));
 	}
+	
+	// Transform
+
+	// FbxAMatrix A가 붙으면 그 자체로 역행렬
+	FbxAMatrix geom;
+	//FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+	//FbxVector4 rotation = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+	//FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+	//geom.SetT(trans);
+	//geom.SetR(rotation);
+	//geom.SetS(scale);
+	//pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(geom));
+
+	geom = pNode->EvaluateGlobalTransform(1.0f);
+	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(pNode->EvaluateGlobalTransform(1.0f)));
 
 	// 폴리곤 수
 	int iPolyCount = pMesh->GetPolygonCount();
@@ -282,6 +306,9 @@ void HFbxObj::ParseMash(FbxNode * pNode, FbxMesh * pMesh, HObject * pObj)
 			for (int iIndex = 0; iIndex < 3; iIndex++)
 			{
 				PNCT_VERTEX v;
+				// geom에 pVertexPositions[iCornerIndices[iIndex]] 를 곱함.
+				auto finalPos = geom.MultT(pVertexPositions[iCornerIndices[iIndex]]);
+
 				v.p.x = pVertexPositions[iCornerIndices[iIndex]].mData[0]; // x
 				v.p.y = pVertexPositions[iCornerIndices[iIndex]].mData[2]; // z
 				v.p.z = pVertexPositions[iCornerIndices[iIndex]].mData[1]; // y
