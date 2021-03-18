@@ -15,8 +15,8 @@
 #include <process.h> //_beginthreadex
 #include <d3dcompiler.h>
 #include <memory>
-#include "dxtk/WICTextureLoader.h"
-#include "dxtk/DDSTextureLoader.h"
+#include "WICTextureLoader.h"
+#include "DDSTextureLoader.h"
 #include "HMath.h"
 
 #pragma comment( lib, "Winmm.lib")

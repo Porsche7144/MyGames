@@ -5,6 +5,16 @@
 
 using namespace DirectX::SimpleMath;
 
+struct HSubMesh
+{
+	std::vector<HTriangle>		m_TriangleList;
+	std::vector<PNCT_VERTEX>	m_VertexList;
+	ComPtr<ID3D11Buffer>		m_pVertexBuffer;
+	HTexture*					m_pTexture;
+	int iCount;
+
+};
+
 static Matrix DxConvertMatrix(Matrix m)
 {
 	Matrix mat;
@@ -35,7 +45,8 @@ static Matrix ConvertMatrixA(const FbxMatrix& matrix)
 class HModelObject : public HObject
 {
 public:
-	std::vector<std::wstring> FbxMaterialList;
+	std::vector<std::wstring>	FbxMaterialList;
+	std::vector<HSubMesh>		m_SubMesh;
 };
 
 typedef std::unordered_map<FbxNode*, HModelObject*> hMeshMap;

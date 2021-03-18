@@ -6,6 +6,7 @@ class Sample : public HCore
 {
 public:
 	HFbxObj		m_FbxObj;
+	HModelObject m_ModelObj;
 
 public:
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -19,9 +19,9 @@ bool HFbxObj::LoadFBX(std::string FileName)
 	}
 
 	m_pFbxRootNode = m_pFbxScene->GetRootNode();
-	PreProcess(m_pFbxRootNode);
+	// PreProcess(m_pFbxRootNode);
 	ParseNode(m_pFbxRootNode, Matrix::Identity);
-	ParseAnimation(m_pFbxScene);
+	// ParseAnimation(m_pFbxScene);
 
 	return true;
 }
@@ -184,8 +184,19 @@ std::string HFbxObj::ParseMaterial(FbxSurfaceMaterial * pMtrl)
 			char ext[MAX_PATH];
 			_splitpath_s(szFilename, drive, dir, name, ext);
 			std::string texName = name;
-			texName += ext;
+			
 
+			std::string Ext;
+			Ext = ext;
+
+			// FBX는 tga를 로드할 수 없다.
+			if (Ext == ".tga")
+			{
+				Ext.clear();
+				Ext = ".dds";
+			}
+
+			texName += Ext;
 			return texName;
 		}
 	}
@@ -224,6 +235,8 @@ void HFbxObj::ParseAnimation(FbxScene * pScene)
 void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 {
 	std::vector<FbxLayerElementUV*> VertexUVSet;
+	std::vector<FbxLayerElementMaterial*> pMaterialSetList;
+
 	int iLayerCount = pMesh->GetLayerCount();
 	for (int iLayer = 0; iLayer < iLayerCount; iLayer++)
 	{
@@ -240,6 +253,11 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 		{
 			VertexUVSet.push_back(pLayer->GetUVs());
 		}
+		if (pMesh->GetLayer(iLayer)->GetMaterials() != nullptr)
+		{
+			// 메쉬의 Material의 정보를 받아와 리스트에 넣는다.
+			pMaterialSetList.push_back(pMesh->GetLayer(iLayer)->GetMaterials());
+		}
 	}
 
 	std::vector<std::string> FbxMaterialList;
@@ -252,6 +270,12 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 			continue;
 		}
 		pObj->FbxMaterialList.push_back(to_mw(ParseMaterial(pMtrl)));
+	}
+
+	// 받아온 Matrial의 갯수 만큼 리사이즈
+	if (iNumMtrl > 1)
+	{
+		pObj->m_SubMesh.resize(iNumMtrl);
 	}
 	
 	// Transform
@@ -282,6 +306,43 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 
 		int iCornerIndices[3];
 		HTriangle Triangle;
+
+		// Sub Material
+		int iSubMtrl = 0;
+		if (pMaterialSetList.size() > 0)
+		{
+			// GetMappingMode() 요소가 표면에 매핑되는 방식을 얻어온다.
+			switch (pMaterialSetList[0]->GetMappingMode())
+			{
+				case FbxLayerElement::eByPolygon:
+				{
+					// GetReferenceMode() 좌표배열이 저장된 매핑정보를 얻어온다.
+					switch ((pMaterialSetList[0]->GetReferenceMode()))
+					{
+					case FbxLayerElement::eIndex:
+					{
+						iSubMtrl = iPoly;
+					}break;
+
+					// 인덱스 버퍼를 통한 참조
+					case FbxLayerElement::eIndexToDirect:
+					{
+						iSubMtrl = pMaterialSetList[0]->GetIndexArray().GetAt(iPoly);
+						pObj->m_SubMesh[iSubMtrl].iCount++;
+					}break;
+					}
+
+				default:
+				{
+					break;
+				}
+
+				}
+			}
+			
+		}
+
+
 		for (int iTri = 0; iTri < iTriangleCount; iTri++)
 		{
 			int iVertIndex[3] = { 0, iTri + 2, iTri + 1 };
@@ -315,9 +376,9 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 
 				v.c = Vector4(1, 1, 0, 1);
 
-				v.n.x = vNormals[iCornerIndices[iIndex]].mData[0];
-				v.n.y = vNormals[iCornerIndices[iIndex]].mData[2];
-				v.n.z = vNormals[iCornerIndices[iIndex]].mData[1];
+				v.n.x = 0; // vNormals[iCornerIndices[iIndex]].mData[0];
+				v.n.y = 0; // vNormals[iCornerIndices[iIndex]].mData[2];
+				v.n.z = 0; // vNormals[iCornerIndices[iIndex]].mData[1];
 
 				for (int iUVIndex = 0; iUVIndex < VertexUVSet.size(); ++iUVIndex)
 				{
@@ -331,11 +392,19 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 
 				Triangle.vVertex[iIndex] = v;
 			}
-			pObj->m_TriangleList.push_back(Triangle);
+			if (iNumMtrl > 1)
+			{
+				pObj->m_SubMesh[iSubMtrl].m_TriangleList.push_back(Triangle);
+			}
+			else
+			{
+				pObj->m_TriangleList.push_back(Triangle);
+			}
 		}
 	}
 
 }
+
 
 HFbxObj::HFbxObj()
 {
