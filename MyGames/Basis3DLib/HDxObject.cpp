@@ -642,6 +642,7 @@ namespace HBASIS_CORE_LIB
 
 	bool HDxObject::CreateVertexBuffer()
 	{
+		if (m_VertexList.size() <= 0) return true;
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
 		/*UINT ByteWidth;

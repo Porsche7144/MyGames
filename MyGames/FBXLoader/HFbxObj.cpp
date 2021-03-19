@@ -61,6 +61,10 @@ bool HFbxObj::Initialize(std::string FileName)
 	// Scene을 가져옴.
 	bRet = m_pFbxImporter->Import(m_pFbxScene);
 
+	// Import 이후에 세팅
+	FbxAxisSystem::MayaZUp.DeepConvertScene(m_pFbxScene);
+	FbxAxisSystem SceneAxisSystem = m_pFbxScene->GetGlobalSettings().GetAxisSystem();
+
 	// 삼각형화
 	FbxGeometryConverter iGeomConverter(g_pSDKManager);
 	iGeomConverter.Triangulate(m_pFbxScene, true);
@@ -282,16 +286,16 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 
 	// FbxAMatrix A가 붙으면 그 자체로 역행렬
 	FbxAMatrix geom;
-	//FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
-	//FbxVector4 rotation = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
-	//FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
-	//geom.SetT(trans);
-	//geom.SetR(rotation);
-	//geom.SetS(scale);
-	//pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(geom));
+	FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+	FbxVector4 rotation = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+	FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+	geom.SetT(trans);
+	geom.SetR(rotation);
+	geom.SetS(scale);
+	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(geom));
 
-	geom = pNode->EvaluateGlobalTransform(1.0f);
-	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(pNode->EvaluateGlobalTransform(1.0f)));
+	/*geom = pNode->EvaluateGlobalTransform(1.0f);
+	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(pNode->EvaluateGlobalTransform(1.0f)));*/
 
 	// 폴리곤 수
 	int iPolyCount = pMesh->GetPolygonCount();

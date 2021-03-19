@@ -56,27 +56,27 @@ bool HCore::CameraFrame()
 
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
-		m_pMainCamera->FrontMovement(1.0f);
+		m_pMainCamera->FrontMovement(5.0f);
 	}
 	if (g_Input.GetKey('S') == KEY_HOLD)
 	{
-		m_pMainCamera->FrontMovement(-1.0f);
+		m_pMainCamera->FrontMovement(-5.0f);
 	}
 	if (g_Input.GetKey('A') == KEY_HOLD)
 	{
-		m_pMainCamera->RightMovement(-1.0f);
+		m_pMainCamera->RightMovement(-5.0f);
 	}
 	if (g_Input.GetKey('D') == KEY_HOLD)
 	{
-		m_pMainCamera->RightMovement(1.0f);
+		m_pMainCamera->RightMovement(5.0f);
 	}
 	if (g_Input.GetKey('Q') == KEY_HOLD)
 	{
-		m_pMainCamera->UpMovement(1.0f);
+		m_pMainCamera->UpMovement(5.0f);
 	}
 	if (g_Input.GetKey('E') == KEY_HOLD)
 	{
-		m_pMainCamera->UpMovement(-1.0f);
+		m_pMainCamera->UpMovement(-5.0f);
 	}
 
 	m_pMainCamera->Frame();
@@ -158,10 +158,10 @@ bool	HCore::PreRender()
 }
 bool	HCore::PostRender()
 {
-	// m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	// m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
-	// m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
-	// m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
+	m_LineShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(100, 0, 0), Vector4(1, 0, 0, 1));
+	m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(0, 100, 0), Vector4(0, 1, 0, 1));
+	m_LineShape.Draw(g_pImmediateContext, Vector3(0, 0, 0), Vector3(0, 0, 100), Vector4(0, 0, 1, 1));
 
 	g_Timer.Render();
 	g_Input.Render();

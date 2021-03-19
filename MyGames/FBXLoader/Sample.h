@@ -7,6 +7,7 @@ class Sample : public HCore
 public:
 	HFbxObj		m_FbxObj;
 	HModelObject m_ModelObj;
+	HDxObject m_DxObj;
 
 public:
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
