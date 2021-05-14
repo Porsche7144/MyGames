@@ -4,10 +4,9 @@
 .vs/
 .bin/
 .obj/
-
 /.vs
 /FBX_SDK
-/Image/FBX_Image
+/Image
 FBX_SDK.7z
 /FBX_SDK.7z
 /MyGames/.vs/MyGames/v15
