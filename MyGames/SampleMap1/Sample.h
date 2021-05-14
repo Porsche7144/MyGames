@@ -28,7 +28,7 @@ public:
 	H_BOX			m_TBoxBase;
 	HPicking		m_Picking;
 
-	HMap			m_Map;
+	HMap				m_Map;
 	HMinimap			m_Minimap;
 	HBoxUser			m_BoxShape;
 	HBoxUser			m_UserShape;
@@ -43,7 +43,7 @@ public:
 	Vector3 v0, v1, v2, vNormal, vEnd;
 	Vector3 list[3];
 
-	float t, u, v;
+	float t, u, v = 0;
 	bool m_bSelect;
 
 	std::vector<HObject*> m_ObjList;

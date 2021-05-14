@@ -4,14 +4,18 @@
 #include "HInput.h"
 #include "HWrite.h"
 #include "HDebugCamera.h"
+#include "HSky.h"
 
 class HCore : public HDevice
 {
 public:
 	bool			m_bGameRun;
-	HDebugCamera	m_Camera;
+	static bool		m_bFrameRun;
 	HCamera*		m_pMainCamera;
-	HShapeLine			m_LineShape;
+	HDebugCamera	m_Camera;
+	HShapeLine		m_LineShape;
+	HSky			m_SkyBox;
+	D3D11_RASTERIZER_DESC rsDesc;
 
 public:
 	virtual bool	PreInit();
@@ -25,9 +29,7 @@ public:
 	virtual bool	Frame() {
 		return true;
 	};
-	virtual bool	PostFrame() {
-		return true;
-	};
+	virtual bool	PostFrame();
 	virtual bool	Render() {
 		return true;
 	};
@@ -39,6 +41,10 @@ public:
 	};
 	virtual HRESULT DeleteDXResource();
 	virtual HRESULT CreateDXResource(UINT w, UINT h);
+	bool InitTool(HWND hwnd, HINSTANCE hInstance);
+	bool ReleaseTool();
+	bool ToolRun();
+
 private:
 	bool	GameInit();
 	bool	GameFrame();

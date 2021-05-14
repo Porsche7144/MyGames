@@ -1,0 +1,193 @@
+// HLSL
+Texture2D g_txDiffuse;  // : resigter(t0)  입력값 없으면 자동으로 t0
+SamplerState g_Sample;  // : register(s0); 입력값 없으면 자동으로 s0
+#define g_iNumLight 3
+#define HALF_VECTOR
+
+
+cbuffer HDataCB : register(b0)
+{
+	float4x4  g_matWorld: packoffset(c0);
+	float4x4  g_matView: packoffset(c4);
+	float4x4  g_matProj: packoffset(c8);
+	float4 vColor : packoffset(c12.x);
+	float  fTime  : packoffset(c13.x);
+	float  fGameTime  : packoffset(c13.y);
+};
+
+//--------------------------------------------------------------------------------------
+//Lighting Variables
+//--------------------------------------------------------------------------------------
+cbuffer cb1: register(b1)
+{
+	float4				g_cAmbientMaterial[g_iNumLight];
+	float4				g_cDiffuseMaterial[g_iNumLight];
+	float4				g_cSpecularMaterial[g_iNumLight];
+	float4				g_cEmissionMaterial[g_iNumLight];
+
+	float4				g_cAmbientLightColor[g_iNumLight];
+	float4				g_cDiffuseLightColor[g_iNumLight];
+	float4				g_cSpecularLightColor[g_iNumLight];
+};
+//--------------------------------------------------------------------------------------
+//Lighting Variables
+//--------------------------------------------------------------------------------------
+cbuffer cb2: register(b2)
+{
+	matrix				g_matWorldInverse[g_iNumLight];
+	float4				g_vLightDir[g_iNumLight];	
+	float4				g_vLightPos[g_iNumLight];	
+	float4				g_vEyeDir[g_iNumLight];	
+	float4				g_vEyePos[g_iNumLight];	
+};
+//--------------------------------------------------------------------------------------
+//Lighting Variables
+//--------------------------------------------------------------------------------------
+cbuffer cb3: register(b3)
+{	
+	float4		g_vSpotInfo[g_iNumLight];
+	//float		g_fTheta[g_iNumLight] : packoffset(c0.x);		// 내부 콘의 각도 범위	
+	//float		g_fPhi[g_iNumLight] : packoffset(c0.y);			// 외부 콘의 각도 범위
+	//float		g_fFalloff[g_iNumLight] : packoffset(c0.z);		// 내부 콘과 외부 콘의 휘도( Luminance )	
+	//float     g_nNumLights[g_iNumLight] : packoffset(c0.w);	// 거리
+};
+
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+	float4 wp : TEXCOORD1;
+};
+
+struct PS_OUTPUT
+{
+	float4 c : SV_TARGET;
+};
+
+float4 Diffuse(float3 vNormal, float4 vLightDir)
+{
+	float fIntensity = max(0, dot(vNormal, normalize(-vLightDir.xyz)));
+	float4 diffuse = float4(1,1,1,1)* fIntensity;
+	diffuse.w = 1.0f;
+	return diffuse;
+}
+
+float4 Specular(float3 vNormal, float4 vLightDir,
+					float4 vEyeDir)
+{
+	float  fPower = 0.0f;
+#ifndef HALF_VECTOR
+	float3 R = reflect(vLightDir.xyz, vNormal);
+	fPower = pow(saturate(dot(R, -vEyeDir)), vEyeDir.w);
+#else
+	float3 vHalf = normalize(-vLightDir.xyz + -vEyeDir.xyz);
+	fPower = pow(saturate(dot(vNormal, vHalf)), vEyeDir.w);
+#endif
+	float4 specular = float4(1,1,1,1) * fPower;
+	specular.w = 1.0f;
+	return specular;
+}
+
+float4 ComputePointLight(float3 vVertexPos, float3 vVertexNormal, int iNumLights)
+{
+	float4 vPointColors = float4(0, 0, 0, 1);
+
+	for(int iLight = 0; iLight < iNumLights; iLight++)
+	{
+		float4 vLight;
+		vLight.xyz = normalize(vVertexPos - g_vLightPos[iLight].xyz);
+		vLight.w = distance(vVertexPos, g_vLightPos[iLight].xyz);
+
+		float fLuminance = smoothstep(vLight.w -5, vLight.w, g_vLightPos[iLight].w);
+		float fIntensity = saturate(dot(vVertexNormal, -vLight.xyz));
+		vPointColors += Diffuse(vVertexNormal, vLight) * fLuminance;
+	}
+
+	vPointColors.w = 1.0f;
+	return vPointColors;
+}
+
+float4 ComputeSpotLight(float3 vVertexPos, float3 vVertexNormal, int iNumLights)
+{
+	float4 vSpotLight = float4(0, 0, 0, 1);
+
+	for(int iLight = 0; iLight < iNumLights; iLight++)
+	{
+		float fInner = g_vSpotInfo[iLight].x;
+		float fOutner = g_vSpotInfo[iLight].y;
+		float fFalloff = g_vSpotInfo[iLight].z;
+		float fRange = g_vSpotInfo[iLight].w;
+
+		float4 vLight;
+		float3 ownerLight = g_vLightDir[iLight].xyz;
+		vLight.xyz = normalize(vVertexPos - g_vLightPos[iLight].xyz);
+		vLight.w = distance(vVertexPos, g_vLightPos[iLight].xyz);
+		float fDot = max(0.0f, dot(vLight.xyz, g_vLightDir[iLight].xyz));
+		fDot = acos(fDot) * (180.0f / 3.141592f);
+		if(fDot < fOutner)
+		{
+			float fIntensity = max(0.3f, 1.0f-smoothstep(fInner, fOutner, fDot));
+			vSpotLight += Diffuse(vVertexNormal, vLight) + 
+						  Specular(vVertexNormal, vLight, g_vEyeDir[iLight]) * fIntensity;
+		}
+		else
+		{
+			vSpotLight += g_cAmbientLightColor[iLight];
+		}
+	}
+
+	vSpotLight.w = 1.0f;
+	return vSpotLight;
+}
+
+float4 Rim( VS_OUTPUT vIn)
+{
+	float fRimLightcolor = smoothstep(1.0f - vIn.wp.w, 1.0f, 
+							1.0f - max(0, dot(vIn.n, vIn.wp.xyz)));
+	float4 vFinalColor = float4(fRimLightcolor, fRimLightcolor, fRimLightcolor, 1.0f);	
+	return vFinalColor;
+}
+
+float Geom(VS_OUTPUT vIn)
+{
+	float3 vReflect = normalize(-g_vLightDir[0] + -g_vEyeDir[0]);
+	float fDot  = pow(saturate(dot(vIn.n, vReflect)), 1);
+
+	float NdotL = saturate(dot(vIn.n, -g_vLightDir[0]));
+	float NdotH = saturate(dot(vIn.n, vReflect));
+	float NdotV = saturate(dot(vIn.n, -g_vEyeDir[0]));
+	float VdotH = saturate(dot(-g_vEyeDir[0], vReflect));
+
+	float Geom = min(min(2 * (NdotH*NdotV / VdotH), 2 * (NdotH*NdotL / VdotH)), 1.0f) / max(0.1f, NdotV);
+	return Geom;
+}
+
+PS_OUTPUT PS( VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	float4 vTexture = g_txDiffuse.Sample( g_Sample, vIn.t);
+	float4 lightColor = ComputeSpotLight(vIn.wp, vIn.n, 3);
+
+	vOut.c = vTexture * vIn.c; //*Diffuse(vIn.n, g_vLightDir[0])*lightColor;
+	//vOut.c = Diffuse(vIn.n, g_vLightDir[0]) * Geom(vIn) * lightColor * vTexture;
+
+	return vOut;
+}
+
+PS_OUTPUT PS_Default( VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	float4 vTexture = g_txDiffuse.Sample( g_Sample, vIn.t);
+	vOut.c = vTexture;
+	return vOut;
+}
+
+PS_OUTPUT PSLine( VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	// float4 vTexture = g_txDiffuse.Sample( g_Sample, vIn.t);
+	vOut.c = vIn.c;
+	return vOut;
+}

@@ -5,6 +5,7 @@
 class Sample : public HCore
 {
 public:
+	std::vector<std::shared_ptr<HFbxObj>> m_ObjList;
 	HFbxObj		m_FbxObj;
 	HModelObject m_ModelObj;
 	HDxObject m_DxObj;

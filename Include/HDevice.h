@@ -12,7 +12,7 @@ public:
 	ComPtr<IDXGISwapChain> 					m_pSwapChain;
 	ComPtr<ID3D11RenderTargetView>			m_pRednerTargetView;
 	ComPtr<ID3D11DepthStencilView>			m_pDSV;
-
+	DXGI_SWAP_CHAIN_DESC m_pSwapChainDesc;
 	D3D11_VIEWPORT			m_ViewPort;
 
 public:

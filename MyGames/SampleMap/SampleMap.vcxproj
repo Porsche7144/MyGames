@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="PS.txt" />
+    <Text Include="SkyObject.txt" />
     <Text Include="VS.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,15 @@
 #include "HCollision.h"
+
+bool HCollision::SphereToSphere(H_SPHERE rt1, H_SPHERE rt2)
+{
+	float fDistance = (rt1.vCenter - rt2.vCenter).Length();
+	if (rt1.fRadius + rt2.fRadius > fDistance)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool HCollision::RectInPt(RECT rt, POINT pt)
 {
 	return (pt.x >= rt.left && 

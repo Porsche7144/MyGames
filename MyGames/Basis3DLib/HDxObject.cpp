@@ -629,9 +629,9 @@ namespace HBASIS_CORE_LIB
 		g_pd3dDevice = pDevice;
 
 		CreateVertexData();
+		CreateIndexData();
 		CreateVertexBuffer();
 		CreateConstantBuffer();
-		CreateIndexData();
 		CreateIndexBuffer();
 		LoadShader(vs, ps);
 		CreateInputLayOut();
@@ -756,9 +756,9 @@ namespace HBASIS_CORE_LIB
 			pData->matView = m_matView.Transpose();
 			pData->matProject = m_matProject.Transpose();
 
-			pData->vColor[0] = cosf(g_fGameTimer);
-			pData->vColor[1] = sinf(g_fGameTimer);
-			pData->vColor[2] = 1.0f - cosf(g_fGameTimer);
+			pData->vColor[0] = m_cbData.vColor[0];
+			pData->vColor[1] = m_cbData.vColor[1];
+			pData->vColor[2] = m_cbData.vColor[2];
 			pData->vColor[3] = 1;
 			pData->vTime[0] = cosf(g_fGameTimer) * 0.5f + 0.5f;
 			pData->vTime[1] = g_fGameTimer;
@@ -897,10 +897,14 @@ namespace HBASIS_CORE_LIB
 		{
 			pContext->PSSetShaderResources(0, 1, &m_pTexture->m_pTextureSRV);
 		}
-		// Vertex Draw
-		// g_pImmediateContext->Draw(m_VertexList.size(), 0);
-
-		PostRender(pContext);
+		if (m_pIndexBuffer == nullptr)
+		{
+			pContext->Draw(m_VertexList.size(), 0);
+		}
+		else
+		{
+			PostRender(pContext);
+		}
 
 		return true;
 	}
@@ -913,11 +917,22 @@ namespace HBASIS_CORE_LIB
 
 	bool HDxObject::Release()
 	{
+		if(m_ConstantBuffer != nullptr)
 		m_ConstantBuffer->Release();
+
+		if (m_pVertexBuffer != nullptr)
 		m_pVertexBuffer->Release();
+
+		if (m_pIndexBuffer != nullptr)
 		m_pIndexBuffer->Release();
+
+		if (m_pInputLayout != nullptr)
 		m_pInputLayout->Release();
+
+		if (m_pVertexShader != nullptr)
 		m_pVertexShader->Release();
+
+		if (m_pPixelShader != nullptr)
 		m_pPixelShader->Release();
 
 		return true;
@@ -928,6 +943,12 @@ namespace HBASIS_CORE_LIB
 		m_szVertexShader = "VS";
 		m_szPixelShader = "PS";
 		m_iTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		m_ConstantBuffer = nullptr;
+		m_pVertexBuffer = nullptr;
+		m_pIndexBuffer = nullptr;
+		m_pInputLayout = nullptr;
+		m_pVertexShader = nullptr;
+		m_pPixelShader = nullptr;
 	}
 
 	HDxObject::~HDxObject()

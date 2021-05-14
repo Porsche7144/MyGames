@@ -19,9 +19,9 @@ bool HFbxObj::LoadFBX(std::string FileName)
 	}
 
 	m_pFbxRootNode = m_pFbxScene->GetRootNode();
-	// PreProcess(m_pFbxRootNode);
+	PreProcess(m_pFbxRootNode);
 	ParseNode(m_pFbxRootNode, Matrix::Identity);
-	// ParseAnimation(m_pFbxScene);
+	ParseAnimation(m_pFbxScene);
 
 	return true;
 }
@@ -66,8 +66,8 @@ bool HFbxObj::Initialize(std::string FileName)
 	FbxAxisSystem SceneAxisSystem = m_pFbxScene->GetGlobalSettings().GetAxisSystem();
 
 	// 삼각형화
-	FbxGeometryConverter iGeomConverter(g_pSDKManager);
-	iGeomConverter.Triangulate(m_pFbxScene, true);
+	/*FbxGeometryConverter iGeomConverter(g_pSDKManager);
+	iGeomConverter.Triangulate(m_pFbxScene, true);*/
 
 	return true;
 }
@@ -85,6 +85,8 @@ void HFbxObj::PreProcess(FbxNode * pNode)
 	if (iter == m_dxMatrixMap.end())
 	{
 		m_dxMatrixMap[pNode->GetName()] = mat;
+		m_pNodeMap[pNode] = m_MatrixList.size();
+		m_MatrixList.push_back(mat);
 	}
 
 	int iChild = pNode->GetChildCount();
@@ -93,7 +95,7 @@ void HFbxObj::PreProcess(FbxNode * pNode)
 		FbxNode* pChildNode = pNode->GetChild(iObj);
 
 		// 메쉬와 뼈대만 저장하도록.
-		if (pChildNode->GetNodeAttribute() != NULL)
+	/*	if (pChildNode->GetNodeAttribute() != NULL)
 		{
 			FbxNodeAttribute::EType AttributeType = pChildNode->GetNodeAttribute()->GetAttributeType();
 			if (AttributeType != FbxNodeAttribute::eMesh &&
@@ -102,7 +104,7 @@ void HFbxObj::PreProcess(FbxNode * pNode)
 			{
 				continue;
 			}
-		}
+		}*/
 		// 갯수만큼 재귀호출.
 		PreProcess(pChildNode);
 	}
@@ -194,7 +196,7 @@ std::string HFbxObj::ParseMaterial(FbxSurfaceMaterial * pMtrl)
 			Ext = ext;
 
 			// FBX는 tga를 로드할 수 없다.
-			if (Ext == ".tga")
+			if (Ext == ".tga" || Ext == ".TGA")
 			{
 				Ext.clear();
 				Ext = ".dds";
@@ -210,9 +212,16 @@ std::string HFbxObj::ParseMaterial(FbxSurfaceMaterial * pMtrl)
 
 void HFbxObj::ParseNode(FbxNode * pNode, Matrix matParent)
 {
+	if (pNode == nullptr) return;
+	if (pNode && (pNode->GetCamera() || pNode->GetLight()))
+	{
+		return;
+	}
+
 	HModelObject* Obj = new HModelObject;
 	Obj->m_szName = to_mw(pNode->GetName());
 	m_hMeshMap[pNode] = Obj;
+	m_hMeshList.push_back(Obj);
 	
 	Matrix matWorld = ParseTransform(pNode, matParent);
 
@@ -232,14 +241,11 @@ void HFbxObj::ParseNode(FbxNode * pNode, Matrix matParent)
 	}
 }
 
-void HFbxObj::ParseAnimation(FbxScene * pScene)
-{
-}
-
 void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 {
 	std::vector<FbxLayerElementUV*> VertexUVSet;
 	std::vector<FbxLayerElementMaterial*> pMaterialSetList;
+	std::vector<FbxLayerElementVertexColor*> pVertexColor;
 
 	int iLayerCount = pMesh->GetLayerCount();
 	for (int iLayer = 0; iLayer < iLayerCount; iLayer++)
@@ -249,7 +255,7 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 		// 버텍스 컬러
 		if (pLayer->GetVertexColors() != NULL)
 		{
-
+			pVertexColor.push_back(pLayer->GetVertexColors());
 		}
 
 		// UV
@@ -292,16 +298,39 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 	geom.SetT(trans);
 	geom.SetR(rotation);
 	geom.SetS(scale);
-	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(geom));
+	// pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(geom));
 
 	/*geom = pNode->EvaluateGlobalTransform(1.0f);
 	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(pNode->EvaluateGlobalTransform(1.0f)));*/
+
+	// 컬러 = 월드 * 역행렬 * 전치행렬
+	FbxAMatrix normalMatrix = geom;
+	normalMatrix = normalMatrix.Inverse();
+	normalMatrix = normalMatrix.Transpose();
+
+	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(pNode->EvaluateGlobalTransform(1.0f)));
 
 	// 폴리곤 수
 	int iPolyCount = pMesh->GetPolygonCount();
 	// 정점 수
 	int iVertexCount = pMesh->GetControlPointsCount();
 	FbxVector4* pVertexPositions = pMesh->GetControlPoints();
+
+	bool bSkinedMesh = ParseMeshSkinningMap(pMesh, pObj->m_WeightList);
+	pObj->m_bSkinnedMesh = bSkinedMesh;
+	if (pObj->m_bSkinnedMesh == false)
+	{
+		auto data = m_pNodeMap.find(pNode);
+		int  iBoneIndex = data->second;
+		pObj->m_WeightList.resize(iVertexCount);
+		for (int iv = 0; iv < iVertexCount; iv++)
+		{
+			pObj->m_WeightList[iv].m_Index.push_back(iBoneIndex);
+			pObj->m_WeightList[iv].m_Weight.push_back(1.0f);
+		}
+	}
+
+	int iBasePolyIndex = 0;
 
 	for (int iPoly = 0; iPoly < iPolyCount; iPoly++)
 	{
@@ -323,23 +352,23 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 					// GetReferenceMode() 좌표배열이 저장된 매핑정보를 얻어온다.
 					switch ((pMaterialSetList[0]->GetReferenceMode()))
 					{
-					case FbxLayerElement::eIndex:
-					{
-						iSubMtrl = iPoly;
-					}break;
+						case FbxLayerElement::eIndex:
+						{
+							iSubMtrl = iPoly;
+						}break;
 
-					// 인덱스 버퍼를 통한 참조
-					case FbxLayerElement::eIndexToDirect:
-					{
-						iSubMtrl = pMaterialSetList[0]->GetIndexArray().GetAt(iPoly);
-						pObj->m_SubMesh[iSubMtrl].iCount++;
-					}break;
+						// 인덱스 버퍼를 통한 참조
+						case FbxLayerElement::eIndexToDirect:
+						{
+							iSubMtrl = pMaterialSetList[0]->GetIndexArray().GetAt(iPoly);
+							// pObj->m_SubMesh[iSubMtrl].iCount++;
+						}break;
 					}
 
-				default:
-				{
-					break;
-				}
+					default:
+					{
+						break;
+					}
 
 				}
 			}
@@ -373,28 +402,88 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 				PNCT_VERTEX v;
 				// geom에 pVertexPositions[iCornerIndices[iIndex]] 를 곱함.
 				auto finalPos = geom.MultT(pVertexPositions[iCornerIndices[iIndex]]);
+				v.p.x = finalPos.mData[0]; // x
+				v.p.y = finalPos.mData[2]; // z
+				v.p.z = finalPos.mData[1]; // y
 
-				v.p.x = pVertexPositions[iCornerIndices[iIndex]].mData[0]; // x
-				v.p.y = pVertexPositions[iCornerIndices[iIndex]].mData[2]; // z
-				v.p.z = pVertexPositions[iCornerIndices[iIndex]].mData[1]; // y
 
-				v.c = Vector4(1, 1, 0, 1);
-
-				v.n.x = 0; // vNormals[iCornerIndices[iIndex]].mData[0];
-				v.n.y = 0; // vNormals[iCornerIndices[iIndex]].mData[2];
-				v.n.z = 0; // vNormals[iCornerIndices[iIndex]].mData[1];
-
-				for (int iUVIndex = 0; iUVIndex < VertexUVSet.size(); ++iUVIndex)
+				// 컬러
+				FbxColor color = FbxColor(1, 1, 1, 1);
+				if (pVertexColor.size())
 				{
-					FbxLayerElementUV* pUVSet = VertexUVSet[iUVIndex];
-					FbxVector2 uv(0, 0);
-					ReadTextureCoord(pMesh, pUVSet, iCornerIndices[iIndex], u[iIndex], uv);
+					color = ReadColor(pMesh,
+						pVertexColor.size(),
+						pVertexColor[0],
+						iCornerIndices[iIndex],
+						iBasePolyIndex + iVertIndex[iIndex]);
+				}
+				v.c.x = (float)color.mRed;
+				v.c.y = (float)color.mGreen;
+				v.c.z = (float)color.mBlue;
+				v.c.w = 1;
 
-					v.t.x = uv.mData[0];
-					v.t.y = 1.0f - uv.mData[1];
+
+				// 노말
+				FbxVector4 normal = ReadNormal(pMesh, iCornerIndices[iIndex], iBasePolyIndex + iVertIndex[iIndex]);
+				finalPos = normalMatrix.MultT(normal);
+
+				v.n.x = finalPos.mData[0];
+				v.n.y = finalPos.mData[2];
+				v.n.z = finalPos.mData[1];
+
+				if (VertexUVSet.size())
+				{
+					for (int iUVIndex = 0; iUVIndex < 1; /*VertexUVSet.size();*/ ++iUVIndex)
+					{
+						FbxLayerElementUV* pUVSet = VertexUVSet[iUVIndex];
+						FbxVector2 uv(0, 0);
+						ReadTextureCoord(pMesh, pUVSet, iCornerIndices[iIndex], u[iIndex], uv);
+
+						v.t.x = uv.mData[0];
+						v.t.y = 1.0f - uv.mData[1];
+					}
+				}
+				
+				IW_VERTEX iw;
+				if (pObj->m_bSkinnedMesh)
+				{
+					HWeight* pW = &pObj->m_WeightList[iCornerIndices[iIndex]];
+
+					int iMax = -99;
+					int iWeightSize = pW->m_Weight.size();
+
+					if (pW != nullptr)
+					{
+						if (iMax < iWeightSize)
+						{
+							iMax = pW->m_Weight.size();
+						}
+					}
+
+					for (int i = 0; i < pW->m_Index.size(); i++)
+					{
+						if (i < 4)
+							iw.i1[i] = pW->m_Index[i];
+						else
+							iw.i2[i - 4] = pW->m_Index[i];
+
+					}
+					for (int i = 0; i < pW->m_Weight.size(); i++)
+					{
+						if (i < 4)
+							iw.w1[i] = pW->m_Weight[i];
+						else
+							iw.w2[i - 4] = pW->m_Weight[i];
+					}
+				}
+				else
+				{
+					iw.i1[0] = 0; // 자기 자신
+					iw.w1[0] = 1.0f;
 				}
 
 				Triangle.vVertex[iIndex] = v;
+				Triangle.vIWVertex[iIndex] = iw;
 			}
 			if (iNumMtrl > 1)
 			{
@@ -405,10 +494,113 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObject * pObj)
 				pObj->m_TriangleList.push_back(Triangle);
 			}
 		}
+		iBasePolyIndex += iPolySize;
 	}
 
 }
 
+FbxVector4 HFbxObj::ReadNormal(const FbxMesh* mesh,	int controlPointIndex, int VertexCounter)
+{
+	if (mesh->GetElementNormalCount() < 1) {}
+
+	const FbxGeometryElementNormal* vertexNormal = mesh->GetElementNormal(0);
+	// 노말 획득 
+	FbxVector4 result;
+	// 노말 벡터를 저장할 벡터 
+	switch (vertexNormal->GetMappingMode()) 	// 매핑 모드 
+	{
+		// 제어점 마다 1개의 매핑 좌표가 있다.
+	case FbxGeometryElement::eByControlPoint:
+	{
+		// control point mapping 
+		switch (vertexNormal->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect:
+		{
+			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(controlPointIndex).mData[0]);
+			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(controlPointIndex).mData[1]);
+			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(controlPointIndex).mData[2]);
+		} break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			int index = vertexNormal->GetIndexArray().GetAt(controlPointIndex);
+			// 인덱스를 얻어온다. 
+			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[0]);
+			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[1]);
+			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[2]);
+		}break;
+		}break;
+	}break;
+	// 정점 마다 1개의 매핑 좌표가 있다.
+	case FbxGeometryElement::eByPolygonVertex:
+	{
+		switch (vertexNormal->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect:
+		{
+			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(VertexCounter).mData[0]);
+			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(VertexCounter).mData[1]);
+			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(VertexCounter).mData[2]);
+		}
+		break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			int index = vertexNormal->GetIndexArray().GetAt(VertexCounter);
+			// 인덱스를 얻어온다. 
+			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[0]);
+			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[1]);
+			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[2]);
+		}break;
+		}
+	}break;
+	}
+	return result;
+}
+
+FbxColor HFbxObj::ReadColor(const FbxMesh* mesh, DWORD dwVertexColorCount, FbxLayerElementVertexColor* pVertexColorSet,
+	DWORD dwDCCIndex, DWORD dwVertexIndex)
+{
+	FbxColor Value(1, 1, 1, 1);
+	if (dwVertexColorCount > 0 && pVertexColorSet != NULL)
+	{
+		// Crack apart the FBX dereferencing system for Color coordinates		
+		switch (pVertexColorSet->GetMappingMode())
+		{
+			case FbxLayerElement::eByControlPoint:
+				switch (pVertexColorSet->GetReferenceMode())
+				{
+					case FbxLayerElement::eDirect:
+					{
+						Value = pVertexColorSet->GetDirectArray().GetAt(dwDCCIndex);
+					}break;
+
+					case FbxLayerElement::eIndexToDirect:
+					{
+						int iColorIndex = pVertexColorSet->GetIndexArray().GetAt(dwDCCIndex);
+						Value = pVertexColorSet->GetDirectArray().GetAt(iColorIndex);
+					}break;
+				}
+
+			case FbxLayerElement::eByPolygonVertex:
+				switch (pVertexColorSet->GetReferenceMode())
+				{
+					case FbxLayerElement::eDirect:
+					{
+						int iColorIndex = dwVertexIndex;
+						Value = pVertexColorSet->GetDirectArray().GetAt(iColorIndex);
+					}break;
+
+					case FbxLayerElement::eIndexToDirect:
+					{
+						int iColorIndex = pVertexColorSet->GetIndexArray().GetAt(dwVertexIndex);
+						Value = pVertexColorSet->GetDirectArray().GetAt(iColorIndex);
+					}break;
+				}
+			break;
+		}
+	}
+	return Value;
+}
 
 HFbxObj::HFbxObj()
 {
@@ -420,7 +612,69 @@ HFbxObj::~HFbxObj()
 {
 	if (m_pFbxImporter) { m_pFbxImporter->Destroy(); }
 	if (m_pFbxScene) { m_pFbxScene->Destroy(); }
-	// if (m_pFbxRootNode) { m_pFbxRootNode->Destroy(); }
+	// if (m_pFbxRootNode != nullptr) { m_pFbxRootNode->Destroy(); }
 	if (g_pSDKManager) { g_pSDKManager->Destroy(); }
 }
 
+
+/////////////////////////////////////////////////////
+
+int SkinData::iNumMaxWeight = 0;
+
+void SkinData::Alloc(size_t dwCount, DWORD dwStride)
+{
+	dwVertexCount = dwCount;
+	dwVertexStride = dwStride;
+
+	size_t dwBufferSize = dwVertexCount * dwVertexStride;
+	pBoneIndices.reset(new int[dwBufferSize]);
+	ZeroMemory(pBoneIndices.get(), sizeof(float) * dwBufferSize);
+
+	pBoneWeights.reset(new float[dwBufferSize]);
+	ZeroMemory(pBoneWeights.get(), sizeof(float) * dwBufferSize);
+}
+
+
+int* SkinData::GetIndices(size_t dwIndex)
+{
+	assert(dwIndex < dwVertexCount);
+	return pBoneIndices.get() + (dwIndex * dwVertexStride);
+}
+float* SkinData::GetWeights(size_t dwIndex)
+{
+	assert(dwIndex < dwVertexCount);
+	return pBoneWeights.get() + (dwIndex * dwVertexStride);
+}
+
+DWORD SkinData::GetBoneCount() const
+{
+	return static_cast<DWORD>(InfluenceNodes.size());
+}
+
+void SkinData::InsertWeight(size_t dwIndex, DWORD dwBoneIndex, float fBoneWeight)
+{
+	assert(dwBoneIndex < 256);
+
+	auto pIndices = GetIndices(dwIndex);
+	auto pWeights = GetWeights(dwIndex);
+
+	for (DWORD i = 0; i < dwVertexStride; ++i)
+	{
+		if (fBoneWeight > pWeights[i])
+		{
+			for (DWORD j = (dwVertexStride - 1); j > i; --j)
+			{
+				pIndices[j] = pIndices[j - 1];
+				pWeights[j] = pWeights[j - 1];
+			}
+			pIndices[i] = static_cast<int>(dwBoneIndex);
+			pWeights[i] = fBoneWeight;
+			break;
+		}
+		// 최대 본 인덱스를 얻는다.
+		if (iNumMaxWeight < i)
+		{
+			iNumMaxWeight = i;
+		}
+	}
+}

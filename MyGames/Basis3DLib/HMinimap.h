@@ -1,12 +1,14 @@
 #pragma once
 #include "HShape.h"
 #include "HDxRT.h"
+#include "HMap.h"
 
 class HMinimap : public HShapePlane
 {
 public:
 	HShapePlane m_Plane;
 	HDxRT m_HDxRT;
+
 
 public:
 	bool Create(ID3D11Device* pd3dDevice, T_STR szVS, T_STR szPS, T_STR filename) override;

@@ -37,6 +37,7 @@
     <ClInclude Include="HDxRT.h" />
     <ClInclude Include="HDxState.h" />
     <ClInclude Include="HEffect.h" />
+    <ClInclude Include="HFbxObj.h" />
     <ClInclude Include="HFrustum.h" />
     <ClInclude Include="HGraphicAPI.h" />
     <ClInclude Include="HheightMap.h" />
@@ -45,10 +46,12 @@
     <ClInclude Include="HMath.h" />
     <ClInclude Include="HMatrix.h" />
     <ClInclude Include="HMinimap.h" />
+    <ClInclude Include="HModelObj.h" />
     <ClInclude Include="HModelViewCamera.h" />
     <ClInclude Include="HPicking.h" />
     <ClInclude Include="HQuadTree.h" />
     <ClInclude Include="HShape.h" />
+    <ClInclude Include="HSky.h" />
     <ClInclude Include="HStd.h" />
     <ClInclude Include="HTexture.h" />
     <ClInclude Include="HTextureManager.h" />
@@ -84,6 +87,8 @@
     <ClCompile Include="HDxRT.cpp" />
     <ClCompile Include="HDxState.cpp" />
     <ClCompile Include="HEffect.cpp" />
+    <ClCompile Include="HFbxAnimation.cpp" />
+    <ClCompile Include="HFbxObj.cpp" />
     <ClCompile Include="HFrustum.cpp" />
     <ClCompile Include="HGraphicAPI.cpp" />
     <ClCompile Include="HheightMap.cpp" />
@@ -91,10 +96,12 @@
     <ClCompile Include="HMap.cpp" />
     <ClCompile Include="HMatrix.cpp" />
     <ClCompile Include="HMinimap.cpp" />
+    <ClCompile Include="HModelObj.cpp" />
     <ClCompile Include="HModelViewCamera.cpp" />
     <ClCompile Include="HPicking.cpp" />
     <ClCompile Include="HQuadTree.cpp" />
     <ClCompile Include="HShape.cpp" />
+    <ClCompile Include="HSky.cpp" />
     <ClCompile Include="HTexture.cpp" />
     <ClCompile Include="HTextureManager.cpp" />
     <ClCompile Include="HTimer.cpp" />
@@ -200,14 +207,15 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../../fmod/inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/;../../include/TNetLib;../../fmod/inc;../../include/DirectXTK;../../FBX_SDK/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>../../fmod/lib/x64;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Lib;../../fmod/lib/x64;../../FBX_SDK/lib/x64/debug;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>copy  "..\\..\\output\\Debug\\Basis3DLib.lib" "..\\..\\lib\\Basis3DLib_D.lib"

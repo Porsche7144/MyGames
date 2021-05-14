@@ -10,8 +10,13 @@ bool  HTexture::Load(ID3D11Device* pd3dDevice, T_STR filename)
 	ID3D11Resource* texture;
 	HRESULT hr = DirectX::CreateWICTextureFromFile(pd3dDevice, filename.c_str(), NULL, &m_pTextureSRV);
 
-	if (FAILED(hr)) return false;
+	if (FAILED(hr))
+	{
+		hr = DirectX::CreateDDSTextureFromFile(pd3dDevice, filename.c_str(), NULL, &m_pTextureSRV);
 
+		if (FAILED(hr)) return false;
+	}
+	   
 	return true;
 }
 

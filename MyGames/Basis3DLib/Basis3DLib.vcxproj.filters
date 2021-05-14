@@ -37,6 +37,9 @@
     <Filter Include="map">
       <UniqueIdentifier>{666dcef8-b1a1-4c6b-894f-7bc4b18e22f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FBX">
+      <UniqueIdentifier>{891cdf9f-afee-42ce-8c2f-bcd2a3c24a26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HBasisStd.h">
@@ -198,6 +201,15 @@
     <ClInclude Include="HQuadTree.h">
       <Filter>dx</Filter>
     </ClInclude>
+    <ClInclude Include="HSky.h">
+      <Filter>dx</Filter>
+    </ClInclude>
+    <ClInclude Include="HFbxObj.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="HModelObj.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -328,6 +340,18 @@
     </ClCompile>
     <ClCompile Include="HQuadTree.cpp">
       <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HSky.cpp">
+      <Filter>dx</Filter>
+    </ClCompile>
+    <ClCompile Include="HFbxAnimation.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="HFbxObj.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="HModelObj.cpp">
+      <Filter>FBX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

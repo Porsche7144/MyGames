@@ -53,6 +53,34 @@ bool Sample::Init()
 {
 	HRESULT hr;
 
+	//HMapDesc desc;
+	//desc.iNumCols = 257;
+	//desc.iNumRows = 257;
+	//desc.fCellDistance = 1.0f;
+	//desc.fScaleHeight = 10.0f;
+	//desc.szTextFile = L"../../Image/data/map/grass_2.jpg";
+	//desc.szVS = L"VS.txt";
+	//desc.szPS = L"PS.txt";
+	
+	
+	// m_Map.CreateMap(g_pd3dDevice, desc);
+
+	/////////////////////////////////////////////////////////////////////////////
+	// 유저 생성
+	/////////////////////////////////////////////////////////////////////////////
+	if (!m_UserShape.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L"../../Image/tileA.jpg"))
+	{
+		return false;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+	// 높이맵 생성
+	/////////////////////////////////////////////////////////////////////////////
+	//if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/129.jpg"))
+	//{
+	//	return false;
+	//}
+
 	HMapDesc desc;
 	desc.iNumCols = 257;
 	desc.iNumRows = 257;
@@ -61,18 +89,18 @@ bool Sample::Init()
 	desc.szTextFile = L"../../Image/data/map/grass_2.jpg";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
-	
-	
 	m_Map.CreateMap(g_pd3dDevice, desc);
+
+	m_vDirValue = { 0,0,0,0 };
 
 	// 쿼드트리 공간분할
 	m_QuadTree.Build(&m_Map);
 
 
 	// 카메라 바꿔치는 부분.
-	m_ModelCamera.CreateViewMatrix({ 0,10,-10 }, { 0,0,0 });
+	m_ModelCamera.CreateViewMatrix({ 0,30,-30 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_ModelCamera.CreateProjectionMatrix(1, 300, HBASIS_PI / 4.0f, fAspect);
+	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
 
 	// 프러스텀 생성
@@ -91,7 +119,8 @@ bool Sample::Init()
 bool Sample::Frame()
 {
 	m_bSelect = false;
-	// Mouse Picking
+
+#pragma region Mouse Picking
 	if (g_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
 	{
 		m_bSelect = true;
@@ -130,9 +159,9 @@ bool Sample::Frame()
 		m_Picking.m_Ray.vOrigin = vPickRayOrigin;
 
 	}
+#pragma endregion
 
-
-
+#pragma region InputKey
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
 		m_UserShape.FrontMovement(1.0f);
@@ -157,6 +186,7 @@ bool Sample::Frame()
 	{
 		m_UserShape.UpMovement(-1.0f);
 	}
+#pragma endregion
 
 	m_UserShape.Frame();
 
@@ -202,7 +232,7 @@ bool Sample::Render()
 		}
 	}
 
-	float fRadius = 20.0f;
+	float fRadius = 10.0f;
 	if (m_bSelect)
 	{
 		for (int i = 0; i < m_Map.m_VertexList.size(); i++)
@@ -211,21 +241,26 @@ bool Sample::Render()
 			if (fDist < fRadius)
 			{
 				Vector3 v = m_Map.m_VertexList[i].p;
-				m_Map.m_VertexList[i].p.y = v.y + 1.0f - cosf((fDist / fRadius));
+				m_Map.m_VertexList[i].p.y = v.y + 1.0f - sinf((fDist / fRadius));
 			}
 
 		}
 
+		// 실시간 노말 계산
+		m_Map.CalcPerVertexNormalsFastLookUp();
 		g_pImmediateContext->UpdateSubresource(m_Map.m_pVertexBuffer, 0, NULL, &m_Map.m_VertexList.at(0), 0, 0);
 	}
 
+	m_Map.m_cbData.vColor[0] = m_pMainCamera->m_vLook.x;
+	m_Map.m_cbData.vColor[1] = m_pMainCamera->m_vLook.y;
+	m_Map.m_cbData.vColor[2] = m_pMainCamera->m_vLook.z;
 	for (auto node : m_QuadTree.m_leafList)
 	{
 		m_QuadTree.Draw(g_pImmediateContext, node);
 	}
 
 	m_UserShape.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	// m_UserShape.Render(g_pImmediateContext);
+	m_UserShape.Render(g_pImmediateContext);
 
 
 	// m_QuadTree.Render(g_pImmediateContext);

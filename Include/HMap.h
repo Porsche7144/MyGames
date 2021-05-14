@@ -12,6 +12,21 @@ struct HMapDesc
 	T_STR szPS;
 };
 
+struct HNormalLookUpTable
+{
+	int Index[6];
+
+	HNormalLookUpTable()
+	{
+		Index[0] = -1;
+		Index[1] = -1;
+		Index[2] = -1;
+		Index[3] = -1;
+		Index[4] = -1;
+		Index[5] = -1;
+	}
+};
+
 class HMap : public HObject
 {
 public:
@@ -35,6 +50,18 @@ public:
 	virtual float GetHeightMap(int row, int col);
 	virtual float Lerp(float fStart, float fEnd, float fTangent);
 	virtual float GetHeightMap(float fPosX, float fPosZ);
+
+public:
+	Vector3 GetNormalOfVertex(UINT index);
+	std::vector<Vector3> m_FaceNormals;
+	std::vector<HNormalLookUpTable> m_LookUpTable;
+	Vector3 ComputeFaceNormal(DWORD i0, DWORD i1, DWORD i2);
+	void CalcFaceNormals();
+	void GetVertexNormal();	
+	void InitFaceNormal();
+	void GenNormalLookUpTable();
+	void CalcPerVertexNormalsFastLookUp();
+	
 
 public:
 	HMap();

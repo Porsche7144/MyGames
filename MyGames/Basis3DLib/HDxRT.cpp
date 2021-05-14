@@ -168,9 +168,20 @@ bool HDxRT::SetViewport()
 
 bool HDxRT::Release()
 {
-	m_pRTV->Release();
-	m_pSRV->Release();
-	m_pDSV->Release();
+	if (m_pRTV)
+	{
+		m_pRTV->Release();
+	}
+
+	if (m_pSRV)
+	{
+		m_pSRV->Release();
+	}
+
+	if (m_pDSV)
+	{
+		m_pDSV->Release();
+	}
 
 	return true;
 }

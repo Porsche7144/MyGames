@@ -1,0 +1,70 @@
+// HLSL = ½¦ÀÌ´õ ¾ð¾î
+
+#define MAX_BONE_MATRIX 255
+#define FT_CONSTANTBUFFER
+
+cbuffer HDataCB : register(b0)
+{
+	float4x4  g_matWorld: packoffset(c0);
+	float4x4  g_matView: packoffset(c4);
+	float4x4  g_matProj: packoffset(c8);
+	float4 vColor : packoffset(c12.x);
+	float  fTime  : packoffset(c13.x);
+	float  fGameTime  : packoffset(c13.y);
+};
+
+#ifdef FT_CONSTANTBUFFER
+	cbuffer cbAnimMatrices : register (b1)
+	{
+		matrix m_matConstBoneWorld[MAX_BONE_MATRICES];
+	};
+	matrix FetchBoneTransform(uint iBone)
+	{
+		matrix mret;
+		mret = m_matConstBoneWorld[iBone];
+		return mret;
+	}
+#else
+	Buffer<float4>     g_BufferBoneWorld : register(t1);
+	float4x4 FetchBoneTransform(uint iBone)
+	{
+		float4x4 mret;
+		iBone *= 4;
+		float4 row1 = g_BufferBoneWorld.Load(iBone + 0);
+		float4 row2 = g_BufferBoneWorld.Load(iBone + 1);
+		float4 row3 = g_BufferBoneWorld.Load(iBone + 2);
+		float4 row4 = g_BufferBoneWorld.Load(iBone + 3);
+		mret = float4x4(row1, row2, row3, row4);
+		return mret;
+	}
+#endif
+
+struct VS_INPUT
+{
+	float3 p : POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR;
+	float2 t : TEXTURE;
+};
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+};
+VS_OUTPUT VS( VS_INPUT vIn)
+{
+	VS_OUTPUT vOut;
+	float4 p = float4(vIn.p,1.0f);
+	p = mul(p, g_matWorld);
+	p = mul(p, g_matView);
+	vOut.p = mul(p, g_matProj);
+
+	// dot
+	vOut.n = vIn.n;
+	vOut.c = vIn.c;
+	vOut.t = vIn.t;
+
+	return vOut;
+}

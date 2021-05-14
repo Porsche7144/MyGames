@@ -1,5 +1,28 @@
 #include "HQuadTree.h"
 
+void HQuadTree::CalcPerVertexNormalsFastLookup(HNode* node)
+{
+	/*CalcFaceNormals();
+	for (int i = 0; i < m_iNumVertices; i++)
+	{
+		Vector3 avgNormal = { 0,0,0 };
+		for (int f = 0; f < 6; f++)
+		{
+			int index = m_LookupTabel[i].index[f];
+			if (index != -1)
+			{
+				avgNormal += m_FaceNormals[index];
+			}
+			else
+			{
+				break;
+			}
+		}
+		m_VertexList[i].n = avgNormal;
+		m_VertexList[i].n.Normalize();
+	}*/
+}
+
 HNode* HQuadTree::CreateIndexNode(HNode* pNode)
 {
 	

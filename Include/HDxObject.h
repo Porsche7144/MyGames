@@ -1,7 +1,7 @@
 #pragma once
+#include "HCollision.h"
 #include "HStd.h"
 #include "HDxState.h"
-#include "SimpleMath.h"
 #include "HTexture.h"
 
 using namespace DirectX;
@@ -50,6 +50,56 @@ struct PNCT_VERTEX
 	}
 };
 
+struct IW_VERTEX
+{
+	float 		i1[4];
+	float 		w1[4];
+
+	IW_VERTEX()
+	{
+		i1[0] = i1[1] = i1[2] = i1[3] = 0.0f;
+		w1[0] = w1[1] = w1[2] = w1[3] = 0;
+	}
+};
+
+struct PNCTIW_VERTEX
+{
+	Vector3		p;
+	Vector3		n;
+	Vector4		c;
+	Vector2     t;
+	Vector4		i;
+	Vector4		w;
+	bool operator == (const PNCTIW_VERTEX & Vertex)
+	{
+		if (p == Vertex.p  && n == Vertex.n && 	c == Vertex.c  &&	t == Vertex.t)
+		{
+			return true;
+		}
+		return  false;
+	}
+	PNCTIW_VERTEX() {}
+	PNCTIW_VERTEX(Vector3		vp,
+		Vector3		vn,
+		Vector4		vc,
+		Vector2     vt)
+	{
+		p = vp, n = vn, c = vc, t = vt;
+		i = Vector4(0, 0, 0, 0);
+		w = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+};
+
+struct HTriangle
+{
+	PNCT_VERTEX vVertex[3];
+	IW_VERTEX    vIWVertex[3];
+	Vector3 vNormal;
+	int iSubIndex;
+	HTriangle(int Index) : iSubIndex(Index) {}
+	HTriangle() : iSubIndex(-1) {}
+};
+
 struct HDataCB
 {
 	Matrix matWorld;
@@ -58,36 +108,6 @@ struct HDataCB
 
 	float vColor[4];
 	float vTime[4];
-};
-
-struct H_SPHERE
-{
-	Vector3 vCenter;
-	float fRadius;
-};
-
-struct H_BOX
-{
-	// Common
-	Vector3 vCenter;
-	Vector3 vPos[8];
-
-	// AABB
-	Vector3 vMax;
-	Vector3 vMin;
-
-	// OBB
-	Vector3 vAxis[3];
-	float fExtent[3];
-};
-
-struct HTriangle
-{
-	PNCT_VERTEX vVertex[3];
-	Vector3 vNormal;
-	int iSubIndex;
-	HTriangle(int Index) : iSubIndex(Index) {}
-	HTriangle() : iSubIndex(-1) {}
 };
 
 namespace HBASIS_CORE_LIB
@@ -118,12 +138,19 @@ namespace HBASIS_CORE_LIB
 	ID3D11ShaderResourceView*	CreateShaderResourceView(ID3D11Device* pDevice, ID3D11DeviceContext*    pContext, const TCHAR* strFilePath);
 	ID3D11DepthStencilView* CreateDepthStencilView(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight);
 
+	struct ColorData
+	{
+		float r;
+		float g;
+		float b;
+		float a;
+	};
 
 	class HDxObject
 	{
 
 	public:
-		std::vector<PNCT_VERTEX>		m_VertexList;
+		std::vector<PNCT_VERTEX>	m_VertexList;
 		std::vector<DWORD>			m_IndexList;
 
 		Matrix						m_matWorld;
@@ -133,6 +160,7 @@ namespace HBASIS_CORE_LIB
 		Matrix						m_matRotation;
 
 		HTexture* m_pTexture;
+		std::vector<ColorData>	m_ColorMiniMapList;
 		std::vector<HTriangle> m_TriangleList;
 
 	public:

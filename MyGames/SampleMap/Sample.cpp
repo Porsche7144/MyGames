@@ -82,6 +82,18 @@ bool Sample::Init()
 {
 	HRESULT hr;
 
+	if (!m_Sky.Create(g_pd3dDevice, L"VS.txt", L"SkyObject.txt", L""))
+	{
+		return false;
+	}
+
+	m_pConstantLightBuffer[0].Attach(HBASIS_CORE_LIB::CreateConstantBuffer
+							(g_pd3dDevice, &m_cbLight1, 1, sizeof(LIGHT_CONSTANT_BUFFER)));
+	m_pConstantLightBuffer[1].Attach(HBASIS_CORE_LIB::CreateConstantBuffer
+							(g_pd3dDevice, &m_cbLight2, 1, sizeof(LIGHT_CONSTANT_BUFFER2)));
+	m_pConstantLightBuffer[2].Attach(HBASIS_CORE_LIB::CreateConstantBuffer
+							(g_pd3dDevice, &m_cbLight3, 1, sizeof(LIGHT_CONSTANT_BUFFER3)));
+
 	/////////////////////////////////////////////////////////////////////////////
 	// 유저 생성
 	/////////////////////////////////////////////////////////////////////////////
@@ -94,7 +106,7 @@ bool Sample::Init()
 	/////////////////////////////////////////////////////////////////////////////
 	// 높이맵 생성
 	/////////////////////////////////////////////////////////////////////////////
-	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/heightMap513.bmp"))
+	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/HEIGHT_CASTLE.bmp"))
 	{
 		return false;
 	}
@@ -103,8 +115,8 @@ bool Sample::Init()
 	desc.iNumCols = m_Map.m_iNumCols;
 	desc.iNumRows = m_Map.m_iNumRows;
 	desc.fCellDistance = 1.0f;
-	desc.fScaleHeight = 3.0f;
-	desc.szTextFile = L"../../Image/data/map/detail.bmp";
+	desc.fScaleHeight = 10.0f;
+	desc.szTextFile = L"../../Image/data/map/castle.jpg";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
 	m_Map.CreateMap(g_pd3dDevice, desc);
@@ -156,6 +168,79 @@ bool Sample::Init()
 bool Sample::Frame()
 {
 
+	// 메테리얼
+	m_cbLight1.g_cAmbientMaterial[0] = Vector4{ 0.1f, 0.1f, 0.1f, 1 };
+	m_cbLight1.g_cDiffuseMaterial[0] = Vector4{ 1, 1, 1, 1 };
+	m_cbLight1.g_cSpecularMaterial[0] = Vector4{ 1, 1, 1, 1 };
+	m_cbLight1.g_cEmissionMaterial[0] = Vector4{ 0, 0, 0, 1 };
+	// 라이트컬러
+	m_cbLight1.g_cAmbientLightColor[0] = Vector4{ 0.3f, 0.3f, 0.3f, 1 };
+	m_cbLight1.g_cDiffuseLightColor[0] = Vector4{ 1, 0, 0, 1.0f };
+	m_cbLight1.g_cSpecularLightColor[0] = Vector4{ 1, 1, 1, 1 };
+
+	m_cbLight1.g_cAmbientLightColor[1] = Vector4{ 0.3f, 0.3f, 0.3f, 1 };
+	m_cbLight1.g_cDiffuseLightColor[1] = Vector4{ 0, 1, 0, 1.0f };
+	m_cbLight1.g_cSpecularLightColor[1] = Vector4{ 1, 1, 1, 1 };
+
+	m_cbLight1.g_cAmbientLightColor[2] = Vector4{ 0.3f, 0.3f, 0.3f, 1 };
+	m_cbLight1.g_cDiffuseLightColor[2] = Vector4{ 0, 0, 1, 1.0f };
+	m_cbLight1.g_cSpecularLightColor[2] = Vector4{ 1, 1, 1, 1 };
+
+	float fTime = 32.0f;
+	m_cbLight2.g_vLightPos[0] = Vector4{ 0, 30, 0, 200 }; // 범위
+	m_cbLight2.g_vLightPos[1] = Vector4{ 50, 0, 0, 200 }; // 범위
+	m_cbLight2.g_vLightPos[2] = Vector4{ 0, 0, 50, 200 }; // 범위
+
+	// 방향 위에서 아래로
+	m_cbLight2.g_vLightDir[0] = -m_cbLight2.g_vLightPos[0];
+	m_cbLight2.g_vLightDir[0].w = 1.0f;
+	m_cbLight2.g_vLightDir[0].Normalize();
+	m_cbLight2.g_vLightDir[1] = -m_cbLight2.g_vLightPos[1];
+	m_cbLight2.g_vLightDir[1].w = 1.0f;
+	m_cbLight2.g_vLightDir[1].Normalize();
+	m_cbLight2.g_vLightDir[2] = -m_cbLight2.g_vLightPos[2];
+	m_cbLight2.g_vLightDir[2].w = 1.0f;
+	m_cbLight2.g_vLightDir[2].Normalize();
+
+	for (int iLight = 0; iLight < g_iNumLight; iLight++)
+	{
+		Matrix matInvWorld;
+		m_cbLight2.g_matInvWorld[iLight] = Matrix::Identity;
+		m_cbLight2.g_vEyeDir[iLight].x = m_pMainCamera->m_vLook.x;
+		m_cbLight2.g_vEyeDir[iLight].y = m_pMainCamera->m_vLook.y;
+		m_cbLight2.g_vEyeDir[iLight].z = m_pMainCamera->m_vLook.z;
+		m_cbLight2.g_vEyeDir[iLight].w = 10.0f; // 강도
+	}
+
+	m_cbLight3.g_vSpotInfo[0].x = cosf(30.0f * (HBASIS_PI / 180.0f)); // 내부 콘 각도 범위
+	m_cbLight3.g_vSpotInfo[0].y = cosf(30.0f * (HBASIS_PI / 180.0f)); // 외부 콘 각도 범위
+	m_cbLight3.g_vSpotInfo[0].z = 4; // 내부 콘과 외부 콘의 휘도
+	m_cbLight3.g_vSpotInfo[0].w = 100;  // 라이트 범위
+
+	m_cbLight3.g_vSpotInfo[1].x = cosf(90.0f * (HBASIS_PI / 180.0f)); // 내부 콘 각도 범위
+	m_cbLight3.g_vSpotInfo[1].y = cosf(120.0f * (HBASIS_PI / 180.0f)); // 외부 콘 각도 범위
+	m_cbLight3.g_vSpotInfo[1].z = 4; // 내부 콘과 외부 콘의 휘도
+	m_cbLight3.g_vSpotInfo[1].w = 100;  // 라이트 범위
+
+	m_cbLight3.g_vSpotInfo[2].x = cosf(90.0f * (HBASIS_PI / 180.0f)); // 내부 콘 각도 범위
+	m_cbLight3.g_vSpotInfo[2].y = cosf(120.0f * (HBASIS_PI / 180.0f)); // 외부 콘 각도 범위
+	m_cbLight3.g_vSpotInfo[2].z = 4; // 내부 콘과 외부 콘의 휘도
+	m_cbLight3.g_vSpotInfo[2].w = 100;  // 라이트 범위
+
+	// ConstantBuffer 정보 업데이트
+	g_pImmediateContext->UpdateSubresource(m_pConstantLightBuffer[0].Get(), 0, NULL, &m_cbLight1, 0, 0);
+	g_pImmediateContext->UpdateSubresource(m_pConstantLightBuffer[1].Get(), 0, NULL, &m_cbLight2, 0, 0);
+	g_pImmediateContext->UpdateSubresource(m_pConstantLightBuffer[2].Get(), 0, NULL, &m_cbLight3, 0, 0);
+
+	ID3D11Buffer* pBuffers[3];
+	pBuffers[0] = m_pConstantLightBuffer[0].Get();
+	pBuffers[1] = m_pConstantLightBuffer[1].Get();
+	pBuffers[2] = m_pConstantLightBuffer[2].Get();
+	// 픽셀쉐이더에 버퍼 전달
+	g_pImmediateContext->PSSetConstantBuffers(1, 3, pBuffers);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
 		m_UserShape.FrontMovement(1.0f);
@@ -195,6 +280,9 @@ bool Sample::Frame()
 
 bool Sample::Render()
 {
+
+	m_Sky.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_Sky.Render(g_pImmediateContext);
 
 	// Culling
 	//std::vector<DWORD> visibleIB;
@@ -272,6 +360,9 @@ bool Sample::Render()
 
 
 	m_Map.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_Map.m_cbData.vColor[0] = m_pMainCamera->m_vLook.x;
+	m_Map.m_cbData.vColor[1] = m_pMainCamera->m_vLook.y;
+	m_Map.m_cbData.vColor[2] = m_pMainCamera->m_vLook.z;
 	m_Map.Render(g_pImmediateContext);
 
 	//Matrix matShadow;
@@ -292,8 +383,8 @@ bool Sample::Render()
 	m_Minimap.Render(g_pImmediateContext);
 
 	//DrawQuadLine(m_QuadTree.m_pRootNode);
-	DrawObject(&m_pMainCamera->m_matView,
-	 	&m_pMainCamera->m_matProject);
+	// DrawObject(&m_pMainCamera->m_matView,
+	//  	&m_pMainCamera->m_matProject);
 
 	return true;
 }
@@ -306,6 +397,7 @@ bool Sample::PostRender()
 
 bool Sample::Release()
 {
+	m_Sky.Release();
 	SAFE_DELETE_ARRAY(m_pObject);
 	m_Minimap.Release();
 	m_Map.Release();

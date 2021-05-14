@@ -54,6 +54,7 @@ HTexture*    HTextureManager::GetPtr(wstring filename)
 
 bool		HTextureManager::Init()
 {
+	m_pWhiteTexture = Load(g_pd3dDevice, L"../../Image/white.jpg");
 	return true;
 }
 bool		HTextureManager::Frame()
@@ -78,7 +79,7 @@ bool		HTextureManager::Release()
 
 HTextureManager::HTextureManager()
 {
-	m_szDefaultPath = L"../../data/bitmap/";
+	m_szDefaultPath = L"../../Image/";
 }
 
 HTextureManager::~HTextureManager()

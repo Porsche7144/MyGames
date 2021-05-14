@@ -291,7 +291,7 @@ void HQuadTree::DrawNode(ID3D11DeviceContext * pContext, HNode* pNode)
 	DrawNode(pContext, pNode->m_Child[0]);
 	DrawNode(pContext, pNode->m_Child[1]);
 	DrawNode(pContext, pNode->m_Child[2]);
-	//DrawNode(pContext, pNode->m_Child[3]);
+	DrawNode(pContext, pNode->m_Child[3]);
 
 }
 

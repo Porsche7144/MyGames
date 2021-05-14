@@ -6,8 +6,39 @@
 #include "HheightMap.h"
 #include "HMinimap.h"
 #include "HQuadTree.h"
+#include "HSky.h"
 
 #pragma comment(lib, "directxtk.lib")
+
+const int g_iNumLight = 3;
+
+struct LIGHT_CONSTANT_BUFFER
+{
+	// 메테리얼
+	Vector4 g_cAmbientMaterial[g_iNumLight];
+	Vector4 g_cDiffuseMaterial[g_iNumLight];
+	Vector4 g_cSpecularMaterial[g_iNumLight];
+	Vector4 g_cEmissionMaterial[g_iNumLight];
+
+	// 라이트컬러
+	Vector4 g_cAmbientLightColor[g_iNumLight];
+	Vector4 g_cDiffuseLightColor[g_iNumLight];
+	Vector4 g_cSpecularLightColor[g_iNumLight];
+};
+
+struct LIGHT_CONSTANT_BUFFER2
+{
+	Matrix	g_matInvWorld[g_iNumLight];
+	Vector4 g_vLightDir[g_iNumLight];
+	Vector4 g_vLightPos[g_iNumLight];
+	Vector4 g_vEyeDir[g_iNumLight];
+	Vector4 g_vEyePos[g_iNumLight];
+};
+
+struct LIGHT_CONSTANT_BUFFER3
+{
+	Vector4 g_vSpotInfo[g_iNumLight];
+};
 
 class HBoxUser : public HShapeBox
 {
@@ -23,9 +54,17 @@ public:
 class Sample : public HCore
 {
 public:
+	Vector3 m_vLightVector;
+	LIGHT_CONSTANT_BUFFER	m_cbLight1;
+	LIGHT_CONSTANT_BUFFER2	m_cbLight2;
+	LIGHT_CONSTANT_BUFFER3	m_cbLight3;
+	ComPtr<ID3D11Buffer> m_pConstantLightBuffer[g_iNumLight];
+
+public:
 	HQuadTree		m_QuadTree;
 	H_BoxObject*	m_pObject;
 	H_BOX			m_TBoxBase;
+	HSky			m_Sky;
 
 	HheightMap m_Map;
 	HMinimap m_Minimap;

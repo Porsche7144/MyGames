@@ -20,20 +20,37 @@ void HDevice::ResizeDevice(UINT w, UINT h)
 {
 	if (m_pd3dDevice.Get() == NULL)  return;
 
+	HRESULT hr = S_OK;
+
 	DeleteDXResource();
 
 	m_pd3dContext->OMSetRenderTargets(0, NULL, NULL);
-	if (m_pRednerTargetView.Get()) m_pRednerTargetView->Release();
-	if (m_pDSV.Get()) m_pDSV->Release();
+	if (m_pRednerTargetView.Get())
+	{
+		m_pRednerTargetView->Release();
+	}
+	if (m_pDSV.Get())
+	{
+		m_pDSV->Release();
+	}
 
-	DXGI_SWAP_CHAIN_DESC pSwapChainDesc;
-	m_pSwapChain->GetDesc(&pSwapChainDesc);
-	m_pSwapChain->ResizeBuffers(
-		pSwapChainDesc.BufferCount,
+	
+	m_pSwapChain->GetDesc(&m_pSwapChainDesc);
+	hr = m_pSwapChain->ResizeBuffers(
+		m_pSwapChainDesc.BufferCount,
 		w,
 		h,
-		pSwapChainDesc.BufferDesc.Format,
-		pSwapChainDesc.Flags);
+		m_pSwapChainDesc.BufferDesc.Format,
+		m_pSwapChainDesc.Flags);
+	if (FAILED(hr))
+	{
+		return;
+	}
+
+	m_pSwapChain->GetDesc(&m_pSwapChainDesc);
+	m_rtClient.right = m_pSwapChainDesc.BufferDesc.Width;
+	m_rtClient.bottom = m_pSwapChainDesc.BufferDesc.Height;
+	g_rtClient = m_rtClient;
 
 	SetRenderTargetView();
 	SetDepthStencilView();
@@ -238,7 +255,7 @@ bool HDevice::Init()
 		return false;
 	}
 
-	HDxState::Set(m_pd3dDevice.Get());
+	HDxState::SetState(m_pd3dDevice.Get());
 
 	if (FAILED(m_pGIFactory->MakeWindowAssociation(m_hWnd,
 		DXGI_MWA_NO_WINDOW_CHANGES |
@@ -254,16 +271,20 @@ bool HDevice::Frame()
 }
 bool HDevice::PreRender()
 {
-	if (m_pd3dContext.Get())
+	if (g_pImmediateContext)
 	{
-		m_pd3dContext->RSSetViewports(1, &m_ViewPort);
-		m_pd3dContext->OMSetRenderTargets(1, m_pRednerTargetView.GetAddressOf(), m_pDSV.Get());
+		g_pImmediateContext->RSSetViewports(1, &m_ViewPort);
+		g_pImmediateContext->OMSetRenderTargets(1, m_pRednerTargetView.GetAddressOf(), m_pDSV.Get());
 		/*float clearColor[] = { cosf(g_fGameTimer)*0.5f + 0.5f,
 								-cosf(g_fGameTimer)*0.5f + 0.5f,
 								sinf(g_fGameTimer)*0.5f + 0.5f,1 };*/
-		float clearColor[] = { 0,0,0,1 };
-		m_pd3dContext->ClearRenderTargetView(m_pRednerTargetView.Get(), clearColor);
-		m_pd3dContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+		float clearColor[] = { 0.25f, 0.25f, 0.25f ,1.0f };
+		g_pImmediateContext->ClearRenderTargetView(m_pRednerTargetView.Get(), clearColor);
+		g_pImmediateContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+		g_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		g_pImmediateContext->RSSetState(HDxState::g_pRSBackCullSolid);
+		g_pImmediateContext->PSSetSamplers(0, 1, &HDxState::g_pSSWrapLinear);
+		g_pImmediateContext->OMSetDepthStencilState(HDxState::g_pDSSDepthEnable, 0);
 	}
 	return true;
 }

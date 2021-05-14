@@ -70,6 +70,7 @@ public:
 	void CreateVertexNode(HNode* pNode);
 	bool Render(ID3D11DeviceContext* pContext);
 	bool Release();
+	void CalcPerVertexNormalsFastLookup(HNode* node);
 
 public:
 	HQuadTree(void);

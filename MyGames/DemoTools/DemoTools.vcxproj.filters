@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{bc71f696-e601-4218-981d-8189e62386bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{96308d78-28a9-46fe-a175-c8e0455b64a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{6f97b5de-167b-4bfb-ba0f-93cb8e17aee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PaneWindow">
+      <UniqueIdentifier>{53c2d790-dcc0-473a-aa7c-489133727ac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PaneWindow\PropertiesWnd">
+      <UniqueIdentifier>{dd3626fa-3451-4eae-abb9-c5f62abbab59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PaneWindow\OutputWnd">
+      <UniqueIdentifier>{f90a49bc-c40d-4f42-9ca6-a62febd98267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PaneWindow\MapTool">
+      <UniqueIdentifier>{1dbf7b37-95dc-4ca7-916e-d2bcc7dfe275}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DemoTools.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoToolsDoc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoToolsView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="HMapDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HCharactorToolDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HQuadTree1.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="HPropertiesWnd.h">
+      <Filter>PaneWindow\PropertiesWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="HOutputWnd.h">
+      <Filter>PaneWindow\OutputWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="HMapToolPane.h">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="HMapToolForm.h">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="HModel.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="HTextureMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="HMapModifyTool.h">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="HMapModifyPane.h">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DemoTools.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoToolsDoc.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoToolsView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sample.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HCharactorToolDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="HQuadTree1.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="HPropertiesWnd.cpp">
+      <Filter>PaneWindow\PropertiesWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="HOutputWnd.cpp">
+      <Filter>PaneWindow\OutputWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapToolPane.cpp">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapToolForm.cpp">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="HModel.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="HTextureMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapModifyTool.cpp">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapModifyPane.cpp">
+      <Filter>PaneWindow\MapTool</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DemoTools.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\userimages.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\DemoToolsDoc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\DemoTools.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\DemoTools.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="PS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="VS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\Shader\ObjectPS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\Shader\ObjectVS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\Shader\LightPS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\Shader\LightVS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="HeightMapPS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="HeightMapVS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\Shader\ToolBasePS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\Shader\ToolBaseVS.txt">
+      <Filter>Shader</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
