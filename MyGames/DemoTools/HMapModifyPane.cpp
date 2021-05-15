@@ -36,6 +36,7 @@ int HMapModifyPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	m_wmModify = HMapModifyTool::CreateOnce(this);
+
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 
 	return 0;

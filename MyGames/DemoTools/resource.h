@@ -47,8 +47,18 @@
 #define IDC_BUTTON2                     1012
 #define IDC_BUTTON3                     1013
 #define IDC_Texture                     1014
+#define IDC_BUTTON6                     1014
 #define IDC_BUTTON1                     1015
 #define IDC_BUTTON4                     1016
+#define IDC_BUTTON9                     1017
+#define IDC_LIST3                       1028
+#define IDC_BUTTON5                     1030
+#define IDC_RADIO4                      1056
+#define IDC_RADIO5                      1057
+#define IDC_BUTTON7                     1060
+#define IDC_BUTTON8                     1061
+#define IDC_RADIO8                      1062
+#define IDC_RADIO9                      1063
 #define ID_TOOL_MAPTOOL                 32771
 #define ID_TOOL_CHARACTORTOOL           32772
 
@@ -58,7 +68,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32786
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1062
 #define _APS_NEXT_SYMED_VALUE           314
 #endif
 #endif

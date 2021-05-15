@@ -4,6 +4,13 @@
 #include "HMap.h"
 #include "HQuadTree.h"
 
+enum SplattingTexture
+{
+	SPLATTING_NUM_1 = 1,
+	SPLATTING_NUM_2 = 2,
+	SPLATTING_NUM_3 = 3,
+	SPLATTING_NUM_4 = 4,
+};
 
 class HTextureMap : public HShapePlane
 {
@@ -11,6 +18,7 @@ public:
 	HShapePlane m_Plane;
 	HDxRT m_HDxRT;
 	D3D11_VIEWPORT		m_RightViewPort;
+	SplattingTexture	m_SplattingNum;
 
 	ID3D11RenderTargetView* m_pRTV;
 	ID3D11ShaderResourceView* m_pSRV;
@@ -28,7 +36,8 @@ public:
 	Vector2 beforePos;
 
 public:
-	void PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext, Vector3 pick);
+	void PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext, 
+								Vector3 pick, int SplattingNum);
 
 public:
 	bool Create(HMap* map, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext, T_STR szVS, T_STR szPS, T_STR filename);

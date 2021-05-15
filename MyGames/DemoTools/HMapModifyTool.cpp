@@ -35,6 +35,7 @@ void HMapModifyTool::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2, m_csRadius);
 	DDX_Control(pDX, IDC_BUTTON1, bIncrease);
 	DDX_Text(pDX, IDC_EDIT6, m_Speed);
+	
 }
 
 BEGIN_MESSAGE_MAP(HMapModifyTool, CFormView)
@@ -45,6 +46,15 @@ BEGIN_MESSAGE_MAP(HMapModifyTool, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON3, &HMapModifyTool::OnBnClickedButton3)
 	ON_EN_CHANGE(IDC_EDIT6, &HMapModifyTool::SpeedChangeEdit)
 	ON_BN_CLICKED(IDC_BUTTON4, &HMapModifyTool::OnBnClickedButton4)
+	ON_LBN_SELCHANGE(IDC_LIST3, &HMapModifyTool::OnLbnSelchangeList)
+	ON_BN_CLICKED(IDC_BUTTON7, &HMapModifyTool::SplattingOnButton)
+	ON_BN_CLICKED(IDC_BUTTON8, &HMapModifyTool::SplattingOffButton)
+	ON_BN_CLICKED(IDC_RADIO4, &HMapModifyTool::OnBnClickedRadio1)
+	ON_BN_CLICKED(IDC_RADIO5, &HMapModifyTool::OnBnClickedRadio2)
+	ON_BN_CLICKED(IDC_RADIO8, &HMapModifyTool::OnBnClickedRadio3)
+	ON_BN_CLICKED(IDC_RADIO9, &HMapModifyTool::OnBnClickedRadio4)
+	ON_BN_CLICKED(IDC_BUTTON9, &HMapModifyTool::FieldUpdateOnButton)
+	ON_BN_CLICKED(IDC_BUTTON6, &HMapModifyTool::FieldUpdateOffButton)
 END_MESSAGE_MAP()
 
 
@@ -102,6 +112,8 @@ int HMapModifyTool::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_fSpeed = 1.0f;
 	SetSpeedCount(m_fSpeed);
+	
+	
 
 	return 0;
 }
@@ -159,5 +171,70 @@ void HMapModifyTool::OnBnClickedButton4()
 	theApp.m_Sample.m_bOriginGround = false;
 	theApp.m_Sample.m_bDecreaseGround = false;
 	theApp.m_Sample.m_bIncreaseGround = false;
+}
 
+
+void HMapModifyTool::OnLbnSelchangeList()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void HMapModifyTool::SplattingOnButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_bSplattingState = true;
+}
+
+
+void HMapModifyTool::SplattingOffButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_bSplattingState = false;
+}
+
+
+void HMapModifyTool::OnBnClickedRadio1()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_iSplattingNum = 1;
+	MessageBox(L"woodfloor.bmp", L"선택한 이미지", MB_OK);
+}
+
+
+void HMapModifyTool::OnBnClickedRadio2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_iSplattingNum = 2;
+	MessageBox(L"seafloor.bmp", L"선택한 이미지", MB_OK);
+}
+
+
+void HMapModifyTool::OnBnClickedRadio3()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_iSplattingNum = 3;
+	MessageBox(L"stone_wall.bmp", L"선택한 이미지", MB_OK);
+}
+
+
+void HMapModifyTool::OnBnClickedRadio4()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_iSplattingNum = 4;
+	MessageBox(L"land.bmp", L"선택한 이미지", MB_OK);
+}
+
+
+void HMapModifyTool::FieldUpdateOnButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_bFieldUpdateState = true;
+}
+
+
+void HMapModifyTool::FieldUpdateOffButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_bFieldUpdateState = false;
 }

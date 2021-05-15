@@ -190,7 +190,7 @@ PS_OUTPUT PS( VS_OUTPUT vIn)
 	float4 lightColor = ComputeSpotLight(vIn.wp, vIn.n, 3);
 
 	float4 vColor = float4(vFinalColor, 1.0f);
-	vOut.c = vColor * vIn.c; //vTexture * vIn.c * FinalColor; // * vIn.c; //vTexture * FieldColor; //* vIn.c; //*Diffuse(vIn.n, g_vLightDir[0])*lightColor;
+	vOut.c = vColor * vIn.c; // vTexture;// * vIn.c * FinalColor; // * vIn.c; //vTexture * FieldColor; //* vIn.c; //*Diffuse(vIn.n, g_vLightDir[0])*lightColor;
 	//vOut.c = Diffuse(vIn.n, g_vLightDir[0]) * Geom(vIn) * lightColor * vTexture;
 
 	return vOut;

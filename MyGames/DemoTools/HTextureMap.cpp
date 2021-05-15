@@ -215,7 +215,8 @@ void HTextureMap::SetRadius(float radius)
 	m_fRadius = radius;
 }
 
-void HTextureMap::PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext, Vector3 pick)
+void HTextureMap::PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, 
+									    ID3D11DeviceContext* pContext, Vector3 pick, int SplattingNum)
 {
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC texDesc;
@@ -259,10 +260,42 @@ void HTextureMap::PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, I
 							iRatio = ((1.0f - fDist / fRadius) * 2.0f) * 255;
 						}
 
-						iTemp = *pDestBytes + (int)iRatio;
-						if (iTemp > 255) iTemp = 255;
-						*pDestBytes = iTemp;
-						pDestBytes += 4;
+						switch (SplattingNum)
+						{
+							case SPLATTING_NUM_1:
+							{
+								iTemp = *pDestBytes + (int)iRatio;
+								if (iTemp > 255) iTemp = 255;
+								*pDestBytes = iTemp;
+								pDestBytes += 4;
+							}break;
+							case SPLATTING_NUM_2:
+							{
+								pDestBytes++;
+								iTemp = *pDestBytes + (int)iRatio;
+								if (iTemp > 255) iTemp = 255;
+								*pDestBytes = iTemp;
+								pDestBytes += 3;
+							}break;
+							case SPLATTING_NUM_3:
+							{
+								pDestBytes += 2;
+								iTemp = *pDestBytes + (int)iRatio;
+								if (iTemp > 255) iTemp = 255;
+								*pDestBytes = iTemp;
+								pDestBytes += 2;
+							}break;
+							case SPLATTING_NUM_4:
+							{
+								pDestBytes += 3;
+								iTemp = *pDestBytes + (int)iRatio;
+								if (iTemp > 255) iTemp = 255;
+								*pDestBytes = iTemp;
+								pDestBytes++;
+							}break;
+							default:
+								break;
+						}
 
 						continue;
 					}

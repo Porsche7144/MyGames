@@ -63,6 +63,7 @@ TCHAR* Sample::StringToTCHAR(string& s)
 	return (TCHAR*)t;
 }
 
+#pragma region Init
 bool Sample::Init()
 {
 	HRESULT hr;
@@ -71,6 +72,7 @@ bool Sample::Init()
 	m_Camera.CreateViewMatrix({ 0,300,-100 }, { 0,0,0 });
 	//m_pObj.Init();
 
+#pragma region UserCreate
 	/////////////////////////////////////////////////////////////////////////////
 	// 유저 생성
 	/////////////////////////////////////////////////////////////////////////////
@@ -78,7 +80,9 @@ bool Sample::Init()
 	{
 		return false;
 	}
+#pragma endregion
 
+#pragma region HeightMap
 	/////////////////////////////////////////////////////////////////////////////
 	// 높이맵 생성
 	/////////////////////////////////////////////////////////////////////////////
@@ -86,7 +90,9 @@ bool Sample::Init()
 	//{
 	//	return false;
 	//}
+#pragma endregion
 
+#pragma region MapCreate
 	HMapDesc desc;
 	desc.iNumCols = m_iTileCount;
 	desc.iNumRows = m_iTileCount;
@@ -96,48 +102,48 @@ bool Sample::Init()
 	desc.szVS = L"../../data/Shader/ToolBaseVS.txt";
 	desc.szPS = L"../../data/Shader/ToolBasePS.txt";
     m_Map.CreateMap(g_pd3dDevice, desc);
+#pragma endregion
 
 	m_vDirValue = { 0,0,0,0 };
-
+#pragma region MinimapCreate
 	if (!m_Minimap.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", Filename))
 	{
 		return false;
 	}
+#pragma endregion
 
+#pragma region TextureMapCreate
 	if (!m_TextureMap.Create(&m_Map, g_pd3dDevice, g_pImmediateContext, L"HeightMapVS.txt", L"HeightMapPS.txt", L""))
 	{
 		return false;
 	}
+#pragma endregion
 
+#pragma region AlphaZeroMap Create
 	if (!m_AlphaZeroTexture.Create(&m_Map, g_pd3dDevice, g_pImmediateContext, L"HeightMapVS.txt", L"HeightMapPS.txt", Filename))
 	{
 		return false;
 	}
+#pragma endregion
 
-	//m_pTextureSRV[0] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/001.jpg");
-	//m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+#pragma region SplattingTexture CreateShaderResourceView
+	m_pTextureSRV[1] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/woodfloor.bmp");
+	m_pTextureSRV[2] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/seafloor.bmp");
+	m_pTextureSRV[3] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/stone_wall.bmp");
+	m_pTextureSRV[4] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/land.bmp");
+#pragma endregion
 
-	m_pTextureSRV[1] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/002.jpg");
-	m_pTextureSRV[2] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/003.jpg");
-	m_pTextureSRV[3] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/004.jpg");
-	m_pTextureSRV[4] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/005.jpg");
-
+#pragma region QuadTree Create
 	// 쿼드트리 공간분할
 	m_QuadTree.Build(&m_Map);
+#pragma endregion
 
-
+#pragma region Camera Init
 	// 카메라 바꿔치는 부분.
 	m_ModelCamera.CreateViewMatrix({ 0,30,-30 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_ModelCamera.CreateProjectionMatrix(1, 10000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
-
-	// 프러스텀 생성
-	//m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
-	//m_pMainCamera = &m_ModelCamera;
-
-	//m_pObj.m_pMainCamera = m_pMainCamera;
-
 
 	m_TopCamera.CreateViewMatrix({ 0,30,-0.1f }, { 0,0,0 });
 	fAspect = g_rtClient.right / (float)g_rtClient.bottom;
@@ -145,21 +151,23 @@ bool Sample::Init()
 	int y = desc.iNumRows * m_fCellCount;
 	m_TopCamera.CreateOrthographic(x, y, 1, 10000);
 	m_TopCamera.Init();
+#pragma endregion
 
 	HCore::m_bFrameRun = true;
 
-	/*m_TopCamera.CreateViewMatrix({ 0,30,-0.1f }, { 0,0,0 });
-	fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_TopCamera.CreateOrthographic(desc.iNumCols, desc.iNumRows, 1.0f, 1000);
-	m_TopCamera.Init();*/
-
-
+	// 프러스텀 생성
+	//m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
+	//m_pMainCamera = &m_ModelCamera;
+	
+	//m_pObj.m_pMainCamera = m_pMainCamera;
 
 	// 1024 * 1024
 
 	return true;
 }
+#pragma endregion
 
+#pragma region Frame
 bool Sample::Frame()
 {
 	m_bSelect = false;
@@ -211,20 +219,49 @@ bool Sample::Frame()
 	{
 		m_TextureMap.Frame(&m_Map, g_pImmediateContext);
 	}
-
-
-	//if (g_Input.GetKey('9') == KEY_PUSH)
-	//{
-	//	m_AlphaZeroTexture.WriteTextureDataAlphaZero(&m_Map, g_pImmediateContext);
-	//	g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
-	//}
-	if (m_bSelect)
+	
+#pragma region PickTextureSplatting
+	if (m_bSelect && m_bSplattingState)
 	{
-		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging, g_pImmediateContext, pick);
+		if (!m_bFieldUpdateState)
+		{
+			for (int i = 0; i < m_QuadTree.m_leafList.size(); i++)
+			{
+				HNode* pNode = m_QuadTree.m_leafList[i];
+
+				if (m_Picking.IntersectBox(&pNode->m_hBox, &m_Picking.m_Ray))
+				{
+					m_SelectNode.push_back(pNode);
+				}
+			}
+
+			float fMaxDist = 99999;
+			bool Update = false;
+			for (int select = 0; select < m_SelectNode.size(); select++)
+			{
+				HNode* pNode = m_SelectNode[select];
+				if (GetIntersection(pNode))
+				{
+					float fDistance = (m_Picking.m_Ray.vOrigin - m_Picking.m_vInterSection).Length();
+					if (fMaxDist > fDistance)
+					{
+						Update = true;
+						pick = m_Picking.m_vInterSection;
+						fMaxDist = fDistance;
+					}
+				}
+
+			}
+		}
+
+		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging, 
+											     g_pImmediateContext, pick, m_iSplattingNum);
 		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
 		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
 	}
+#pragma endregion
 
+#pragma region UserInput
 /*
 	if (g_Input.GetKey('W') == KEY_HOLD)
 	{
@@ -250,6 +287,7 @@ bool Sample::Frame()
 	{
 		m_UserShape.UpMovement(-1.0f);
 	}*/
+#pragma endregion
 
 
 	m_UserShape.Frame();
@@ -262,7 +300,9 @@ bool Sample::Frame()
 
 	return true;
 }
+#pragma endregion
 
+#pragma region Render
 bool Sample::Render()
 {
 	m_AlphaZeroTexture.SetRadius(m_fRadius);
@@ -334,7 +374,7 @@ bool Sample::Render()
 #pragma region Field Update
 	m_SelectNode.clear();
 
-	if (m_bSelect)
+	if (m_bSelect && m_bFieldUpdateState)
 	{
 		for (int i = 0; i < m_QuadTree.m_leafList.size(); i++)
 		{
@@ -487,28 +527,6 @@ bool Sample::Render()
 			}
 		}
 
-
-		//if (m_bFlatGrond)
-		//{
-		//	for (auto node : m_ControlNode)
-		//	{
-		//		for (int v = 0; v < node->m_IndexList.size(); v++)
-		//		{
-		//			int iID = node->m_IndexList[v];
-		//			float fDist = (m_Map.m_VertexList[iID].p - pick).Length();
-		//			if (fDist < m_fRadius)
-		//			{
-		//				
-		//			}
-		//		}
-
-		//		// 실시간 노말 계산
-		//		//m_Map.CalcPerVertexNormalsFastLookUp();
-		//	}
-		//}
-
-
-
 		g_pImmediateContext->UpdateSubresource(m_Map.m_pVertexBuffer, 0, NULL, &m_Map.m_VertexList.at(0), 0, 0);
 	}
 #pragma endregion
@@ -567,13 +585,17 @@ bool Sample::Render()
 
 	return true;
 }
+#pragma endregion
 
+#pragma region PostRender
 bool Sample::PostRender()
 {
 	HCore::PostRender();
 	return true;
 }
+#pragma endregion
 
+#pragma region Release
 bool Sample::Release()
 {
 	if (m_pTextureSRV[1])
@@ -592,8 +614,9 @@ bool Sample::Release()
 
 	return true;
 }
+#pragma endregion
 
-
+#pragma region BoxMovement
 void HBoxUser::FrontMovement(float fDir)
 {
 	Vector3 vFrontMove = m_vLook * g_fSecondPerFrame * m_fSpeed * fDir;
@@ -635,90 +658,4 @@ void HBoxUser::UpBase(float fDir)
 	m_vPos += vMove;
 	m_vTarget += m_vLook * m_fSpeed;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//#include "Sample.h"
-//
-//int Sample::m_iTileCount = 32;
-//
-//bool Sample::Init()
-//{
-//
-//	HMapDesc MapDesc;
-//	MapDesc.iNumCols = m_iTileCount;
-//	MapDesc.iNumRows = m_iTileCount;
-//	MapDesc.fCellDistance = 1.0f;
-//	MapDesc.fScaleHeight = 0.1f;
-//	MapDesc.szTextFile = L"../../Image/data/map/castle.jpg";
-//	MapDesc.szVS = L"VS.txt";
-//	MapDesc.szPS = L"PS.txt";
-//	if (!m_CustomMap.CreateMap(g_pd3dDevice, MapDesc))
-//	{
-//		return false;
-//	}
-//
-//	HCore::m_bFrameRun = true;
-//
-//	return true;
-//}
-//
-//bool Sample::Frame()
-//{
-//
-//	/*float t = cosf(g_fGameTimer * 0.5f);
-//	for (int z = 0; z < m_CustomMap.m_iNumRows; z++)
-//	{
-//		for (int x = 0; x < m_CustomMap.m_iNumCols; x++)
-//		{
-//			int iIndex = z * m_CustomMap.m_iNumCols + x;
-//			float fCos = cosf(t * x);
-//			float fSin = sinf(t * z);
-//			m_CustomMap.m_VertexList[iIndex].p.y = fCos + fSin;
-//		}
-//	}*/
-//
-//	// UpdateSubresource로 버퍼 업데이트
-//	g_pImmediateContext->UpdateSubresource(m_CustomMap.m_pVertexBuffer, 0, NULL, &m_CustomMap.m_VertexList.at(0), 0, 0);
-//	// m_pMainCamera->Frame();
-//	m_CustomMap.Frame();
-//
-//	return true;
-//}
-//
-//bool Sample::Render()
-//{
-//
-//	m_CustomMap.SetMatrix(&m_pMainCamera->m_matWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-//	m_CustomMap.Render(g_pImmediateContext);
-//
-//	return true;
-//}
-//
-//
-//bool Sample::Release()
-//{
-//	m_CustomMap.Release();
-//	return true;
-//}
-//
-//Sample::Sample()
-//{
-//	m_pMainCamera = nullptr;
-//}
-//Sample::~Sample()
-//{
-//
-//}
+#pragma endregion

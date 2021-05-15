@@ -31,22 +31,33 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	// // 반지름 범위
+	// 반지름 범위
 	CString m_csRadius;
 	float m_fRadius;
+	int SplattingNum;
 	afx_msg void RadiusChangeEdit();
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	// // 지형 올리기
+	// 지형 올리기
 	CButton bIncrease;
 	afx_msg void OnBnClickedButton();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
-	// // 속력
+	// 속력
 	CString m_Speed;
 	float m_fSpeed;
 	afx_msg void SpeedChangeEdit();
 	void SetSpeedCount(float speed);
 	afx_msg void OnBnClickedButton4();
+	afx_msg void OnLbnSelchangeList();
+	
+	afx_msg void SplattingOnButton();
+	afx_msg void SplattingOffButton();
+	afx_msg void OnBnClickedRadio1();
+	afx_msg void OnBnClickedRadio2();
+	afx_msg void OnBnClickedRadio3();
+	afx_msg void OnBnClickedRadio4();
+	afx_msg void FieldUpdateOnButton();
+	afx_msg void FieldUpdateOffButton();
 };
 
 

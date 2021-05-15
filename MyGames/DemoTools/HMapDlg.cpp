@@ -39,7 +39,6 @@ void HMapDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PROGRESS1, m_Progress);
 	DDX_Control(pDX, IDC_SPIN2, m_SpinControl);
 	DDX_Text(pDX, IDC_EDIT4, m_ProgressCount);
-	//DDX_Control(pDX, IDC_EDIT1, m_TileCount);
 	DDX_Text(pDX, IDC_EDIT5, m_fScale);
 }
 
@@ -48,7 +47,6 @@ BEGIN_MESSAGE_MAP(HMapDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT1, &HMapDlg::OnEnChangeEdit1)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &HMapDlg::OnCbnSelchangeCombo1)
 	ON_LBN_SELCHANGE(IDC_LIST1, &HMapDlg::OnLbnSelchangeList1)
-	// ON_NOTIFY(NM_CUSTOMDRAW, IDC_PROGRESS1, &HMapDlg::OnNMCustomdrawProgress1)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN2, &HMapDlg::OnDeltaposSpin2)
 	ON_BN_CLICKED(IDOK, &HMapDlg::OnBnClickedOk)
 	ON_EN_CHANGE(IDC_EDIT2, &HMapDlg::CellChangeEdit)

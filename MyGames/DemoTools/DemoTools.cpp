@@ -177,7 +177,6 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnMaptoolDlg();
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -226,4 +225,3 @@ BOOL CDemoToolsApp::OnIdle(LONG lCount)
 
 	return TRUE;
 }
-

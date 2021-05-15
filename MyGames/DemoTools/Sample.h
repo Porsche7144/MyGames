@@ -23,14 +23,6 @@ public:
 	void UpBase(float fDir);
 };
 
-enum SubTextureNum
-{
-	TEXTURE_ONE,
-	TEXTURE_TWO,
-	TEXTURE_THREE,
-	TEXTURE_FOUR,
-};
-
 class Sample : public HCore
 {
 public:
@@ -66,6 +58,8 @@ public:
 	bool m_bDecreaseGround = false;
 	bool m_bOriginGround = false;
 	bool m_bFlatGrond = false;
+	bool m_bSplattingState = false;
+	bool m_bFieldUpdateState = false;
 
 	float t, u, v = 0;
 	bool m_bSelect;
@@ -74,6 +68,7 @@ public:
 	static float m_fScale;
 	float m_fRadius;
 	float m_fSpeed;
+	int	  m_iSplattingNum;
 
 	std::string m_FileName;
 

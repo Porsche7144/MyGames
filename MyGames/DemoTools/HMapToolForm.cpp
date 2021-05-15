@@ -145,7 +145,7 @@ void HMapToolForm::SetPictureControlImage(CString string)
 	m_Img.Load(string);
 	int Width = m_Img.GetWidth();
 	int Height = m_Img.GetHeight();
-	m_Img.Draw(dc->m_hDC, 0, 0, m_Img.GetWidth(), m_Img.GetHeight());
+	m_Img.Draw(dc->m_hDC, 10, 10, m_Img.GetWidth(), m_Img.GetHeight());
 }
 
 void HMapToolForm::TextureLoadButton()
@@ -168,7 +168,7 @@ void HMapToolForm::TextureLoadButton()
 		std::string filename = CW2A(pathName);
 
 		SetFileName(filename);
-		//SetPictureControlImage(pathName);
+		SetPictureControlImage(pathName);
 
 		pathName = PathFindFileName(pathName);
 		//MessageBox(pathName, L"OK", MB_OK);
@@ -210,6 +210,8 @@ int HMapToolForm::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	SetScaleCount(fScale);
 
 	string filename = "../../Image/data/main_fr_list.bmp";
+	//CString pathName = L"../../Image/data/main_fr_list.bmp";
+	//SetPictureControlImage(pathName);
 	SetFileName(filename);
 
 	return 0;
