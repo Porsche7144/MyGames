@@ -2,6 +2,7 @@
 #include "HShape.h"
 #include "HDxRT.h"
 #include "HMap.h"
+#include "HQuadTree.h"
 
 
 class HTextureMap : public HShapePlane
@@ -23,8 +24,11 @@ public:
 	ID3D11Texture2D* pTexture;
 	ID3D11Texture2D* pStaging;
 
+	float m_fRadius;
+	Vector2 beforePos;
+
 public:
-	void PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext);
+	void PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext, Vector3 pick);
 
 public:
 	bool Create(HMap* map, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext, T_STR szVS, T_STR szPS, T_STR filename);
@@ -46,6 +50,7 @@ public:
 	HRESULT CreateStagingTexture2D(HMap* map, ID3D11DeviceContext* pContext);
 	void WriteTextureData(HMap* map, ID3D11DeviceContext* pContext);
 	void WriteTextureDataAlphaZero(HMap* map, ID3D11DeviceContext* pContext);
+	void SetRadius(float radius);
 
 public:
 	HTextureMap();

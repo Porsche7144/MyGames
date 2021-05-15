@@ -69,9 +69,6 @@
     <ClInclude Include="HCharactorToolDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HQuadTree1.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="HPropertiesWnd.h">
       <Filter>PaneWindow\PropertiesWnd</Filter>
     </ClInclude>
@@ -121,9 +118,6 @@
     </ClCompile>
     <ClCompile Include="HCharactorToolDlg.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="HQuadTree1.cpp">
-      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="HPropertiesWnd.cpp">
       <Filter>PaneWindow\PropertiesWnd</Filter>

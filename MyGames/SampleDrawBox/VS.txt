@@ -9,6 +9,7 @@ cbuffer HDataCB
 	float  fTime  : packoffset(c13.x);
 	float  fGameTime  : packoffset(c13.y);
 };
+
 struct VS_INPUT
 {
 	float3 p : POSITION;

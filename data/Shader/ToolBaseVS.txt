@@ -23,6 +23,7 @@ struct VS_OUTPUT
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 	float4 wp : TEXCOORD1;
+	float4 t2 : TEXCOORD2;
 };
 
 VS_OUTPUT VS( VS_INPUT vIn)
@@ -46,6 +47,9 @@ VS_OUTPUT VS( VS_INPUT vIn)
 
 	vOut.t.x = ((vOut.wp.x / 10.0f) + 128.0f) / 256.0f * 2;
 	vOut.t.y = 1.0f - ((vOut.wp.z / 10.0f) + 128.0f) / 256.0f * 2; 
+
+	vOut.t2.x = ((vOut.wp.x / 10.0f) + 128.0f) / 256.0f;
+	vOut.t2.y = 1.0f - ((vOut.wp.z / 10.0f) + 128.0f) / 256.0f; 
 
 	return vOut;
 }

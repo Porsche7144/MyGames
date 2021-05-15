@@ -69,7 +69,7 @@ bool Sample::Init()
 	TCHAR* Filename = StringToTCHAR(m_FileName);
 
 	m_Camera.CreateViewMatrix({ 0,300,-100 }, { 0,0,0 });
-	m_pObj.Init();
+	//m_pObj.Init();
 
 	/////////////////////////////////////////////////////////////////////////////
 	// 유저 생성
@@ -136,7 +136,7 @@ bool Sample::Init()
 	//m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
 	//m_pMainCamera = &m_ModelCamera;
 
-	m_pObj.m_pMainCamera = m_pMainCamera;
+	//m_pObj.m_pMainCamera = m_pMainCamera;
 
 
 	m_TopCamera.CreateViewMatrix({ 0,30,-0.1f }, { 0,0,0 });
@@ -162,28 +162,9 @@ bool Sample::Init()
 
 bool Sample::Frame()
 {
-	m_pObj.Frame();
-
-	if (g_Input.GetKey('0') == KEY_PUSH)
-	{
-		m_TextureMap.Frame(&m_Map, g_pImmediateContext);
-	}
-
-	if (g_Input.GetKey('9') == KEY_PUSH)
-	{
-		m_AlphaZeroTexture.WriteTextureDataAlphaZero(&m_Map, g_pImmediateContext);
-		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
-	}
-	if (g_Input.GetKey('8') == KEY_PUSH)
-	{
-		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging ,g_pImmediateContext);
-		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
-		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
-	}
-
-
-
 	m_bSelect = false;
+
+	//m_pObj.Frame();
 
 #pragma region Mouse Picking
 	if (g_Input.GetKey(VK_LBUTTON) == KEY_HOLD && g_Input.GetKey(VK_SHIFT))
@@ -226,6 +207,23 @@ bool Sample::Frame()
 	}
 #pragma endregion
 
+	if (g_Input.GetKey('0') == KEY_PUSH)
+	{
+		m_TextureMap.Frame(&m_Map, g_pImmediateContext);
+	}
+
+
+	//if (g_Input.GetKey('9') == KEY_PUSH)
+	//{
+	//	m_AlphaZeroTexture.WriteTextureDataAlphaZero(&m_Map, g_pImmediateContext);
+	//	g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
+	//}
+	if (m_bSelect)
+	{
+		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging, g_pImmediateContext, pick);
+		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
+		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+	}
 
 /*
 	if (g_Input.GetKey('W') == KEY_HOLD)
@@ -267,13 +265,14 @@ bool Sample::Frame()
 
 bool Sample::Render()
 {
+	m_AlphaZeroTexture.SetRadius(m_fRadius);
 
 #pragma region ModelRender
-	for (auto data : m_ModelMatrixList)
-	{
-		m_pObj.m_pFbxObj->SetMatrix(&data, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-		//m_pObj.Render(g_pImmediateContext);
-	}
+	//for (auto data : m_ModelMatrixList)
+	//{
+	//	m_pObj.m_pFbxObj->SetMatrix(&data, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	//	//m_pObj.Render(g_pImmediateContext);
+	//}
 #pragma endregion
 
 #pragma region Rasterize
@@ -347,7 +346,6 @@ bool Sample::Render()
 			}
 		}
 
-		Vector3 pick;
 		float fMaxDist = 99999;
 		bool Update = false;
 		for (int select = 0; select < m_SelectNode.size(); select++)
@@ -377,7 +375,7 @@ bool Sample::Render()
 		m_ControlNode.clear();
 		H_SPHERE pickSphere;
 		pickSphere.vCenter = pick;
-		pickSphere.fRadius = 50.0f;
+		pickSphere.fRadius = m_fRadius;
 
 		for (int i = 0; i < m_QuadTree.m_leafList.size(); i++)
 		{
@@ -387,7 +385,6 @@ bool Sample::Render()
 				m_ControlNode.push_back(pNode);
 			}
 		}
-
 		
 		if (m_bIncreaseGround)
 		{
@@ -398,12 +395,11 @@ bool Sample::Render()
 					int iID = node->m_IndexList[v];
 					float fDist = (m_Map.m_VertexList[iID].p - pick).Length();
 					if (fDist < m_fRadius)
-					{
+					{						
 						if (m_Map.m_VertexList[iID].p.y < 255)
 						{
 							Vector3 v = m_Map.m_VertexList[iID].p;
 							m_Map.m_VertexList[iID].p.y = v.y + m_fSpeed - sinf((fDist / m_fRadius));
-
 						}
 						beforePos.y = pick.y;
 					}
@@ -492,24 +488,24 @@ bool Sample::Render()
 		}
 
 
-		if (m_bFlatGrond)
-		{
-			for (auto node : m_ControlNode)
-			{
-				for (int v = 0; v < node->m_IndexList.size(); v++)
-				{
-					int iID = node->m_IndexList[v];
-					float fDist = (m_Map.m_VertexList[iID].p - pick).Length();
-					if (fDist < m_fRadius)
-					{
-						
-					}
-				}
+		//if (m_bFlatGrond)
+		//{
+		//	for (auto node : m_ControlNode)
+		//	{
+		//		for (int v = 0; v < node->m_IndexList.size(); v++)
+		//		{
+		//			int iID = node->m_IndexList[v];
+		//			float fDist = (m_Map.m_VertexList[iID].p - pick).Length();
+		//			if (fDist < m_fRadius)
+		//			{
+		//				
+		//			}
+		//		}
 
-				// 실시간 노말 계산
-				//m_Map.CalcPerVertexNormalsFastLookUp();
-			}
-		}
+		//		// 실시간 노말 계산
+		//		//m_Map.CalcPerVertexNormalsFastLookUp();
+		//	}
+		//}
 
 
 
@@ -519,31 +515,31 @@ bool Sample::Render()
 
 #pragma region MapRender
 	m_Map.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	// m_Map.Render(g_pImmediateContext);
-	m_Map.m_cbData.vColor[0] = m_pMainCamera->m_vLook.x;
-	m_Map.m_cbData.vColor[1] = m_pMainCamera->m_vLook.y;
-	m_Map.m_cbData.vColor[2] = m_pMainCamera->m_vLook.z;
-
+	m_Map.m_cbData.vColor[0] = m_pMainCamera->m_vLook.x*1.5f;
+	m_Map.m_cbData.vColor[1] = m_pMainCamera->m_vLook.y*1.5f;
+	m_Map.m_cbData.vColor[2] = m_pMainCamera->m_vLook.z*1.5f;
 	for (auto node : m_QuadTree.m_leafList)
 	{
 		g_pImmediateContext->PSSetShaderResources(1, 1, &m_pTextureSRV[0]);
 		g_pImmediateContext->PSSetShaderResources(2, 4, &m_pTextureSRV[1]);
-		m_QuadTree.Draw(g_pImmediateContext, node);		
+		m_QuadTree.Draw(g_pImmediateContext, node);	
 	}
 #pragma endregion
 
 #pragma region MiniMapRender
 	m_Minimap.SetMatrix(NULL, NULL, NULL);
-	m_Minimap.Begin(g_pImmediateContext);
-	m_Map.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
-	for (auto node : m_QuadTree.m_leafList)
+	if (m_Minimap.Begin(g_pImmediateContext))
 	{
-		g_pImmediateContext->PSSetShaderResources(1, 1, &m_pTextureSRV[0]);
-		g_pImmediateContext->PSSetShaderResources(2, 4, &m_pTextureSRV[1]);
-		m_QuadTree.Draw(g_pImmediateContext, node);
-	}	
-	m_Map.Render(g_pImmediateContext);
-	m_Minimap.End(g_pImmediateContext);
+		m_Map.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+		for (auto node : m_QuadTree.m_leafList)
+		{
+			g_pImmediateContext->PSSetShaderResources(1, 1, &m_pTextureSRV[0]);
+			g_pImmediateContext->PSSetShaderResources(2, 4, &m_pTextureSRV[1]);
+			m_QuadTree.Draw(g_pImmediateContext, node);
+		}
+		m_Map.Render(g_pImmediateContext);
+		m_Minimap.End(g_pImmediateContext);
+	}
 #pragma endregion	
 
 	Matrix mat;
@@ -580,15 +576,15 @@ bool Sample::PostRender()
 
 bool Sample::Release()
 {
-	if (m_pTextureSRV)
+	if (m_pTextureSRV[1])
 	{
-		m_pTextureSRV[0]->Release();
 		m_pTextureSRV[1]->Release();
 		m_pTextureSRV[2]->Release();
 		m_pTextureSRV[3]->Release();
+		m_pTextureSRV[4]->Release();
 	}
 
-	m_pObj.Release();
+	//m_pObj.Release();
 	m_QuadTree.Release();
 	m_Minimap.Release();
 	m_Map.Release();

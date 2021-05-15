@@ -102,14 +102,6 @@ bool HMap::CreateVertexData()
 
 			//m_VertexList[iIndex].n = GetNormalOfVertex(iIndex);
 			m_VertexList[iIndex].c = { 1,1,1,1 };
-
-			ColorData color;
-			color.r = m_VertexList[iIndex].t.x * 255;
-			color.g = m_VertexList[iIndex].t.y * 255;
-			color.b = 0;
-			color.a = 0;
-
-			m_ColorMiniMapList.push_back(color);
 		}
 
 	}

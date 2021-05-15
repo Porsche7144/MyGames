@@ -160,7 +160,6 @@ namespace HBASIS_CORE_LIB
 		Matrix						m_matRotation;
 
 		HTexture* m_pTexture;
-		std::vector<ColorData>	m_ColorMiniMapList;
 		std::vector<HTriangle> m_TriangleList;
 
 	public:

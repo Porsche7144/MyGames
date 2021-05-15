@@ -205,8 +205,8 @@ bool	HCore::PreRender()
 	HDevice::PreRender();
 
 	g_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//m_SkyBox.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	//m_SkyBox.Render(g_pImmediateContext);
+	m_SkyBox.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+	m_SkyBox.Render(g_pImmediateContext);
 
 	g_pImmediateContext->RSSetState(HDxState::g_pRSBackCullSolid);
 	g_pImmediateContext->PSSetSamplers(0, 1, &HDxState::g_pSSWrapLinear);

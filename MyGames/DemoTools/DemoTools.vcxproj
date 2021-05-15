@@ -205,7 +205,6 @@
     <ClInclude Include="HModel.h" />
     <ClInclude Include="HOutputWnd.h" />
     <ClInclude Include="HPropertiesWnd.h" />
-    <ClInclude Include="HQuadTree1.h" />
     <ClInclude Include="HTextureMap.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
@@ -226,7 +225,6 @@
     <ClCompile Include="HModel.cpp" />
     <ClCompile Include="HOutputWnd.cpp" />
     <ClCompile Include="HPropertiesWnd.cpp" />
-    <ClCompile Include="HQuadTree1.cpp" />
     <ClCompile Include="HTextureMap.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">

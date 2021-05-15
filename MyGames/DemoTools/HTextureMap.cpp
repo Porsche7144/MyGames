@@ -210,45 +210,150 @@ void HTextureMap::WriteTextureDataAlphaZero(HMap* map, ID3D11DeviceContext* pCon
 	}
 }
 
-void HTextureMap::PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext)
+void HTextureMap::SetRadius(float radius)
+{
+	m_fRadius = radius;
+}
+
+void HTextureMap::PickRenderTextureData(HMap* map, ID3D11Texture2D* Texture2D, ID3D11DeviceContext* pContext, Vector3 pick)
 {
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC texDesc;
 	Texture2D->GetDesc(&texDesc);
+	D3D11_MAPPED_SUBRESOURCE MappedFaceDest;
 
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-
-	hr = pContext->Map((ID3D11Resource*)pStaging, 0, D3D11_MAP_READ_WRITE, 0, &mappedResource);
-	if (SUCCEEDED(hr))
+	if (pick.x == 0 && pick.z == 0)
 	{
-		BYTE* pDestBytes = (BYTE*)mappedResource.pData;
-
-		float fWidthRatio = map->m_iNumCols / (float)texDesc.Width;
-		float fHeightRatio = map->m_iNumRows / (float)texDesc.Height;
-
-		for (UINT y = 0; y < texDesc.Height; y++)
+		return;
+	}
+	if (SUCCEEDED(pContext->Map((ID3D11Resource*)Texture2D,
+		0, D3D11_MAP_READ_WRITE, 0, &MappedFaceDest)))
+	{
+		BYTE* pDestBytes = (BYTE*)MappedFaceDest.pData;
+		float fMapWidth = map->m_iNumCellCols * map->m_fCellDistance;
+		float fWidthRatio = (float)texDesc.Width / fMapWidth;
+		Vector2 vCenter = Vector2((pick.x + (fMapWidth / 2.0f)) * fWidthRatio,
+			(-(pick.z - (fMapWidth / 2.0f))) * fWidthRatio);
+		float fRadius = m_fRadius * fWidthRatio;
+		
+		if (beforePos != vCenter)
 		{
-
-			for (UINT x = 0; x < texDesc.Width; x++)
+			for (UINT y = 0; y < texDesc.Height; y++)
 			{
-				if (x < 100 && x > 0)
+				for (UINT x = 0; x < texDesc.Width; x++)
 				{
-					*pDestBytes++ = 255;
-					*pDestBytes++ = 0;
-					*pDestBytes++ = 0;
-					*pDestBytes++ = 0;
-					continue;
-				}
+					Vector2 p = Vector2(x, y);
+					float fDist = (p - vCenter).Length();
 
-				*pDestBytes++ = 0;
-				*pDestBytes++ = 0;
-				*pDestBytes++ = 0;
-				*pDestBytes++ = 0;
+					if (fDist < fRadius)
+					{
+						float iRatio = 0.0f;
+						int iTemp = 0;
+
+						if (fDist < fRadius / 2.0f)
+						{
+							iRatio = 255;
+						}
+						else
+						{
+							iRatio = ((1.0f - fDist / fRadius) * 2.0f) * 255;
+						}
+
+						iTemp = *pDestBytes + (int)iRatio;
+						if (iTemp > 255) iTemp = 255;
+						*pDestBytes = iTemp;
+						pDestBytes += 4;
+
+						continue;
+					}
+					pDestBytes += 4;
+				}
 			}
-			//pDestBytes += mappedResource.RowPitch;
 		}
+
+		beforePos = vCenter;
 		pContext->Unmap(Texture2D, 0);
 	}
+
+	// D3D11_TEXTURE2D_DESC desc;
+	// pTexDest->GetDesc(&desc);
+	// 
+	// D3D11_MAPPED_SUBRESOURCE MappedFaceDest;
+	// if (SUCCEEDED(pImmediateContext->Map((ID3D11Resource*)pTexDest,
+	// 	0, D3D11_MAP_READ_WRITE, 0, &MappedFaceDest)))
+	// {
+	// 	BYTE* pDestBytes = (BYTE*)MappedFaceDest.pData;
+	// 	float fMapWidth = m_pMap->m_iNumCellCols * m_pMap->m_fCellDistance;
+	// 	float fWidthRatio = (float)desc.Width / fMapWidth;
+	// 	Vector2 vCenter = Vector2((vPick.x + (fMapWidth / 2.0f)) * fWidthRatio,
+	// 		(-(vPick.z - (fMapWidth / 2.0f))) * fWidthRatio);
+	// 	float fRadius = m_fOutRad * fWidthRatio;
+	// 
+	// 	for (UINT y = 0; y < desc.Height; y++)
+	// 	{
+	// 		for (UINT x = 0; x < desc.Width; x++)
+	// 		{
+	// 			Vector2 p = Vector2(x, y);
+	// 			float fDist = (p - vCenter).Length();
+	// 			if (fDist < fRadius)
+	// 			{
+	// 				float iRatio = 0.0f;
+	// 				int iTemp = 0;
+	// 				if (fDist < fRadius / 2.0f)
+	// 				{
+	// 					iRatio = 255;
+	// 				}
+	// 				else
+	// 				{
+	// 					iRatio = ((1.0f - fDist / fRadius) * 2.0f) * 255;
+	// 				}
+	// 				switch (m_eSplatType)
+	// 				{
+	// 				case SPLAT_TEX_01:
+	// 				{
+	// 					iTemp = *pDestBytes + (int)iRatio;
+	// 					if (iTemp > 255) iTemp = 255;
+	// 					*pDestBytes = iTemp;
+	// 					pDestBytes += 4;
+	// 				}
+	// 				break;
+	// 				case SPLAT_TEX_02:
+	// 				{
+	// 					pDestBytes++;
+	// 					iTemp = *pDestBytes + (int)iRatio;
+	// 					if (iTemp > 255) iTemp = 255;
+	// 					*pDestBytes = iTemp;
+	// 					pDestBytes += 3;
+	// 				}
+	// 				break;
+	// 				case SPLAT_TEX_03:
+	// 				{
+	// 					pDestBytes += 2;
+	// 					iTemp = *pDestBytes + (int)iRatio;
+	// 					if (iTemp > 255) iTemp = 255;
+	// 					*pDestBytes = iTemp;
+	// 					pDestBytes += 2;
+	// 				}
+	// 				break;
+	// 				case SPLAT_TEX_04:
+	// 				{
+	// 					pDestBytes += 3;
+	// 					iTemp = *pDestBytes + (int)iRatio;
+	// 					if (iTemp > 255) iTemp = 255;
+	// 					*pDestBytes = iTemp;
+	// 					pDestBytes++;
+	// 				}
+	// 				break;
+	// 				default:
+	// 					break;
+	// 				}
+	// 				continue;
+	// 			}
+	// 			pDestBytes += 4;
+	// 		}
+	// 	}
+	// 	pImmediateContext->Unmap(pTexDest, 0);
+
 }
 
 HRESULT HTextureMap::SetDepthStencilView()

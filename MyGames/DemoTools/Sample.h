@@ -7,7 +7,7 @@
 #include "HQuadTree.h"
 #include "HPicking.h"
 #include "HModelViewCamera.h"
-#include "HModel.h"
+//#include "HModel.h"
 #include "HTextureMap.h"
 
 #pragma comment(lib, "directxtk.lib")
@@ -37,7 +37,7 @@ public:
 	HQuadTree		m_QuadTree;
 	H_BOX			m_TBoxBase;
 	HPicking		m_Picking;
-	HModel			m_pObj;
+	//HModel			m_pObj;
 
 	HMap				m_Map;
 	HMinimap			m_Minimap;
@@ -53,6 +53,7 @@ public:
 
 	Vector3 vPickRayDir;
 	Vector3 vPickRayOrigin;
+	Vector3 pick;
 
 	Vector3 v0, v1, v2, vNormal, vEnd;
 	Vector3 list[3];

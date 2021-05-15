@@ -64,6 +64,7 @@ struct VS_OUTPUT
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 	float4 wp : TEXCOORD1;
+	float4 t2 : TEXCOORD2;
 };
 
 struct PS_OUTPUT
@@ -173,13 +174,13 @@ PS_OUTPUT PS( VS_OUTPUT vIn)
 {
 	PS_OUTPUT vOut;
 	float4 vTexture = g_txDiffuse.Sample(g_Sample, vIn.t);
-	float4 baseTex = g_txBaseTex.Sample(g_Sample, vIn.t);
+	float4 baseTex = g_txBaseTex.Sample(g_Sample, vIn.t2);
 	
 	float4 FieldColor[4];
-	FieldColor[0] = g_LayerTex[0].Sample(g_Sample, vIn.t);
-	FieldColor[1] = g_LayerTex[1].Sample(g_Sample, vIn.t);
-	FieldColor[2] = g_LayerTex[2].Sample(g_Sample, vIn.t);
-	FieldColor[3] = g_LayerTex[3].Sample(g_Sample, vIn.t);
+	FieldColor[0] = g_LayerTex[0].Sample(g_Sample, vIn.t2);
+	FieldColor[1] = g_LayerTex[1].Sample(g_Sample, vIn.t2);
+	FieldColor[2] = g_LayerTex[2].Sample(g_Sample, vIn.t2);
+	FieldColor[3] = g_LayerTex[3].Sample(g_Sample, vIn.t2);
 
 	float3 vFinalColor = vTexture.xyz * (1.0f- baseTex.r) +  FieldColor[0].xyz * baseTex.r;
 	vFinalColor =  vFinalColor.xyz * (1.0f- baseTex.g) +  FieldColor[1].xyz * baseTex.g;
@@ -187,9 +188,9 @@ PS_OUTPUT PS( VS_OUTPUT vIn)
 	vFinalColor =  vFinalColor.xyz * (1.0f- baseTex.a) +  FieldColor[3].xyz * baseTex.a;
 
 	float4 lightColor = ComputeSpotLight(vIn.wp, vIn.n, 3);
-	
-	vOut.c = float4(vFinalColor, 1.0f);
-	//vOut.c = vTexture * vIn.c * FinalColor; // * vIn.c; //vTexture * FieldColor; //* vIn.c; //*Diffuse(vIn.n, g_vLightDir[0])*lightColor;
+
+	float4 vColor = float4(vFinalColor, 1.0f);
+	vOut.c = vColor * vIn.c; //vTexture * vIn.c * FinalColor; // * vIn.c; //vTexture * FieldColor; //* vIn.c; //*Diffuse(vIn.n, g_vLightDir[0])*lightColor;
 	//vOut.c = Diffuse(vIn.n, g_vLightDir[0]) * Geom(vIn) * lightColor * vTexture;
 
 	return vOut;
