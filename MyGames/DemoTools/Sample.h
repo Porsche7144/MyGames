@@ -12,6 +12,14 @@
 
 #pragma comment(lib, "directxtk.lib")
 
+struct SaveData
+{
+	TCHAR* fileName;
+	int iTileCount;
+	float fCellCount;
+	float fScale;
+};
+
 class HBoxUser : public HShapeBox
 {
 public:
@@ -26,11 +34,12 @@ public:
 class Sample : public HCore
 {
 public:
+	SaveData		m_Save;
 	HQuadTree		m_QuadTree;
 	H_BOX			m_TBoxBase;
 	HPicking		m_Picking;
 	//HModel			m_pObj;
-
+	int isave;
 	HMap				m_Map;
 	HMinimap			m_Minimap;
 	HTextureMap			m_TextureMap;
@@ -41,6 +50,7 @@ public:
 	HShapePlane			m_PlaneShape;
 	Vector4				m_vDirValue;
 	HModelViewCamera	m_ModelCamera;
+
 	HCamera m_TopCamera;
 
 	Vector3 vPickRayDir;
@@ -60,6 +70,8 @@ public:
 	bool m_bFlatGrond = false;
 	bool m_bSplattingState = false;
 	bool m_bFieldUpdateState = false;
+	bool m_SaveData = false;
+	bool m_LoadData = false;
 
 	float t, u, v = 0;
 	bool m_bSelect;
@@ -69,6 +81,7 @@ public:
 	float m_fRadius;
 	float m_fSpeed;
 	int	  m_iSplattingNum;
+	TCHAR* Filename;
 
 	std::string m_FileName;
 
@@ -95,6 +108,8 @@ public:
 public:
 	bool GetIntersection(HNode* pNode);
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	void SaveMapData();
+	void LoadMapData(string filename);
 
 public:
 	Sample()

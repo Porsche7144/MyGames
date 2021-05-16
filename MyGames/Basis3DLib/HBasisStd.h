@@ -17,6 +17,8 @@
 #include <memory>
 #include "dxtk/WICTextureLoader.h"
 #include "dxtk/DDSTextureLoader.h"
+#include "dxtk/ScreenGrab.h"
+#include <fstream>
 #include "HMath.h"
 
 #pragma comment( lib, "Winmm.lib")

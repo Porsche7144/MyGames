@@ -4,6 +4,50 @@ int Sample::m_iTileCount = 257;
 float Sample::m_fCellCount = 10.0f;
 float Sample::m_fScale = 10.0f;
 
+void Sample::SaveMapData()
+{
+	ofstream fout;
+	fout.open("save.txt");
+	m_Save.iTileCount = m_iTileCount;
+	m_Save.fCellCount = m_fCellCount;
+	m_Save.fScale = m_fScale;
+	m_Save.fileName = Filename;
+
+	int len = 256;
+	char cTemp[256];
+	WideCharToMultiByte(CP_ACP, 0, m_Save.fileName, len, cTemp, len, NULL, NULL);
+
+	fout << cTemp << endl << m_Save.iTileCount << endl
+		 << m_Save.fCellCount << endl << m_Save.fScale;
+	
+	fout.close();
+
+	isave = 0;
+
+}
+
+void Sample::LoadMapData(string filename)
+{
+
+	ifstream fin;
+	char input[256];
+
+	fin.open(filename);
+	if (fin.fail())
+	{
+		return;
+	}
+
+	fin >> input
+		>> m_Save.iTileCount
+		>> m_Save.fCellCount
+		>> m_Save.fScale;
+
+	string name = input;
+	m_Save.fileName = StringToTCHAR(name);
+
+}
+
 LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pMainCamera == nullptr) return -1;
@@ -67,7 +111,7 @@ TCHAR* Sample::StringToTCHAR(string& s)
 bool Sample::Init()
 {
 	HRESULT hr;
-	TCHAR* Filename = StringToTCHAR(m_FileName);
+	Filename = StringToTCHAR(m_FileName);
 
 	m_Camera.CreateViewMatrix({ 0,300,-100 }, { 0,0,0 });
 	//m_pObj.Init();
@@ -91,17 +135,31 @@ bool Sample::Init()
 	//	return false;
 	//}
 #pragma endregion
-
+	
 #pragma region MapCreate
 	HMapDesc desc;
-	desc.iNumCols = m_iTileCount;
-	desc.iNumRows = m_iTileCount;
-	desc.fCellDistance = m_fCellCount;
-	desc.fScaleHeight = m_fScale;
-	desc.szTextFile = Filename;
-	desc.szVS = L"../../data/Shader/ToolBaseVS.txt";
-	desc.szPS = L"../../data/Shader/ToolBasePS.txt";
-    m_Map.CreateMap(g_pd3dDevice, desc);
+	if (m_LoadData)
+	{		
+		desc.iNumCols = m_Save.iTileCount;
+		desc.iNumRows = m_Save.iTileCount;
+		desc.fCellDistance = m_Save.fCellCount;
+		desc.fScaleHeight = m_Save.fScale;
+		desc.szTextFile = m_Save.fileName;
+		desc.szVS = L"../../data/Shader/ToolBaseVS.txt";
+		desc.szPS = L"../../data/Shader/ToolBasePS.txt";
+		m_Map.CreateMap(g_pd3dDevice, desc);
+	}
+	else
+	{
+		desc.iNumCols = m_iTileCount;
+		desc.iNumRows = m_iTileCount;
+		desc.fCellDistance = m_fCellCount;
+		desc.fScaleHeight = m_fScale;
+		desc.szTextFile = Filename;
+		desc.szVS = L"../../data/Shader/ToolBaseVS.txt";
+		desc.szPS = L"../../data/Shader/ToolBasePS.txt";
+		m_Map.CreateMap(g_pd3dDevice, desc);
+	}
 #pragma endregion
 
 	m_vDirValue = { 0,0,0,0 };
@@ -125,7 +183,6 @@ bool Sample::Init()
 		return false;
 	}
 #pragma endregion
-
 #pragma region SplattingTexture CreateShaderResourceView
 	m_pTextureSRV[1] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/woodfloor.bmp");
 	m_pTextureSRV[2] = CreateShaderResourceView(g_pd3dDevice, L"../../Image/data/map/seafloor.bmp");
@@ -162,7 +219,7 @@ bool Sample::Init()
 	//m_pObj.m_pMainCamera = m_pMainCamera;
 
 	// 1024 * 1024
-
+	isave = 1;
 	return true;
 }
 #pragma endregion
@@ -297,7 +354,16 @@ bool Sample::Frame()
 
 	m_UserShape.m_matRotation = m_pMainCamera->m_matWorld;
 
+	//m_SaveData = true;
+	if (isave == 1)
+	{
+		//SaveMapData();
+		//const string name = "save.txt";
+		//LoadMapData(name);
+		
 
+	}
+	//m_SaveData = false;
 	return true;
 }
 #pragma endregion

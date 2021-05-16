@@ -210,6 +210,9 @@
     <ClInclude Include="HModelObj.h">
       <Filter>FBX</Filter>
     </ClInclude>
+    <ClInclude Include="dxtk\ScreenGrab.h">
+      <Filter>dxtk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="HModelObj.cpp">
       <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="dxtk\ScreenGrab.cpp">
+      <Filter>dxtk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

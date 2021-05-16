@@ -539,7 +539,6 @@ namespace HBASIS_CORE_LIB
 			D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, D3D11_RESOURCE_MISC_GENERATE_MIPS,
 			WIC_LOADER_DEFAULT,
 			res.GetAddressOf(), &pSRV);*/
-
 		hr = DirectX::CreateWICTextureFromFile(pDevice, strFilePath, res.GetAddressOf(), &pSRV);
 		if (FAILED(hr))
 		{

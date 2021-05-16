@@ -1,0 +1,4 @@
+../../Image/data/main_fr_list.bmp
+257
+10
+10

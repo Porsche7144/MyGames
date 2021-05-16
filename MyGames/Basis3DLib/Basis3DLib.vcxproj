@@ -25,6 +25,7 @@
     <ClInclude Include="Dxtk\LoaderHelpers.h" />
     <ClInclude Include="Dxtk\pch.h" />
     <ClInclude Include="Dxtk\PlatformHelpers.h" />
+    <ClInclude Include="dxtk\ScreenGrab.h" />
     <ClInclude Include="Dxtk\WICTextureLoader.h" />
     <ClInclude Include="HBasisStd.h" />
     <ClInclude Include="HCamera.h" />
@@ -78,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dxtk\DDSTextureLoader.cpp" />
+    <ClCompile Include="dxtk\ScreenGrab.cpp" />
     <ClCompile Include="Dxtk\WICTextureLoader.cpp" />
     <ClCompile Include="HCamera.cpp" />
     <ClCompile Include="HCore.cpp" />
