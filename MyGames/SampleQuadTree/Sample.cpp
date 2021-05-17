@@ -24,7 +24,7 @@ bool Sample::Init()
 	/////////////////////////////////////////////////////////////////////////////
 	// 높이맵 생성
 	/////////////////////////////////////////////////////////////////////////////
-	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../Image/data/map/heightMap513.bmp"))
+	if (!m_Map.CreateHeightMap(g_pd3dDevice, g_pImmediateContext, L"../../save/SaveHeightTex.dds"))
 	{
 		return false;
 	}
@@ -32,8 +32,8 @@ bool Sample::Init()
 	HMapDesc desc;
 	desc.iNumCols = m_Map.m_iNumCols;
 	desc.iNumRows = m_Map.m_iNumRows;
-	desc.fCellDistance = 1.0f;
-	desc.fScaleHeight = 3.0f;
+	desc.fCellDistance = 10.0f;
+	desc.fScaleHeight = 10.0f;
 	desc.szTextFile = L"../../Image/data/map/detail.bmp";
 	desc.szVS = L"VS.txt";
 	desc.szPS = L"PS.txt";
@@ -68,7 +68,7 @@ bool Sample::Init()
 	// 카메라 바꿔치는 부분.
 	m_ModelCamera.CreateViewMatrix({ 0,10,-10 }, { 0,0,0 });
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_ModelCamera.CreateProjectionMatrix(1, 1000, HBASIS_PI / 4.0f, fAspect);
+	m_ModelCamera.CreateProjectionMatrix(1, 100000, HBASIS_PI / 4.0f, fAspect);
 	m_ModelCamera.Init();
 	// 프러스텀 생성
 	m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
@@ -76,7 +76,7 @@ bool Sample::Init()
 
 	m_TopCamera.CreateViewMatrix({ 0,30,-0.1f }, { 0,0,0 });
 	fAspect = g_rtClient.right / (float)g_rtClient.bottom;
-	m_TopCamera.CreateOrthographic(desc.iNumCols, desc.iNumRows, 1.0f, 1000);
+	m_TopCamera.CreateOrthographic(desc.iNumCols, desc.iNumRows, 1.0f, 100000);
 	m_TopCamera.Init();
 
 

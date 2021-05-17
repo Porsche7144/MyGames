@@ -39,6 +39,7 @@ public:
 	UINT m_iNumFaces;
 	float m_fCellDistance;
 	std::vector<float> m_fHeightList;
+	std::vector<Vector3> m_LoadVertexList;
 
 public:
 	bool CreateMap(ID3D11Device* pDevice, HMapDesc desc);
@@ -50,6 +51,9 @@ public:
 	virtual float GetHeightMap(int row, int col);
 	virtual float Lerp(float fStart, float fEnd, float fTangent);
 	virtual float GetHeightMap(float fPosX, float fPosZ);
+	bool LoadMap(ID3D11Device* pDevice, HMapDesc desc);
+	virtual bool LoadVertexData();
+	void SetLoadHeight(std::vector<Vector3> height);
 
 public:
 	Vector3 GetNormalOfVertex(UINT index);

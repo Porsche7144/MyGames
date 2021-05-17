@@ -18,6 +18,9 @@ struct SaveData
 	int iTileCount;
 	float fCellCount;
 	float fScale;
+	std::vector<Vector3> m_SaveVertexList;
+	int iListSize;
+
 };
 
 class HBoxUser : public HShapeBox
@@ -72,6 +75,7 @@ public:
 	bool m_bFieldUpdateState = false;
 	bool m_SaveData = false;
 	bool m_LoadData = false;
+	bool m_SaveTexture = false;
 
 	float t, u, v = 0;
 	bool m_bSelect;
@@ -82,6 +86,7 @@ public:
 	float m_fSpeed;
 	int	  m_iSplattingNum;
 	TCHAR* Filename;
+	ID3D11Texture2D* m_LoadTexture = nullptr;
 
 	std::string m_FileName;
 
@@ -110,6 +115,8 @@ public:
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void SaveMapData();
 	void LoadMapData(string filename);
+	void SaveTextureFile(ID3D11Texture2D* texture, T_STR name);
+	ID3D11Texture2D* LoadTexturetMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const TCHAR* pFilename);
 
 public:
 	Sample()

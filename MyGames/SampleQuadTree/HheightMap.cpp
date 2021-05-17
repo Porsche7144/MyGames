@@ -14,17 +14,30 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 	// 불러온 Texture를 CPU가 읽어들일 수 있도록 D3D11_USAGE_STAGING,
 	// D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ 로 할당.
-	if (FAILED(hr = CreateWICTextureFromFileEx(pDevice, 
+	if (FAILED(hr = CreateWICTextureFromFileEx(pDevice,
 		pFilename,
-		maxsize, 
-		D3D11_USAGE_STAGING, 
-		0, 
-		D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ, 
-		0, 
-		WIC_LOADER_DEFAULT, 
+		maxsize,
+		D3D11_USAGE_STAGING,
+		0,
+		D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+		0,
+		WIC_LOADER_DEFAULT,
 		&pTexture, nullptr)))
 	{
-		return false;
+
+		if (FAILED(hr = CreateDDSTextureFromFileEx(pDevice,
+			pFilename,
+			maxsize,
+			D3D11_USAGE_STAGING,
+			0,
+			D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+			0,
+			WIC_LOADER_DEFAULT,
+			&pTexture, nullptr)))
+			{
+				return false;
+			}		
+
 	}
 
 	ID3D11Texture2D* pTexture2D = NULL;
@@ -42,7 +55,7 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	// 버퍼에 대한 정보를 얻어온다.
 	pTexture2D->GetDesc(&desc);
 
-	m_fHeightList.resize(desc.Height * desc.Width);
+	m_fHeightList.resize((desc.Height) * (desc.Width));
 
 
 	// 이미지의 RGBA에 따른 높이값을 계산한다.
@@ -73,8 +86,8 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 		}
 	}
 
-	m_iNumRows = desc.Height;
-	m_iNumCols = desc.Width;
+	m_iNumRows = desc.Height+1;
+	m_iNumCols = desc.Width+1;
 	pTexture2D->Release();
 	pTexture->Release();
 

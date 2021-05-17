@@ -53,6 +53,7 @@
 #define IDC_BUTTON9                     1017
 #define IDC_LIST3                       1028
 #define IDC_BUTTON5                     1030
+#define IDC_BUTTON10                    1031
 #define IDC_RADIO4                      1056
 #define IDC_RADIO5                      1057
 #define IDC_BUTTON7                     1060

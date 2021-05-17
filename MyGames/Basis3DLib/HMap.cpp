@@ -76,6 +76,12 @@ float HMap::GetHeight(UINT index)
 	return 0.0f;
 }
 
+void HMap::SetLoadHeight(std::vector<Vector3> height)
+{
+	m_LoadVertexList = height;
+	//return 0.0f;
+}
+
 bool HMap::CreateVertexData()
 {
 	// 정점 가로/세로 = 2N승+1
@@ -104,6 +110,46 @@ bool HMap::CreateVertexData()
 			m_VertexList[iIndex].c = { 1,1,1,1 };
 		}
 
+	}
+
+	return true;
+}
+
+bool HMap::LoadVertexData()
+{
+	// 정점 가로/세로 = 2N승+1
+
+	m_VertexList.resize(m_iNumVertices);
+	//m_LoadVertexList.resize(m_iNumVertices);
+	float fHalfCols = (m_iNumCols - 1) / 2.0f;
+	float fHalfRows = (m_iNumRows - 1) / 2.0f;
+	float fOffsetU = 1.0f / (m_iNumCols - 1);
+	float fOffsetV = 1.0f / (m_iNumRows - 1);
+
+	for (int iRow = 0; iRow < m_iNumRows; iRow++)
+	{
+
+		for (int iCol = 0; iCol < m_iNumCols; iCol++)
+		{
+			int iIndex = iRow * m_iNumCols + iCol;
+			m_VertexList[iIndex].p.x = (iCol - fHalfCols) * m_fCellDistance;
+
+			// 얻어온 높이만큼 할당.
+			m_VertexList[iIndex].p.y = GetHeight(iIndex);
+			m_VertexList[iIndex].p.z = (iRow - fHalfRows) * m_fCellDistance*-1.0f;
+			m_VertexList[iIndex].t.x = iCol * fOffsetU * 1;
+			m_VertexList[iIndex].t.y = iRow * fOffsetV * 1;
+
+			//m_VertexList[iIndex].n = GetNormalOfVertex(iIndex);
+			m_VertexList[iIndex].c = { 1,1,1,1 };
+		}
+
+	}
+
+	for (int i = 0; i < m_LoadVertexList.size(); i++)
+	{
+		// 얻어온 높이만큼 할당.
+		m_VertexList[i].p.y = m_LoadVertexList[i].y;
 	}
 
 	return true;
@@ -239,6 +285,23 @@ bool HMap::Frame()
 bool HMap::PostRender(ID3D11DeviceContext * pd3dContext)
 {
 	pd3dContext->DrawIndexed(m_iNumFaces*3, 0, 0);
+
+	return true;
+}
+
+bool HMap::LoadMap(ID3D11Device* pDevice, HMapDesc desc)
+{
+	m_MapDesc = desc;
+	m_iNumRows = desc.iNumRows;
+	m_iNumCols = desc.iNumCols;
+	m_iNumCellCols = m_iNumCols - 1;
+	m_iNumCellRows = m_iNumRows - 1;
+	m_iNumVertices = m_iNumCols * m_iNumRows;
+	m_iNumFaces = m_iNumCellCols * m_iNumCellRows * 2;
+	m_fCellDistance = desc.fCellDistance;
+
+
+	LoadMapData(pDevice, desc.szVS, desc.szPS, desc.szTextFile);
 
 	return true;
 }

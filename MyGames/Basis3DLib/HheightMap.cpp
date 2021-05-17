@@ -24,7 +24,19 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 		WIC_LOADER_DEFAULT, 
 		&pTexture, nullptr)))
 	{
-		return false;
+		if (FAILED(hr = CreateDDSTextureFromFileEx(pDevice,
+			pFilename,
+			maxsize,
+			D3D11_USAGE_STAGING,
+			0,
+			D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+			0,
+			WIC_LOADER_DEFAULT,
+			&pTexture, nullptr)))
+		{
+			return false;
+		}
+		
 	}
 
 	ID3D11Texture2D* pTexture2D = NULL;
@@ -42,7 +54,11 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	// 버퍼에 대한 정보를 얻어온다.
 	pTexture2D->GetDesc(&desc);
 
-	m_fHeightList.resize(desc.Height * desc.Width);
+	m_iNumRows = 513;
+	m_iNumCols = 513;
+	float numRatio = m_iNumRows * m_iNumCols;
+	float fRatio = (desc.Height * desc.Width) / numRatio;
+	m_fHeightList.resize((desc.Height + (desc.Height * fRatio)) * (desc.Width + (desc.Width * fRatio)));
 
 
 	// 이미지의 RGBA에 따른 높이값을 계산한다.
@@ -73,8 +89,8 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 		}
 	}
 
-	m_iNumRows = desc.Height;
-	m_iNumCols = desc.Width;
+	//m_iNumRows = desc.Height;
+	//m_iNumCols = desc.Width;
 	pTexture2D->Release();
 	pTexture->Release();
 

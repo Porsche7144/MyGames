@@ -203,6 +203,8 @@ namespace HBASIS_CORE_LIB
 		virtual bool LoadShader(T_STR vs, T_STR ps);
 		virtual bool LoadTexture(T_STR texture);
 		virtual bool SetMatrix(Matrix* pWorld, Matrix* pView, Matrix* pProj);
+		virtual bool LoadMapData(ID3D11Device * pDevice, T_STR vs, T_STR ps, T_STR texture);
+		virtual bool LoadVertexData();
 
 		void CompilerCheck(ID3DBlob* ErrorMsg);
 

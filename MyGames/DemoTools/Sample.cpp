@@ -4,6 +4,53 @@ int Sample::m_iTileCount = 257;
 float Sample::m_fCellCount = 10.0f;
 float Sample::m_fScale = 10.0f;
 
+ID3D11Texture2D* Sample ::LoadTexturetMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const TCHAR* pFilename)
+{
+	HRESULT hr;
+	ID3D11Resource* pTexture;
+	size_t maxsize = 0;
+
+	// 불러온 Texture를 CPU가 읽어들일 수 있도록 D3D11_USAGE_STAGING,
+	// D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ 로 할당.
+	if (FAILED(hr = CreateWICTextureFromFileEx(pDevice,
+		pFilename,
+		maxsize,
+		D3D11_USAGE_STAGING,
+		0,
+		D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+		0,
+		WIC_LOADER_DEFAULT,
+		&pTexture, nullptr)))
+	{
+
+		if (FAILED(hr = CreateDDSTextureFromFileEx(pDevice,
+			pFilename,
+			maxsize,
+			D3D11_USAGE_STAGING,
+			0,
+			D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+			0,
+			WIC_LOADER_DEFAULT,
+			&pTexture, nullptr)))
+		{
+			return false;
+		}
+
+	}
+
+	ID3D11Texture2D* pTexture2D = NULL;
+	// QueryInterface
+	// 개체가 특정의 구성 요소 개체 모델 (COM) 인터페이스를 지원 하고 있을지 어떨지를 판별한다. 
+	// 인터페이스가 지원 되고 있는 경우, 시스템은 개체의 참조 카운트를 늘려, 
+	// 애플리케이션은, 그 인터페이스를 곧바로 사용할 수 있다.
+	if (FAILED(pTexture->QueryInterface(__uuidof(ID3D11Texture2D), (LPVOID*)&pTexture2D)))
+	{
+		return false;
+	}
+
+	return pTexture2D;
+}
+
 void Sample::SaveMapData()
 {
 	ofstream fout;
@@ -12,13 +59,24 @@ void Sample::SaveMapData()
 	m_Save.fCellCount = m_fCellCount;
 	m_Save.fScale = m_fScale;
 	m_Save.fileName = Filename;
+	m_Save.iListSize = m_Map.m_VertexList.size();
+
 
 	int len = 256;
 	char cTemp[256];
 	WideCharToMultiByte(CP_ACP, 0, m_Save.fileName, len, cTemp, len, NULL, NULL);
 
 	fout << cTemp << endl << m_Save.iTileCount << endl
-		 << m_Save.fCellCount << endl << m_Save.fScale;
+		 << m_Save.fCellCount << endl << m_Save.fScale << endl 
+		 << m_Save.iListSize << endl;
+
+	m_Save.m_SaveVertexList.resize(m_Map.m_VertexList.size());
+
+	for (int i = 0; i < m_Map.m_VertexList.size(); i++)
+	{
+		m_Save.m_SaveVertexList[i].y = m_Map.m_VertexList[i].p.y;
+		fout << m_Save.m_SaveVertexList[i].y << endl;
+	}
 	
 	fout.close();
 
@@ -41,11 +99,37 @@ void Sample::LoadMapData(string filename)
 	fin >> input
 		>> m_Save.iTileCount
 		>> m_Save.fCellCount
-		>> m_Save.fScale;
+		>> m_Save.fScale
+		>> m_Save.iListSize;
 
 	string name = input;
 	m_Save.fileName = StringToTCHAR(name);
 
+	m_Save.m_SaveVertexList.resize(m_Save.iListSize);
+	for (int i = 0; i < m_Save.m_SaveVertexList.size(); i++)
+	{
+		fin >> m_Save.m_SaveVertexList[i].y;
+	}
+
+}
+
+void Sample::SaveTextureFile(ID3D11Texture2D* texture, T_STR name)
+{
+	HRESULT hr;
+	ComPtr<ID3D11Texture2D> SaveTex;
+	if (texture == nullptr)
+	{
+		return;
+	}
+	else
+	{
+		SaveTex = texture;
+	}
+	hr = DirectX::SaveDDSTextureToFile(g_pImmediateContext, SaveTex.Get(), (name + L".dds").c_str());
+	if (FAILED(hr))
+	{
+		return;
+	}
 }
 
 LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -139,7 +223,8 @@ bool Sample::Init()
 #pragma region MapCreate
 	HMapDesc desc;
 	if (m_LoadData)
-	{		
+	{
+		LoadMapData("save.txt");
 		desc.iNumCols = m_Save.iTileCount;
 		desc.iNumRows = m_Save.iTileCount;
 		desc.fCellDistance = m_Save.fCellCount;
@@ -147,7 +232,13 @@ bool Sample::Init()
 		desc.szTextFile = m_Save.fileName;
 		desc.szVS = L"../../data/Shader/ToolBaseVS.txt";
 		desc.szPS = L"../../data/Shader/ToolBasePS.txt";
+		//m_Map.SetLoadHeight(m_Save.m_SaveVertexList);
 		m_Map.CreateMap(g_pd3dDevice, desc);
+		for (int i = 0; i < m_Save.m_SaveVertexList.size(); i++)
+		{
+			m_Map.m_VertexList[i].p.y = m_Save.m_SaveVertexList[i].y;
+		}
+		m_LoadTexture = LoadTexturetMap(g_pd3dDevice, g_pImmediateContext, L"SaveAlphaTex.dds");
 	}
 	else
 	{
@@ -219,6 +310,11 @@ bool Sample::Init()
 	//m_pObj.m_pMainCamera = m_pMainCamera;
 
 	// 1024 * 1024
+	if (m_LoadData)
+	{
+		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
+		g_pImmediateContext->UpdateSubresource(m_Map.m_pVertexBuffer, 0, NULL, &m_Map.m_VertexList.at(0), 0, 0);
+	}
 	isave = 1;
 	return true;
 }
@@ -230,6 +326,7 @@ bool Sample::Frame()
 	m_bSelect = false;
 
 	//m_pObj.Frame();
+
 
 #pragma region Mouse Picking
 	if (g_Input.GetKey(VK_LBUTTON) == KEY_HOLD && g_Input.GetKey(VK_SHIFT))
@@ -277,6 +374,21 @@ bool Sample::Frame()
 		m_TextureMap.Frame(&m_Map, g_pImmediateContext);
 	}
 	
+	if (m_LoadData)
+	{
+		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
+			g_pImmediateContext, pick, m_iSplattingNum);
+		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
+		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+	}
+	else
+	{
+		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging,
+			g_pImmediateContext, pick, m_iSplattingNum);
+		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
+		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+	}
+
 #pragma region PickTextureSplatting
 	if (m_bSelect && m_bSplattingState)
 	{
@@ -310,11 +422,28 @@ bool Sample::Frame()
 
 			}
 		}
-
-		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging, 
-											     g_pImmediateContext, pick, m_iSplattingNum);
-		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
-		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+		if (m_LoadData)
+		{
+			m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
+				g_pImmediateContext, pick, m_iSplattingNum);
+			g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
+			m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+		}
+		else
+		{
+			m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging,
+				g_pImmediateContext, pick, m_iSplattingNum);
+			g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
+			m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+		}
+	}
+	if (m_SaveTexture)
+	{
+		SaveMapData();
+		//const string name = "save.txt";
+		//LoadMapData(name);
+		SaveTextureFile(m_AlphaZeroTexture.pTexture, L"../../save/SaveTex");
+		m_SaveTexture = false;
 	}
 #pragma endregion
 
@@ -354,16 +483,6 @@ bool Sample::Frame()
 
 	m_UserShape.m_matRotation = m_pMainCamera->m_matWorld;
 
-	//m_SaveData = true;
-	if (isave == 1)
-	{
-		//SaveMapData();
-		//const string name = "save.txt";
-		//LoadMapData(name);
-		
-
-	}
-	//m_SaveData = false;
 	return true;
 }
 #pragma endregion
@@ -625,7 +744,7 @@ bool Sample::Render()
 		m_Minimap.End(g_pImmediateContext);
 	}
 #pragma endregion	
-
+	
 	Matrix mat;
 	mat._41 = 1.5f;
 

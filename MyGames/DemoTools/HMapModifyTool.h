@@ -58,6 +58,8 @@ public:
 	afx_msg void OnBnClickedRadio4();
 	afx_msg void FieldUpdateOnButton();
 	afx_msg void FieldUpdateOffButton();
+	afx_msg void SaveClickedButton();
+	afx_msg void LoadClickedButton();
 };
 
 

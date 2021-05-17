@@ -639,6 +639,22 @@ namespace HBASIS_CORE_LIB
 		return true;
 	}
 
+	bool HDxObject::LoadMapData(ID3D11Device * pDevice, T_STR vs, T_STR ps, T_STR texture)
+	{
+		g_pd3dDevice = pDevice;
+
+		LoadVertexData();
+		CreateIndexData();
+		CreateVertexBuffer();
+		CreateConstantBuffer();
+		CreateIndexBuffer();
+		LoadShader(vs, ps);
+		CreateInputLayOut();
+		LoadTexture(texture);
+
+		return true;
+	}
+
 	bool HDxObject::CreateVertexBuffer()
 	{
 		if (m_VertexList.size() <= 0) return true;
@@ -718,6 +734,11 @@ namespace HBASIS_CORE_LIB
 	}
 
 	bool HDxObject::CreateIndexData()
+	{
+		return true;
+	}
+
+	bool HDxObject::LoadVertexData()
 	{
 		return true;
 	}

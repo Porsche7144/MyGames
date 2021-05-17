@@ -1,6 +1,7 @@
 #pragma once
 #include "HCamera.h"
 #include "HMap.h"
+#include "HheightMap.h"
 #include <queue>
 
 struct HNode
@@ -52,6 +53,7 @@ class HQuadTree
 public:
 	HDxObject m_DXObj;
 	HMap* m_pMap;
+	HheightMap* m_pHeightMap;
 	ID3D11Device* m_pd3dDevice;
 	HNode* m_pParentNode;
 	LTRB_POSITION m_ltPos[4];

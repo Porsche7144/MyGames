@@ -55,6 +55,8 @@ BEGIN_MESSAGE_MAP(HMapModifyTool, CFormView)
 	ON_BN_CLICKED(IDC_RADIO9, &HMapModifyTool::OnBnClickedRadio4)
 	ON_BN_CLICKED(IDC_BUTTON9, &HMapModifyTool::FieldUpdateOnButton)
 	ON_BN_CLICKED(IDC_BUTTON6, &HMapModifyTool::FieldUpdateOffButton)
+	ON_BN_CLICKED(IDC_BUTTON5, &HMapModifyTool::SaveClickedButton)
+	ON_BN_CLICKED(IDC_BUTTON10, &HMapModifyTool::LoadClickedButton)
 END_MESSAGE_MAP()
 
 
@@ -237,4 +239,19 @@ void HMapModifyTool::FieldUpdateOffButton()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	theApp.m_Sample.m_bFieldUpdateState = false;
+}
+
+
+void HMapModifyTool::SaveClickedButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_SaveTexture = true;
+}
+
+
+void HMapModifyTool::LoadClickedButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_LoadData = true;
+	theApp.m_Sample.Init();
 }
