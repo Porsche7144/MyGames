@@ -29,6 +29,8 @@ class HShapeBox : public HShape
 public:
 	bool CreateVertexData() override;
 	bool CreateIndexData() override;
+	void CreateOBBBox(float fExtentX, float fExtentY, float fExtentZ, Vector3 vCenter, Vector3 vDirX,
+		Vector3 vDirY, Vector3 vDirZ);
 public:
 	HShapeBox();
 	virtual ~HShapeBox();

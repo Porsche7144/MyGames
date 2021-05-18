@@ -33,6 +33,7 @@
 #define IDD_HCharactorToolDlg           311
 #define IDD_HMapToolForm                312
 #define IDD_HMapModifyTool              313
+#define IDD_HMapObjectModifyTool        314
 #define IDC_EDIT1                       1001
 #define IDC_EDIT2                       1002
 #define IDC_COMBO1                      1003
@@ -67,9 +68,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        315
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32786
 #define _APS_NEXT_CONTROL_VALUE         1062
-#define _APS_NEXT_SYMED_VALUE           314
+#define _APS_NEXT_SYMED_VALUE           315
 #endif
 #endif

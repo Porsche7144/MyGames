@@ -7,8 +7,9 @@
 #include "HQuadTree.h"
 #include "HPicking.h"
 #include "HModelViewCamera.h"
-//#include "HModel.h"
+#include "HModel.h"
 #include "HTextureMap.h"
+#include "HSelect.h"
 
 #pragma comment(lib, "directxtk.lib")
 
@@ -21,6 +22,13 @@ struct SaveData
 	std::vector<Vector3> m_SaveVertexList;
 	int iListSize;
 
+};
+
+struct ColisionSphere
+{
+	Matrix mat;
+	HModel pModel;
+	H_SPHERE sphere;
 };
 
 class HBoxUser : public HShapeBox
@@ -39,9 +47,11 @@ class Sample : public HCore
 public:
 	SaveData		m_Save;
 	HQuadTree		m_QuadTree;
-	H_BOX			m_TBoxBase;
+	HShapeBox		m_ShapeBox;
 	HPicking		m_Picking;
-	//HModel			m_pObj;
+	HModel			m_pObj;
+	HSelect			m_Select;
+
 	int isave;
 	HMap				m_Map;
 	HMinimap			m_Minimap;
@@ -62,11 +72,20 @@ public:
 
 	Vector3 v0, v1, v2, vNormal, vEnd;
 	Vector3 list[3];
-
+	
+	ColisionSphere collision;
 	ID3D11ShaderResourceView* m_pTextureSRV[5];
 
-	Vector3 beforePos;
+	// Object
+public:
+	std::vector<ColisionSphere> m_ColisionList;
+	bool m_bObjInitState = false;
+	bool m_bObjFrameState = false;
+	bool m_bCreateObj = false;
+	bool m_bObjDelete = false;
 
+	// Map
+public:
 	bool m_bIncreaseGround = false;
 	bool m_bDecreaseGround = false;
 	bool m_bOriginGround = false;
@@ -90,6 +109,7 @@ public:
 
 	std::string m_FileName;
 
+	Vector3 beforePos;
 	std::vector<HObject*> m_ObjList;
 	std::vector<HNode*> m_SelectNode;
 	std::vector<HNode*> m_ControlNode;

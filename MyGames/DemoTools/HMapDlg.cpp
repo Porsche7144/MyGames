@@ -34,7 +34,6 @@ void HMapDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2, m_fCellCount);
 	DDV_MinMaxInt(pDX, m_fCellCount, 0, 4096);
 	DDX_Control(pDX, IDC_COMBO1, m_SpaceDivision);
-	DDX_Control(pDX, IDC_LIST1, m_TextureList);
 	DDX_Text(pDX, IDC_EDIT3, m_szTextureName);
 	DDX_Control(pDX, IDC_PROGRESS1, m_Progress);
 	DDX_Control(pDX, IDC_SPIN2, m_SpinControl);
@@ -46,7 +45,6 @@ void HMapDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(HMapDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT1, &HMapDlg::OnEnChangeEdit1)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &HMapDlg::OnCbnSelchangeCombo1)
-	ON_LBN_SELCHANGE(IDC_LIST1, &HMapDlg::OnLbnSelchangeList1)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_SPIN2, &HMapDlg::OnDeltaposSpin2)
 	ON_BN_CLICKED(IDOK, &HMapDlg::OnBnClickedOk)
 	ON_EN_CHANGE(IDC_EDIT2, &HMapDlg::CellChangeEdit)
@@ -128,15 +126,6 @@ void HMapDlg::OnCbnSelchangeCombo1()
 }
 
 
-void HMapDlg::OnLbnSelchangeList1()
-{
-	CString name;
-	int iSel = m_TextureList.GetCurSel();
-	m_TextureList.GetText(iSel, m_szTextureName);
-	UpdateData(FALSE);
-}
-
-
 BOOL HMapDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -166,10 +155,10 @@ BOOL HMapDlg::OnInitDialog()
 	m_SpaceDivision.AddString(L"BSP");
 	m_SpaceDivision.SetCurSel(1);
 
-	m_TextureList.InsertString(0, L"이미지1");
-	m_TextureList.InsertString(1, L"이미지2");
-	m_TextureList.InsertString(2, L"이미지3");
-	m_TextureList.SetCurSel(0);
+	//m_TextureList.InsertString(0, L"이미지1");
+	//m_TextureList.InsertString(1, L"이미지2");
+	//m_TextureList.InsertString(2, L"이미지3");
+	//m_TextureList.SetCurSel(0);
 
 
 	UpdateData(FALSE);

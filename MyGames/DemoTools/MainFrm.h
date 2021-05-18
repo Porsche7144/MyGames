@@ -8,6 +8,7 @@
 #include "HOutputWnd.h"
 #include "HMapToolPane.h"
 #include "HMapModifyPane.h"
+#include "HMapObjectPane.h"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -23,6 +24,7 @@ public:
 	HOutputWnd		  m_OutputWnd;
 	HMapToolPane	  m_wndMapToolPane;
 	HMapModifyPane	  m_wnModifyPane;
+	HMapObjectPane	  m_wnObjPane;
 
 // 작업입니다.
 public:

@@ -213,6 +213,9 @@
     <ClInclude Include="dxtk\ScreenGrab.h">
       <Filter>dxtk</Filter>
     </ClInclude>
+    <ClInclude Include="HNode.h">
+      <Filter>map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HCore.cpp">
@@ -358,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="dxtk\ScreenGrab.cpp">
       <Filter>dxtk</Filter>
+    </ClCompile>
+    <ClCompile Include="HNode.cpp">
+      <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

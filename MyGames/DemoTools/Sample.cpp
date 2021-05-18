@@ -197,8 +197,61 @@ bool Sample::Init()
 	HRESULT hr;
 	Filename = StringToTCHAR(m_FileName);
 
+	if (!m_ShapeBox.Create(g_pd3dDevice, L"VS.txt", L"PS.txt", L""))
+	{
+		return false;
+	}
+
+	/*m_BoxBase.vMin = Vector3(-72.0f, -0.09f, -72.0f);
+	m_BoxBase.vMax = Vector3(71.0f, 156.0f, 72.0f);
+	m_BoxBase.vCenter = (m_BoxBase.vMax + m_BoxBase.vMin);
+	m_BoxBase.vCenter.x /= 2.0f;
+	m_BoxBase.vCenter.y /= 2.0f;
+	m_BoxBase.vCenter.z /= 2.0f;
+	m_BoxBase.fExtent[0] = fabs(m_BoxBase.vCenter.x - m_BoxBase.vMax.x);
+	m_BoxBase.fExtent[1] = fabs(m_BoxBase.vCenter.y - m_BoxBase.vMax.y);
+	m_BoxBase.fExtent[2] = fabs(m_BoxBase.vCenter.z - m_BoxBase.vMax.z);
+	m_BoxBase.vAxis[0] = Vector3(1.0f, 0.0f, 0.0f);
+	m_BoxBase.vAxis[1] = Vector3(0.0f, 1.0f, 0.0f);
+	m_BoxBase.vAxis[2] = Vector3(0.0f, 0.0f, 1.0f);
+
+	m_BoxBase.vAxis[0].Normalize();
+	m_BoxBase.vAxis[1].Normalize();
+	m_BoxBase.vAxis[2].Normalize();
+
+	Matrix matX, matY, matWorld;
+	matX = Matrix::Identity;
+	matY = Matrix::Identity;
+	matWorld = Matrix::Identity;
+
+	matX.CreateRotationX(0.5f);
+	matY.CreateRotationZ(0.5f);
+	matWorld = matX * matY;
+
+	m_BoxBase.vAxis[0] = Vector3::Transform(m_BoxBase.vAxis[0], matWorld);
+	m_BoxBase.vAxis[1] = Vector3::Transform(m_BoxBase.vAxis[1], matWorld);
+	m_BoxBase.vAxis[2] = Vector3::Transform(m_BoxBase.vAxis[2], matWorld);
+
+	Matrix matScale;
+	Vector3 scale = Vector3(m_BoxBase.fExtent[0], m_BoxBase.fExtent[1], m_BoxBase.fExtent[2]);
+	matScale = matScale.CreateScale(scale);
+
+	m_ShapeBox.m_matWorld = matScale * matWorld;
+	m_ShapeBox.m_matWorld._41 = m_BoxBase.vCenter.x;
+	m_ShapeBox.m_matWorld._42 = m_BoxBase.vCenter.y;
+	m_ShapeBox.m_matWorld._43 = m_BoxBase.vCenter.z;*/
+
+
+
 	m_Camera.CreateViewMatrix({ 0,300,-100 }, { 0,0,0 });
-	//m_pObj.Init();
+	
+	if (m_bObjInitState)
+	{
+		m_pObj.Init();
+		
+		m_bObjInitState = false;
+	}
+	m_pObj.m_pMainCamera = m_pMainCamera;
 
 #pragma region UserCreate
 	/////////////////////////////////////////////////////////////////////////////
@@ -234,10 +287,12 @@ bool Sample::Init()
 		desc.szPS = L"../../data/Shader/ToolBasePS.txt";
 		//m_Map.SetLoadHeight(m_Save.m_SaveVertexList);
 		m_Map.CreateMap(g_pd3dDevice, desc);
+
 		for (int i = 0; i < m_Save.m_SaveVertexList.size(); i++)
 		{
 			m_Map.m_VertexList[i].p.y = m_Save.m_SaveVertexList[i].y;
 		}
+
 		m_LoadTexture = LoadTexturetMap(g_pd3dDevice, g_pImmediateContext, L"SaveAlphaTex.dds");
 	}
 	else
@@ -304,17 +359,25 @@ bool Sample::Init()
 	HCore::m_bFrameRun = true;
 
 	// 프러스텀 생성
-	//m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
+	m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
 	//m_pMainCamera = &m_ModelCamera;
-	
-	//m_pObj.m_pMainCamera = m_pMainCamera;
 
-	// 1024 * 1024
 	if (m_LoadData)
 	{
+		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
+			g_pImmediateContext, pick, m_iSplattingNum);
 		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
-		g_pImmediateContext->UpdateSubresource(m_Map.m_pVertexBuffer, 0, NULL, &m_Map.m_VertexList.at(0), 0, 0);
+		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+		//m_LoadData = false;
 	}
+	else
+	{
+		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging,
+			g_pImmediateContext, pick, m_iSplattingNum);
+		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
+		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+	}
+
 	isave = 1;
 	return true;
 }
@@ -325,8 +388,14 @@ bool Sample::Frame()
 {
 	m_bSelect = false;
 
-	//m_pObj.Frame();
-
+	if (m_SaveTexture)
+	{
+		SaveMapData();
+		//const string name = "save.txt";
+		//LoadMapData(name);
+		SaveTextureFile(m_AlphaZeroTexture.pTexture, L"../../save/SaveTex");
+		m_SaveTexture = false;
+	}
 
 #pragma region Mouse Picking
 	if (g_Input.GetKey(VK_LBUTTON) == KEY_HOLD && g_Input.GetKey(VK_SHIFT))
@@ -369,24 +438,83 @@ bool Sample::Frame()
 	}
 #pragma endregion
 
+#pragma region ObjectControl
+	if (m_bObjFrameState && m_bSelect)
+	{
+		m_pObj.Frame();
+
+		for (int i = 0; i < m_QuadTree.m_leafList.size(); i++)
+		{
+			HNode* pNode = m_QuadTree.m_leafList[i];
+
+			if (m_Picking.IntersectBox(&pNode->m_hBox, &m_Picking.m_Ray))
+			{
+				m_SelectNode.push_back(pNode);
+			}
+		}
+
+		float fMaxDist = 99999;
+		bool Update = false;
+		for (int select = 0; select < m_SelectNode.size(); select++)
+		{
+			HNode* pNode = m_SelectNode[select];
+			if (GetIntersection(pNode))
+			{
+				float fDistance = (m_Picking.m_Ray.vOrigin - m_Picking.m_vInterSection).Length();
+				if (fMaxDist > fDistance)
+				{
+					Update = true;
+					pick = m_Picking.m_vInterSection;
+					fMaxDist = fDistance;
+				}
+			}
+
+		}
+		if (Update)
+		{	
+			if (m_bCreateObj)
+			{	
+				Matrix matWorld;
+				HModel model;
+				H_SPHERE sphere;
+
+				matWorld._41 = m_Picking.m_vInterSection.x;
+				matWorld._42 = m_Picking.m_vInterSection.y;
+				matWorld._43 = m_Picking.m_vInterSection.z;
+
+				model.Init();				
+
+				sphere.fRadius = 30.0f;
+				sphere.vCenter = m_Picking.m_vInterSection;
+				
+				collision.sphere = sphere;
+				collision.mat = matWorld;
+				collision.pModel = model;
+
+				m_ModelMatrixList.push_back(matWorld);
+				m_ColisionList.push_back(collision);
+			}
+				
+			if (m_bObjDelete)
+			{
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						m_ColisionList.erase(m_ColisionList.begin() + i);
+						m_ModelMatrixList.erase(m_ModelMatrixList.begin() + i);
+					}
+				}
+			}
+
+		}
+
+	}
+#pragma endregion
+
 	if (g_Input.GetKey('0') == KEY_PUSH)
 	{
 		m_TextureMap.Frame(&m_Map, g_pImmediateContext);
-	}
-	
-	if (m_LoadData)
-	{
-		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
-			g_pImmediateContext, pick, m_iSplattingNum);
-		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
-		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
-	}
-	else
-	{
-		m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging,
-			g_pImmediateContext, pick, m_iSplattingNum);
-		g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
-		m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
 	}
 
 #pragma region PickTextureSplatting
@@ -437,14 +565,6 @@ bool Sample::Frame()
 			m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
 		}
 	}
-	if (m_SaveTexture)
-	{
-		SaveMapData();
-		//const string name = "save.txt";
-		//LoadMapData(name);
-		SaveTextureFile(m_AlphaZeroTexture.pTexture, L"../../save/SaveTex");
-		m_SaveTexture = false;
-	}
 #pragma endregion
 
 #pragma region UserInput
@@ -493,11 +613,11 @@ bool Sample::Render()
 	m_AlphaZeroTexture.SetRadius(m_fRadius);
 
 #pragma region ModelRender
-	//for (auto data : m_ModelMatrixList)
-	//{
-	//	m_pObj.m_pFbxObj->SetMatrix(&data, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
-	//	//m_pObj.Render(g_pImmediateContext);
-	//}
+	for (auto data : m_ModelMatrixList)
+	{
+		m_pObj.m_pFbxObj->SetMatrix(&data, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
+		m_pObj.Render(g_pImmediateContext);
+	}
 #pragma endregion
 
 #pragma region Rasterize
@@ -588,14 +708,7 @@ bool Sample::Render()
 			}
 
 		}
-		//if (Update)
-		//{
-		//	Matrix matWorld;
-		//	matWorld._41 = m_Picking.m_vInterSection.x;
-		//	matWorld._42 = m_Picking.m_vInterSection.y;
-		//	matWorld._43 = m_Picking.m_vInterSection.z;
-		//	m_ModelMatrixList.push_back(matWorld);
-		//}
+
 
 		m_ControlNode.clear();
 		H_SPHERE pickSphere;
@@ -738,7 +851,7 @@ bool Sample::Render()
 		{
 			g_pImmediateContext->PSSetShaderResources(1, 1, &m_pTextureSRV[0]);
 			g_pImmediateContext->PSSetShaderResources(2, 4, &m_pTextureSRV[1]);
-			m_QuadTree.Draw(g_pImmediateContext, node);
+			//m_QuadTree.Draw(g_pImmediateContext, node);
 		}
 		m_Map.Render(g_pImmediateContext);
 		m_Minimap.End(g_pImmediateContext);
@@ -791,7 +904,7 @@ bool Sample::Release()
 		m_pTextureSRV[4]->Release();
 	}
 
-	//m_pObj.Release();
+	m_pObj.Release();
 	m_QuadTree.Release();
 	m_Minimap.Release();
 	m_Map.Release();

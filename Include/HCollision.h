@@ -23,6 +23,7 @@ struct H_BOX
 	// OBB
 	Vector3 vAxis[3];
 	float fExtent[3];
+
 };
 
 class HCollision

@@ -34,6 +34,9 @@
     <Filter Include="PaneWindow\MapTool">
       <UniqueIdentifier>{1dbf7b37-95dc-4ca7-916e-d2bcc7dfe275}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PaneWindow\MapObject">
+      <UniqueIdentifier>{5e166a09-1e28-409c-ab35-9893886b1cb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DemoTools.h">
@@ -93,6 +96,15 @@
     <ClInclude Include="HMapModifyPane.h">
       <Filter>PaneWindow\MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="HMapObjectPane.h">
+      <Filter>PaneWindow\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="HMapObjectModifyTool.h">
+      <Filter>PaneWindow\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="HSelect.h">
+      <Filter>PaneWindow\MapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoTools.cpp">
@@ -119,9 +131,6 @@
     <ClCompile Include="HCharactorToolDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HPropertiesWnd.cpp">
-      <Filter>PaneWindow\PropertiesWnd</Filter>
-    </ClCompile>
     <ClCompile Include="HOutputWnd.cpp">
       <Filter>PaneWindow\OutputWnd</Filter>
     </ClCompile>
@@ -142,6 +151,18 @@
     </ClCompile>
     <ClCompile Include="HMapModifyPane.cpp">
       <Filter>PaneWindow\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapObjectPane.cpp">
+      <Filter>PaneWindow\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="HMapObjectModifyTool.cpp">
+      <Filter>PaneWindow\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="HSelect.cpp">
+      <Filter>PaneWindow\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="HPropertiesWnd.cpp">
+      <Filter>PaneWindow\PropertiesWnd</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

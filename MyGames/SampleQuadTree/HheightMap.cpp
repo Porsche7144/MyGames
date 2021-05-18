@@ -86,8 +86,8 @@ bool HheightMap::CreateHeightMap(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 		}
 	}
 
-	m_iNumRows = desc.Height+1;
-	m_iNumCols = desc.Width+1;
+	m_iNumRows = desc.Height;
+	m_iNumCols = desc.Width;
 	pTexture2D->Release();
 	pTexture->Release();
 

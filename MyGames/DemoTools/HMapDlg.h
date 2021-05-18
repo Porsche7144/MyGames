@@ -32,7 +32,6 @@ public:
 	CComboBox m_SpaceDivision;
 	afx_msg void OnCbnSelchangeCombo1();
 	// 텍스쳐 선택
-	CListBox m_TextureList;
 	afx_msg void OnLbnSelchangeList1();
 	// 선택된 택스쳐 이름
 	CString m_szTextureName;

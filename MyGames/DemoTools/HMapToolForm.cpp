@@ -18,7 +18,7 @@ HMapToolForm* HMapToolForm::CreateOnce(CWnd* pParent)
 }
 HMapToolForm::HMapToolForm()
 	: CFormView(IDD_HMapToolForm)
-	, m_TileCount(257)
+	, m_TileCount(513)
 	, m_CellCount("10")
 	, m_Scale("10")
 	, szFilename(_T("../../Image/data/main_fr_list.bmp"))
@@ -200,7 +200,7 @@ int HMapToolForm::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
-	m_TileCount = 257;
+	m_TileCount = 513;
 	SetTileCount(m_TileCount);
 
 	fCellCount = 10.0f;

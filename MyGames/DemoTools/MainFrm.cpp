@@ -167,15 +167,21 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wnModifyPane.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wnModifyPane);
 
-	m_PropertiesWnd.CreateEx(NULL, L"Propertiestool", this,
+	m_wnObjPane.CreateEx(NULL, L"Object", this,
 		CRect(0, 0, 100, 100), TRUE,
 		1236, dwStyle);
+	m_wnObjPane.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wnObjPane);
+
+	m_PropertiesWnd.CreateEx(NULL, L"Propertiestool", this,
+		CRect(0, 0, 100, 100), TRUE,
+		1237, dwStyle);
 	m_PropertiesWnd.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_PropertiesWnd);
 
 	m_OutputWnd.CreateEx(NULL, L"OutputWnd", this,
 		CRect(0, 0, 100, 100), TRUE,
-		1237, dwStyle);
+		1238, dwStyle);
 	m_OutputWnd.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_OutputWnd);
 

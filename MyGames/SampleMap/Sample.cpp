@@ -347,7 +347,7 @@ bool Sample::Render()
 		m_BoxShape.SetMatrix(NULL, &m_TopCamera.m_matView, &m_TopCamera.m_matProject);
 		m_BoxShape.Render(g_pImmediateContext);
 
-		// DrawObject(&m_TopCamera.m_matView, &m_TopCamera.m_matProject);
+		//DrawObject(&m_TopCamera.m_matView, &m_TopCamera.m_matProject);
 
 		// ¹Ì´Ï¸Ê Áß¾Ó¿¡ ¹èÄ¡
 		/*Vector3 vPos = m_BoxShape.m_vPos - m_BoxShape.m_vLook;
@@ -383,8 +383,8 @@ bool Sample::Render()
 	m_Minimap.Render(g_pImmediateContext);
 
 	//DrawQuadLine(m_QuadTree.m_pRootNode);
-	// DrawObject(&m_pMainCamera->m_matView,
-	//  	&m_pMainCamera->m_matProject);
+	DrawObject(&m_pMainCamera->m_matView,
+	  	&m_pMainCamera->m_matProject);
 
 	return true;
 }

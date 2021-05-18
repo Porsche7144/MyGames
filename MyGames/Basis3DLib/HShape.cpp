@@ -64,6 +64,12 @@ bool HShapeBox::CreateIndexData()
 	return true;
 }
 
+void HShapeBox::CreateOBBBox(float fExtentX, float fExtentY, float fExtentZ, Vector3 vCenter, Vector3 vDirX,
+							Vector3 vDirY, Vector3 vDirZ)
+{
+	
+}
+
 HShapeBox::HShapeBox()
 {
 }

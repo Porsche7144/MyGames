@@ -18,6 +18,7 @@ struct VS_OUTPUT
 	float3 n : NORMAL;
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
+	float4 wp : TEXCOORD1;
 };
 
 struct PS_OUTPUT

@@ -49,6 +49,7 @@
     <ClInclude Include="HMinimap.h" />
     <ClInclude Include="HModelObj.h" />
     <ClInclude Include="HModelViewCamera.h" />
+    <ClInclude Include="HNode.h" />
     <ClInclude Include="HPicking.h" />
     <ClInclude Include="HQuadTree.h" />
     <ClInclude Include="HShape.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="HMinimap.cpp" />
     <ClCompile Include="HModelObj.cpp" />
     <ClCompile Include="HModelViewCamera.cpp" />
+    <ClCompile Include="HNode.cpp" />
     <ClCompile Include="HPicking.cpp" />
     <ClCompile Include="HQuadTree.cpp" />
     <ClCompile Include="HShape.cpp" />
@@ -209,15 +211,15 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../../include/;../../include/TNetLib;../../fmod/inc;../../include/DirectXTK;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/;../../include/TNetLib;../../fmod/inc;../../include/DirectXTK;../../FBX_SDK/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>../../Lib;../../fmod/lib/x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../Lib;../../fmod/lib/x64;../../FBX_SDK/lib/x64/debug;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>copy  "..\\..\\output\\Debug\\Basis3DLib.lib" "..\\..\\lib\\Basis3DLib_D.lib"
