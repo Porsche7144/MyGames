@@ -38,6 +38,7 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void ObjDeleteClickedButton();
 	afx_msg void AddObjClickedButton();
+	afx_msg void ObjMoveClickedButton();
 };
 
 

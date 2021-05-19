@@ -202,47 +202,6 @@ bool Sample::Init()
 		return false;
 	}
 
-	/*m_BoxBase.vMin = Vector3(-72.0f, -0.09f, -72.0f);
-	m_BoxBase.vMax = Vector3(71.0f, 156.0f, 72.0f);
-	m_BoxBase.vCenter = (m_BoxBase.vMax + m_BoxBase.vMin);
-	m_BoxBase.vCenter.x /= 2.0f;
-	m_BoxBase.vCenter.y /= 2.0f;
-	m_BoxBase.vCenter.z /= 2.0f;
-	m_BoxBase.fExtent[0] = fabs(m_BoxBase.vCenter.x - m_BoxBase.vMax.x);
-	m_BoxBase.fExtent[1] = fabs(m_BoxBase.vCenter.y - m_BoxBase.vMax.y);
-	m_BoxBase.fExtent[2] = fabs(m_BoxBase.vCenter.z - m_BoxBase.vMax.z);
-	m_BoxBase.vAxis[0] = Vector3(1.0f, 0.0f, 0.0f);
-	m_BoxBase.vAxis[1] = Vector3(0.0f, 1.0f, 0.0f);
-	m_BoxBase.vAxis[2] = Vector3(0.0f, 0.0f, 1.0f);
-
-	m_BoxBase.vAxis[0].Normalize();
-	m_BoxBase.vAxis[1].Normalize();
-	m_BoxBase.vAxis[2].Normalize();
-
-	Matrix matX, matY, matWorld;
-	matX = Matrix::Identity;
-	matY = Matrix::Identity;
-	matWorld = Matrix::Identity;
-
-	matX.CreateRotationX(0.5f);
-	matY.CreateRotationZ(0.5f);
-	matWorld = matX * matY;
-
-	m_BoxBase.vAxis[0] = Vector3::Transform(m_BoxBase.vAxis[0], matWorld);
-	m_BoxBase.vAxis[1] = Vector3::Transform(m_BoxBase.vAxis[1], matWorld);
-	m_BoxBase.vAxis[2] = Vector3::Transform(m_BoxBase.vAxis[2], matWorld);
-
-	Matrix matScale;
-	Vector3 scale = Vector3(m_BoxBase.fExtent[0], m_BoxBase.fExtent[1], m_BoxBase.fExtent[2]);
-	matScale = matScale.CreateScale(scale);
-
-	m_ShapeBox.m_matWorld = matScale * matWorld;
-	m_ShapeBox.m_matWorld._41 = m_BoxBase.vCenter.x;
-	m_ShapeBox.m_matWorld._42 = m_BoxBase.vCenter.y;
-	m_ShapeBox.m_matWorld._43 = m_BoxBase.vCenter.z;*/
-
-
-
 	m_Camera.CreateViewMatrix({ 0,300,-100 }, { 0,0,0 });
 	
 	if (m_bObjInitState)
@@ -359,7 +318,7 @@ bool Sample::Init()
 	HCore::m_bFrameRun = true;
 
 	// 프러스텀 생성
-	m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
+	//m_ModelCamera.CreateFrustum(g_pd3dDevice, g_pImmediateContext);
 	//m_pMainCamera = &m_ModelCamera;
 
 	if (m_LoadData)
@@ -470,6 +429,7 @@ bool Sample::Frame()
 			}
 
 		}
+		int SelectNum = 0;
 		if (Update)
 		{	
 			if (m_bCreateObj)
@@ -507,6 +467,32 @@ bool Sample::Frame()
 				}
 			}
 
+			if (m_bMoveObj)
+			{
+				
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						if (g_Input.GetKey(VK_LBUTTON) == KEY_HOLD)
+						{
+							m_ColisionList[i].sphere.fRadius = 2000.0f;
+						}
+						m_ModelMatrixList[i]._41 = m_Picking.m_vInterSection.x;
+						m_ModelMatrixList[i]._43 = m_Picking.m_vInterSection.z;
+						m_ColisionList[i].mat._41 = m_ModelMatrixList[i]._41;
+						m_ColisionList[i].mat._43 = m_ModelMatrixList[i]._43;
+						SelectNum = i;
+					}
+					
+				}
+				
+			}
+			
+		}
+		if (g_Input.GetKey(VK_LBUTTON) == KEY_UP)
+		{
+			m_ColisionList[SelectNum].sphere.fRadius = 30.0f;
 		}
 
 	}

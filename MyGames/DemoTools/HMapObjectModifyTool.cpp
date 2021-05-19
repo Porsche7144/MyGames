@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(HMapObjectModifyTool, CFormView)
 	ON_LBN_SELCHANGE(IDC_LIST1, &HMapObjectModifyTool::OnMapObjSelchangeList)
 	ON_BN_CLICKED(IDC_BUTTON1, &HMapObjectModifyTool::ObjDeleteClickedButton)
 	ON_BN_CLICKED(IDC_BUTTON4, &HMapObjectModifyTool::AddObjClickedButton)
+	ON_BN_CLICKED(IDC_BUTTON9, &HMapObjectModifyTool::ObjMoveClickedButton)
 END_MESSAGE_MAP()
 
 
@@ -110,6 +111,7 @@ void HMapObjectModifyTool::ObjDeleteClickedButton()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	theApp.m_Sample.m_bObjDelete = true;
 	theApp.m_Sample.m_bCreateObj = false;
+	theApp.m_Sample.m_bMoveObj = false;
 }
 
 
@@ -118,5 +120,15 @@ void HMapObjectModifyTool::AddObjClickedButton()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	theApp.m_Sample.m_bCreateObj = true;
 	theApp.m_Sample.m_bObjDelete = false;
+	theApp.m_Sample.m_bMoveObj = false;
 
+}
+
+
+void HMapObjectModifyTool::ObjMoveClickedButton()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	theApp.m_Sample.m_bMoveObj = true;
+	theApp.m_Sample.m_bCreateObj = false;
+	theApp.m_Sample.m_bObjDelete = false;
 }

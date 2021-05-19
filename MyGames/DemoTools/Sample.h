@@ -83,6 +83,7 @@ public:
 	bool m_bObjFrameState = false;
 	bool m_bCreateObj = false;
 	bool m_bObjDelete = false;
+	bool m_bMoveObj = false;
 
 	// Map
 public:
