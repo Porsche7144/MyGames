@@ -338,6 +338,7 @@ bool Sample::Init()
 	}
 
 	isave = 1;
+
 	return true;
 }
 #pragma endregion
@@ -357,7 +358,15 @@ bool Sample::Frame()
 	}
 
 #pragma region Mouse Picking
-	if (g_Input.GetKey(VK_LBUTTON) == KEY_HOLD && g_Input.GetKey(VK_SHIFT))
+	if (m_bMoveObj || m_bFieldUpdateState)
+	{
+		PickingSelect = KEY_HOLD;
+	}
+	else
+	{
+		PickingSelect = KEY_PUSH;
+	}
+	if (g_Input.GetKey(VK_LBUTTON) == PickingSelect && g_Input.GetKey(VK_SHIFT))
 	{
 		m_bSelect = true;
 		POINT cursor;
@@ -398,6 +407,7 @@ bool Sample::Frame()
 #pragma endregion
 
 #pragma region ObjectControl
+
 	if (m_bObjFrameState && m_bSelect)
 	{
 		m_pObj.Frame();
@@ -429,7 +439,7 @@ bool Sample::Frame()
 			}
 
 		}
-		int SelectNum = 0;
+		
 		if (Update)
 		{	
 			if (m_bCreateObj)
@@ -444,7 +454,7 @@ bool Sample::Frame()
 
 				model.Init();				
 
-				sphere.fRadius = 30.0f;
+				sphere.fRadius = 80.0f;
 				sphere.vCenter = m_Picking.m_vInterSection;
 				
 				collision.sphere = sphere;
@@ -474,32 +484,85 @@ bool Sample::Frame()
 				{
 					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
 					{
-						if (g_Input.GetKey(VK_LBUTTON) == KEY_HOLD)
-						{
-							m_ColisionList[i].sphere.fRadius = 2000.0f;
-						}
+						m_ColisionList[i].sphere.fRadius = 2000.0f;
+						m_ColisionList[i].sphere.vCenter = m_Picking.m_vInterSection;
 						m_ModelMatrixList[i]._41 = m_Picking.m_vInterSection.x;
 						m_ModelMatrixList[i]._43 = m_Picking.m_vInterSection.z;
 						m_ColisionList[i].mat._41 = m_ModelMatrixList[i]._41;
 						m_ColisionList[i].mat._43 = m_ModelMatrixList[i]._43;
 						SelectNum = i;
-					}
+					}					
 					
 				}
 				
 			}
+
+			if (m_bScale)
+			{
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{	
+						Matrix trans;
+						trans._41 = m_ModelMatrixList[i]._41;
+						trans._43 = m_ModelMatrixList[i]._43;
+
+						m_ModelMatrixList[i] = m_ModelMatrixList[i].CreateScale(m_ScaleCount);
+						m_ModelMatrixList[i]._41 = trans._41;
+						m_ModelMatrixList[i]._43 = trans._43;
+
+						m_ColisionList[i].mat = m_ColisionList[i].mat.CreateScale(m_ScaleCount);
+						m_ColisionList[i].mat._41 = trans._41;
+						m_ColisionList[i].mat._43 = trans._43;
+					}
+				}				
+			}
+
+			if (m_bRotation)
+			{
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						Matrix trans;
+						Matrix rotate;
+
+						rotate = Matrix::CreateRotationY(m_RotationCount * (HBASIS_PI/180.0f));
+
+						trans._41 = m_ModelMatrixList[i]._41;
+						trans._43 = m_ModelMatrixList[i]._43;
+
+						m_ModelMatrixList[i] = m_ModelMatrixList[i] * rotate;
+						m_ModelMatrixList[i]._41 = trans._41;
+						m_ModelMatrixList[i]._43 = trans._43;
+
+						m_ColisionList[i].mat = m_ColisionList[i].mat * rotate;
+						m_ColisionList[i].mat._41 = trans._41;
+						m_ColisionList[i].mat._43 = trans._43;
+
+					}
+				}
+			}
 			
-		}
-		if (g_Input.GetKey(VK_LBUTTON) == KEY_UP)
-		{
-			m_ColisionList[SelectNum].sphere.fRadius = 30.0f;
 		}
 
 	}
+	if (!m_bSelect && m_bMoveObj)
+	{
+		m_ColisionList[SelectNum].sphere.fRadius = 80.0f;
+		for (int i = 0; i < m_ColisionList.size(); i++)
+		{
+			m_ColisionList[i].mat._41 = m_ModelMatrixList[i]._41;
+			m_ColisionList[i].mat._43 = m_ModelMatrixList[i]._43;
+		}
+
+	}
+
 #pragma endregion
 
 	if (g_Input.GetKey('0') == KEY_PUSH)
 	{
+		//높이맵 갱신
 		m_TextureMap.Frame(&m_Map, g_pImmediateContext);
 	}
 
@@ -712,8 +775,11 @@ bool Sample::Render()
 		
 		if (m_bIncreaseGround)
 		{
+			float transY = 0.0f;
+			float beforeY = 0.0f;
+
 			for (auto node : m_ControlNode)
-			{
+			{				
 				for (int v = 0; v < node->m_IndexList.size(); v++)
 				{
 					int iID = node->m_IndexList[v];
@@ -724,18 +790,35 @@ bool Sample::Render()
 						{
 							Vector3 v = m_Map.m_VertexList[iID].p;
 							m_Map.m_VertexList[iID].p.y = v.y + m_fSpeed - sinf((fDist / m_fRadius));
+							beforeY = m_Map.m_VertexList[iID].p.y;
+							if (beforeY > transY)
+							{
+								transY = beforeY;
+							}
 						}
 						beforePos.y = pick.y;
 					}
 				}
-
 				// 실시간 노말 계산
 				//m_Map.CalcPerVertexNormalsFastLookUp();
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						m_ColisionList[i].sphere.fRadius = m_fRadius;
+						m_ModelMatrixList[i]._42 = transY;
+						m_ColisionList[i].mat._42 = transY;
+					}
+
+				}
 			}
 		}
 
 		if (m_bDecreaseGround)
 		{
+			float transY = 0.0f;
+			float beforeY = 0.0f;
+
 			for (auto node : m_ControlNode)
 			{
 				for (int v = 0; v < node->m_IndexList.size(); v++)
@@ -749,20 +832,37 @@ bool Sample::Render()
 							Vector3 v = m_Map.m_VertexList[iID].p;
 							m_Map.m_VertexList[iID].p.y = v.y - m_fSpeed - sinf((fDist / m_fRadius));
 							beforePos.y = pick.y;
+							beforeY = m_Map.m_VertexList[iID].p.y;
+							if (beforeY < transY)
+							{
+								transY = beforeY;
+							}
 						}						
 					}
 				}
-
 				// 실시간 노말 계산
 				//m_Map.CalcPerVertexNormalsFastLookUp();
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						m_ColisionList[i].sphere.fRadius = m_fRadius;
+						m_ModelMatrixList[i]._42 = transY;
+						m_ColisionList[i].mat._42 = transY;
+					}
+
+				}
 			}
 		}
 
 
 		if (m_bOriginGround)
 		{
+			float transY = 0.0f;
+			float beforeY = 0.0f;
+
 			for (auto node : m_ControlNode)
-			{
+			{	
 				for (int v = 0; v < node->m_IndexList.size(); v++)
 				{
 					int iID = node->m_IndexList[v];
@@ -774,22 +874,45 @@ bool Sample::Render()
 						{
 							Vector3 v = m_Map.m_VertexList[iID].p;
 							m_Map.m_VertexList[iID].p.y = beforePos.y - m_fSpeed - sinf((fDist / m_fRadius));
+							beforeY = m_Map.m_VertexList[iID].p.y;
+							if (beforeY < transY)
+							{
+								transY = beforeY;
+							}
 						}
 						if (m_Map.m_VertexList[iID].p.y <= 0)
 						{
 							Vector3 v = m_Map.m_VertexList[iID].p;
 							m_Map.m_VertexList[iID].p.y = beforePos.y + m_fSpeed - sinf((fDist / m_fRadius));
+							beforeY = m_Map.m_VertexList[iID].p.y;
+							if (beforeY > transY)
+							{
+								transY = beforeY;
+							}
 						}
+
 					}
 				}
-
 				// 실시간 노말 계산
 				//m_Map.CalcPerVertexNormalsFastLookUp();
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						m_ColisionList[i].sphere.fRadius = m_fRadius;
+						m_ModelMatrixList[i]._42 = transY;
+						m_ColisionList[i].mat._42 = transY;
+					}
+
+				}
 			}
 		}
 
 		if (m_bFlatGrond)
 		{
+			float transY = 0.0f;
+			float beforeY = 0.0f;
+
 			for (auto node : m_ControlNode)
 			{
 				for (int v = 0; v < node->m_IndexList.size(); v++)
@@ -802,12 +925,26 @@ bool Sample::Render()
 						{
 							Vector3 v = m_Map.m_VertexList[iID].p;
 							m_Map.m_VertexList[iID].p.y = beforePos.y + m_fSpeed - sinf((fDist / m_fRadius));
+							transY = m_Map.m_VertexList[iID].p.y;
+							//if (beforeY > transY)
+							//{
+							//	transY = beforeY;
+							//}
 						}
 					}
 				}
-
 				// 실시간 노말 계산
 				//m_Map.CalcPerVertexNormalsFastLookUp();
+				for (int i = 0; i < m_ColisionList.size(); i++)
+				{
+					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
+					{
+						m_ColisionList[i].sphere.fRadius = m_fRadius;
+						m_ModelMatrixList[i]._42 = transY;
+						m_ColisionList[i].mat._42 = transY;
+					}
+
+				}
 			}
 		}
 

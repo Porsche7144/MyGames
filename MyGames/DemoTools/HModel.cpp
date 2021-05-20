@@ -230,49 +230,49 @@ bool HModel::Frame()
 			}
 		}
 
-		if (pModelObj->m_AnimList.size() - 1 == 0)
-		{
-			if (g_Input.GetKey(VK_UP) == KEY_HOLD)
-			{
-				matWorld._43 = matWorld._43 + (1.0f * g_fSecondPerFrame);
-				if (m_pFbxObj->m_fTick >= 33 * m_pFbxObj->m_AnimScene.iTickPerFrame)
-				{
-					m_pFbxObj->m_fTick = 7 * 160;
-				}
-				// matWorld._43 = pModelObj->m_matAnim._43;
-			}
-			if (g_Input.GetKey(VK_DOWN) == KEY_HOLD)
-			{
-				matWorld._43 = matWorld._43 - (1.0f * g_fSecondPerFrame);
-				if (m_pFbxObj->m_fTick >= 33 * m_pFbxObj->m_AnimScene.iTickPerFrame)
-				{
-					m_pFbxObj->m_fTick = 7 * 160;
-				}
-				// matWorld._43 = pModelObj->m_matAnim._43;
-			}
-			if (g_Input.GetKey(VK_RIGHT) == KEY_HOLD)
-			{
-				matWorld._41 = matWorld._41 + (1.0f * g_fSecondPerFrame);
-				// matWorld._41 = pModelObj->m_matAnim._41;
-			}
-			if (g_Input.GetKey(VK_LEFT) == KEY_HOLD)
-			{
-				matWorld._41 = matWorld._41 - (1.0f * g_fSecondPerFrame);
-				// matWorld._41 = pModelObj->m_matAnim._41;
-			}
+		//if (pModelObj->m_AnimList.size() - 1 == 0)
+		//{
+		//	if (g_Input.GetKey(VK_UP) == KEY_HOLD)
+		//	{
+		//		matWorld._43 = matWorld._43 + (1.0f * g_fSecondPerFrame);
+		//		if (m_pFbxObj->m_fTick >= 33 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+		//		{
+		//			m_pFbxObj->m_fTick = 7 * 160;
+		//		}
+		//		// matWorld._43 = pModelObj->m_matAnim._43;
+		//	}
+		//	if (g_Input.GetKey(VK_DOWN) == KEY_HOLD)
+		//	{
+		//		matWorld._43 = matWorld._43 - (1.0f * g_fSecondPerFrame);
+		//		if (m_pFbxObj->m_fTick >= 33 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+		//		{
+		//			m_pFbxObj->m_fTick = 7 * 160;
+		//		}
+		//		// matWorld._43 = pModelObj->m_matAnim._43;
+		//	}
+		//	if (g_Input.GetKey(VK_RIGHT) == KEY_HOLD)
+		//	{
+		//		matWorld._41 = matWorld._41 + (1.0f * g_fSecondPerFrame);
+		//		// matWorld._41 = pModelObj->m_matAnim._41;
+		//	}
+		//	if (g_Input.GetKey(VK_LEFT) == KEY_HOLD)
+		//	{
+		//		matWorld._41 = matWorld._41 - (1.0f * g_fSecondPerFrame);
+		//		// matWorld._41 = pModelObj->m_matAnim._41;
+		//	}
 
-			if (g_Input.GetKey(VK_SPACE) == KEY_HOLD)
-			{
-				if (m_pFbxObj->m_fTick >= 855 * m_pFbxObj->m_AnimScene.iTickPerFrame)
-				{
-					m_pFbxObj->m_fTick = 840 * 160;
-				}
-			}
+		//	if (g_Input.GetKey(VK_SPACE) == KEY_HOLD)
+		//	{
+		//		if (m_pFbxObj->m_fTick >= 855 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+		//		{
+		//			m_pFbxObj->m_fTick = 840 * 160;
+		//		}
+		//	}
 
-			matParent._41 = matWorld._41;
-			matParent._42 = matWorld._42;
-			matParent._43 = matWorld._43;
-		}
+		//	matParent._41 = matWorld._41;
+		//	matParent._42 = matWorld._42;
+		//	matParent._43 = matWorld._43;
+		//}
 	}
 
 	return true;

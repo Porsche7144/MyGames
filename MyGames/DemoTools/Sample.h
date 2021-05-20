@@ -84,6 +84,13 @@ public:
 	bool m_bCreateObj = false;
 	bool m_bObjDelete = false;
 	bool m_bMoveObj = false;
+	bool m_bScale = false;
+	bool m_bRotation = false;
+	int SelectNum = 0;
+	int PickingSelect = 0;
+	float m_ScaleCount;
+	float m_RotationCount;
+
 
 	// Map
 public:

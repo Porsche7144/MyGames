@@ -39,6 +39,10 @@ public:
 	afx_msg void ObjDeleteClickedButton();
 	afx_msg void AddObjClickedButton();
 	afx_msg void ObjMoveClickedButton();
+	CString m_ScaleCount;
+	CString m_RotationCount;
+	afx_msg void OnScaleCountChangeEdit();
+	afx_msg void OnRotationCountChangeEdit();
 };
 
 

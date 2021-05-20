@@ -1,5 +1,5 @@
 // HLSL
-Texture2D g_txDiffuse;// : register(t0);
+Texture2D g_txDiffuse : register(t0);
 SamplerState g_Sample;// : register(s0);
 TextureCube g_txCube : register(t1);
 
