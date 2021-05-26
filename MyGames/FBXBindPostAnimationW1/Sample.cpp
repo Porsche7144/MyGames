@@ -19,14 +19,19 @@ bool Sample::Init()
 
 	m_pFbxObj = make_shared<HFbxObj>();
 
-	if (m_pFbxObj->Load("../../Image/FBX_Image/man.fbx"))
+	//const char* filename[] =   { "../../Image/character/Sword and Shield Pack/paladin_prop_j_nordstrom.fbx", 
+	//						     "../../Image/character/Sword and Shield Pack/sword and shield attack.fbx",
+	//						     "../../Image/character/Sword and Shield Pack/sword and shield block.fbx" ,};
+
+	if (m_pFbxObj->Load("../../Image/character/Sword and Shield Pack/paladin_prop_j_nordstrom.fbx"))
+	if (m_pFbxObj->Load("../../Image/character/Sword and Shield Pack/sword and shield attack.fbx"))
+	if (m_pFbxObj->Load("../../Image/character/Sword and Shield Pack/sword and shield block.fbx"))
 	{
 		HStopwatch stopwatch;
 		for (auto data : m_pFbxObj->m_hNodeList)
 		{
 			HModelObj* pObject = data;
-			
-			for (int iSub = 0; iSub < pObject->m_SubMesh.size(); iSub++)
+						for (int iSub = 0; iSub < pObject->m_SubMesh.size(); iSub++)
 			{
 				HSubMesh* pSub = &pObject->m_SubMesh[iSub];
 				if (pSub->m_iNumFace <= 0) continue;
@@ -83,7 +88,7 @@ bool Sample::Init()
 				pSub->m_pIndexBuffer.Attach(ib);
 
 
-				wstring loadTex = L"../../Image/FBX_Image/";
+				wstring loadTex = L"../../Image/character/Sword and Shield Pack/";
 				loadTex += pObject->FbxMaterialList[iSub].c_str();
 				pSub->m_pTexture = g_TextureMgr.Load(g_pd3dDevice, loadTex.c_str());
 

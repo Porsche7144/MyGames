@@ -12,6 +12,7 @@
 #include "HSelect.h"
 
 #pragma comment(lib, "directxtk.lib")
+#define TEXTURE_COUNT 4
 
 struct SaveData
 {
@@ -21,7 +22,6 @@ struct SaveData
 	float fScale;
 	std::vector<Vector3> m_SaveVertexList;
 	int iListSize;
-
 };
 
 struct ColisionSphere
@@ -29,6 +29,15 @@ struct ColisionSphere
 	Matrix mat;
 	HModel pModel;
 	H_SPHERE sphere;
+};
+
+struct BufferType
+{
+	Vector3 vPickPos;
+	float fRadius;
+	int iIndex; // RGBA
+	float fTexWidth;
+	float fTexHeight;
 };
 
 class HBoxUser : public HShapeBox
@@ -128,6 +137,38 @@ public:
 	Matrix						m_matBoxWorld;
 	Matrix						m_matPlaneWorld;
 	Matrix						m_matLineWorld;
+
+public:
+	// Compute Shader
+	HTexture* m_pSplatting[TEXTURE_COUNT]; // 스플래팅 이미지 4장
+	int m_iTextureSizeX = 1024;
+	int m_iTextureSizeY = 1024;
+	BufferType m_SelectData[TEXTURE_COUNT]; 
+	ComPtr<ID3D11ComputeShader> m_pCS;
+
+	HRESULT InitWork();
+	HRESULT CreateComputeShader(ID3D11Device* pDevice, LPCWSTR srcFile, LPCSTR FuncName, ID3D11ComputeShader** ppShaderOut);
+	void RunComputeShader(ID3D11DeviceContext* pContext, ID3D11ComputeShader* pCS, ID3D11ShaderResourceView** ppSRV,
+						  ID3D11UnorderedAccessView** ppUAV, int iNumView, UINT X, UINT Y, UINT Z);
+
+	// 구조화 버퍼
+	ComPtr<ID3D11Buffer> m_pSelectBuffer;
+	ComPtr<ID3D11ShaderResourceView> m_pSelectBufferSRV;
+
+	HRESULT CreateStructuredBuffer(ID3D11Device* pDevice, UINT uElementSize, UINT uCount,
+								   VOID* pInitData, ID3D11Buffer** ppBufOut);
+	HRESULT CreateBufferSRV(ID3D11Device* pDevice, ID3D11Buffer* pBuffer, ID3D11ShaderResourceView** ppSRVOut);
+
+	// 알파텍스쳐
+	ComPtr<ID3D11Texture2D> m_pAlphaTexture;
+	ComPtr<ID3D11ShaderResourceView> m_pAlphaTextureSRV;
+	ComPtr<ID3D11UnorderedAccessView> m_pAlphaTextureUAV;
+
+	ComPtr<ID3D11Texture2D> m_pAlphaTextureCopy;
+	ComPtr<ID3D11ShaderResourceView> m_pAlphaTextureSRVCopy;
+
+	HRESULT CreateTextureUAV(ID3D11Device* pDevice, int iWidth, int iHeight);
+
 
 public:
 	bool Init() override;

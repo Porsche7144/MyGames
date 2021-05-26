@@ -1,0 +1,51 @@
+struct BufferType
+{
+	float3 vPickPos;
+	float fRadius;
+	int iIndex;  // RGBA
+	float fTexWidth;
+	float fTexHeight;
+};
+
+Texture2D<float4>				InputMap : register(t0);
+Texture2D<float4>				CopyMap : register(t1);
+StructuredBuffer<BufferType>	SelectMap : register(t2);
+RWTexture2D<float4>				OutputMap : register(u0);
+
+#define size_x 32
+#define size_y 32
+
+[numthreads(size_x, size_y, 1)]
+void CS(uint3 GroupID : SV_GroupID,
+		uint3 DispatchThreadID : SV_DispatchThreadID,  // 필수
+		uint3 GroupThreadID : SV_GroupThreadID,
+		uint GroupIndex : SV_GroupIndex)
+{
+	int3 textureLocation = int3(0, 0, 0);
+	//textureLocation.x = GroupID.x * size_x + GroupThreadID.x; // 1*32+ 133
+	//textureLocation.y = GroupID.y * size_y + GroupThreadID.y; //33
+	textureLocation.x = DispatchThreadID.x;
+	textureLocation.y = DispatchThreadID.y;
+
+	// 0 ~ 1024 -> 0 ~ 1
+	float1 w = SelectMap[0].fTexWidth / 2.0f;
+	float1 h = SelectMap[0].fTexHeight / 2.0f;
+	float3 TexPos = float3(textureLocation.x - w, -(textureLocation.y - h), 0.0f);
+	float1 fDistance = distance(TexPos, SelectMap[0].vPickPos);
+	float4 vAlphaColor = CopyMap.Load(textureLocation);
+	float fDot = 1.0f - (fDistance / SelectMap[0].fRadius);
+	if(fDistance < SelectMap[0].fRadius)
+	{
+		switch(SelectMap[0].iIndex)
+		{
+			case 0 : vAlphaColor.x = max(vAlphaColor.x, fDot); break;
+			case 1 : vAlphaColor.y = max(vAlphaColor.y, fDot); break;
+			case 2 : vAlphaColor.z = max(vAlphaColor.z, fDot); break;
+			case 3 : vAlphaColor.w = max(vAlphaColor.w, fDot); break;
+		}
+
+		OutputMap[textureLocation.xy] = vAlphaColor;
+		//OutputMap[textureLocation.xy] = float4(fDot,fDot,fDot,1);
+	}
+
+}

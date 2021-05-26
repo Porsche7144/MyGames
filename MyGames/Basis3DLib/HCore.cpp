@@ -131,8 +131,8 @@ bool HCore::GameInit()
 
 	g_TextureMgr.Init();
 
-	//Init();
-	//m_bFrameRun = true;
+	Init();
+	m_bFrameRun = true;
 	PostInit();
 
 	return true;

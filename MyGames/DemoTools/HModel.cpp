@@ -367,14 +367,17 @@ bool HModel::Render(ID3D11DeviceContext* pContext)
 
 bool HModel::Release()
 {
-
-	for (auto data : m_pFbxObj->m_hNodeList)
+	if (!m_pFbxObj == NULL)
 	{
-		HModelObj* pObject = data;
-		pObject->Release();
-		delete pObject;
+		for (auto data : m_pFbxObj->m_hNodeList)
+		{
+			HModelObj* pObject = data;
+			pObject->Release();
+			delete pObject;
+		}
+
+		m_pFbxObj->Release();
 	}
-	m_pFbxObj->Release();
 
 	return true;
 };

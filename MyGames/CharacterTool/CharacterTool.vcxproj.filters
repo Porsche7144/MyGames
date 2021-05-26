@@ -16,9 +16,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{bc71f696-e601-4218-981d-8189e62386bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map">
-      <UniqueIdentifier>{96308d78-28a9-46fe-a175-c8e0455b64a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{6f97b5de-167b-4bfb-ba0f-93cb8e17aee8}</UniqueIdentifier>
     </Filter>
@@ -31,11 +28,8 @@
     <Filter Include="PaneWindow\OutputWnd">
       <UniqueIdentifier>{f90a49bc-c40d-4f42-9ca6-a62febd98267}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PaneWindow\MapTool">
-      <UniqueIdentifier>{1dbf7b37-95dc-4ca7-916e-d2bcc7dfe275}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PaneWindow\MapObject">
-      <UniqueIdentifier>{5e166a09-1e28-409c-ab35-9893886b1cb9}</UniqueIdentifier>
+    <Filter Include="FBX">
+      <UniqueIdentifier>{5e19dc89-8b2f-41e7-b8fc-76f3a0ebdc73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,9 +60,6 @@
     <ClInclude Include="Sample.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="HMapDlg.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="HCharactorToolDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -78,32 +69,17 @@
     <ClInclude Include="HOutputWnd.h">
       <Filter>PaneWindow\OutputWnd</Filter>
     </ClInclude>
-    <ClInclude Include="HMapToolPane.h">
-      <Filter>PaneWindow\MapTool</Filter>
+    <ClInclude Include="ModelObj.h">
+      <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="HMapToolForm.h">
-      <Filter>PaneWindow\MapTool</Filter>
+    <ClInclude Include="FbxObj.h">
+      <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="HModel.h">
-      <Filter>Map</Filter>
+    <ClInclude Include="Mesh.h">
+      <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="HTextureMap.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="HMapModifyTool.h">
-      <Filter>PaneWindow\MapTool</Filter>
-    </ClInclude>
-    <ClInclude Include="HMapModifyPane.h">
-      <Filter>PaneWindow\MapTool</Filter>
-    </ClInclude>
-    <ClInclude Include="HMapObjectPane.h">
-      <Filter>PaneWindow\MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="HMapObjectModifyTool.h">
-      <Filter>PaneWindow\MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="HSelect.h">
-      <Filter>PaneWindow\MapObject</Filter>
+    <ClInclude Include="FbxMaterial.h">
+      <Filter>FBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,47 +101,29 @@
     <ClCompile Include="Sample.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="HMapDlg.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="HCharactorToolDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="HOutputWnd.cpp">
       <Filter>PaneWindow\OutputWnd</Filter>
     </ClCompile>
-    <ClCompile Include="HMapToolPane.cpp">
-      <Filter>PaneWindow\MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="HMapToolForm.cpp">
-      <Filter>PaneWindow\MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="HModel.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="HTextureMap.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="HMapModifyTool.cpp">
-      <Filter>PaneWindow\MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="HMapModifyPane.cpp">
-      <Filter>PaneWindow\MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="HMapObjectPane.cpp">
-      <Filter>PaneWindow\MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="HMapObjectModifyTool.cpp">
-      <Filter>PaneWindow\MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="HSelect.cpp">
-      <Filter>PaneWindow\MapObject</Filter>
-    </ClCompile>
     <ClCompile Include="HPropertiesWnd.cpp">
       <Filter>PaneWindow\PropertiesWnd</Filter>
     </ClCompile>
-    <ClCompile Include="CS.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelObj.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxObj.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxMaterial.cpp">
+      <Filter>FBX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,33 +158,6 @@
       <Filter>Shader</Filter>
     </Text>
     <Text Include="VS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\ObjectPS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\ObjectVS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\LightPS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\LightVS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="HeightMapPS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="HeightMapVS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\ToolBasePS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\ToolBaseVS.txt">
-      <Filter>Shader</Filter>
-    </Text>
-    <Text Include="..\..\data\Shader\CS.txt">
       <Filter>Shader</Filter>
     </Text>
   </ItemGroup>

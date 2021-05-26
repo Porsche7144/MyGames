@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{4BF7703C-AE4A-4DE7-8C5B-0D27516C055E}</ProjectGuid>
+    <ProjectGuid>{ac36a22e-0c05-4654-a5b2-43439dacfb29}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
-    <RootNamespace>DemoTools</RootNamespace>
+    <RootNamespace>CharacterTool</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -77,7 +77,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../../output</OutDir>
-    <IntDir>../../output/DemoTool</IntDir>
+    <IntDir>../../output/CharacterTool</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -101,7 +101,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>../../Lib;../../fmod/lib/x64;../../FBX_SDK/lib/x64/debug;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../../Lib/Basis3DLib_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../Lib/Basis3DLib_D.lib;libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -195,45 +195,33 @@
     <ClInclude Include="DemoTools.h" />
     <ClInclude Include="DemoToolsDoc.h" />
     <ClInclude Include="DemoToolsView.h" />
+    <ClInclude Include="FbxMaterial.h" />
+    <ClInclude Include="FbxObj.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="HCharactorToolDlg.h" />
-    <ClInclude Include="HMapDlg.h" />
-    <ClInclude Include="HMapModifyPane.h" />
-    <ClInclude Include="HMapModifyTool.h" />
-    <ClInclude Include="HMapObjectModifyTool.h" />
-    <ClInclude Include="HMapObjectPane.h" />
-    <ClInclude Include="HMapToolForm.h" />
-    <ClInclude Include="HMapToolPane.h" />
-    <ClInclude Include="HModel.h" />
     <ClInclude Include="HOutputWnd.h" />
     <ClInclude Include="HPropertiesWnd.h" />
-    <ClInclude Include="HSelect.h" />
-    <ClInclude Include="HTextureMap.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ModelObj.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CS.cpp" />
     <ClCompile Include="DemoTools.cpp" />
     <ClCompile Include="DemoToolsDoc.cpp" />
     <ClCompile Include="DemoToolsView.cpp" />
+    <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="FbxMaterial.cpp" />
+    <ClCompile Include="FbxObj.cpp" />
     <ClCompile Include="HCharactorToolDlg.cpp" />
-    <ClCompile Include="HMapDlg.cpp" />
-    <ClCompile Include="HMapModifyPane.cpp" />
-    <ClCompile Include="HMapModifyTool.cpp" />
-    <ClCompile Include="HMapObjectModifyTool.cpp" />
-    <ClCompile Include="HMapObjectPane.cpp" />
-    <ClCompile Include="HMapToolForm.cpp" />
-    <ClCompile Include="HMapToolPane.cpp" />
-    <ClCompile Include="HModel.cpp" />
     <ClCompile Include="HOutputWnd.cpp" />
     <ClCompile Include="HPropertiesWnd.cpp" />
-    <ClCompile Include="HSelect.cpp" />
-    <ClCompile Include="HTextureMap.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ModelObj.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -263,15 +251,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\data\Shader\CS.txt" />
-    <Text Include="..\..\data\Shader\LightPS.txt" />
-    <Text Include="..\..\data\Shader\LightVS.txt" />
-    <Text Include="..\..\data\Shader\ObjectPS.txt" />
-    <Text Include="..\..\data\Shader\ObjectVS.txt" />
-    <Text Include="..\..\data\Shader\ToolBasePS.txt" />
-    <Text Include="..\..\data\Shader\ToolBaseVS.txt" />
-    <Text Include="HeightMapPS.txt" />
-    <Text Include="HeightMapVS.txt" />
     <Text Include="PS.txt" />
     <Text Include="VS.txt" />
   </ItemGroup>
