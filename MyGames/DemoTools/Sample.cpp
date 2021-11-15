@@ -1036,8 +1036,6 @@ bool Sample::Render()
 	m_Map.m_cbData.vColor[2] = m_pMainCamera->m_vLook.z*1.5f;
 	for (auto node : m_QuadTree.m_leafList)
 	{
-		//g_pImmediateContext->PSSetShaderResources(1, 1, &m_pTextureSRV[0]);
-		//g_pImmediateContext->PSSetShaderResources(2, 4, &m_pTextureSRV[1]);
 		g_pImmediateContext->PSSetShaderResources(1, 1, &m_pSplatting[0]->m_pTextureSRV);
 		g_pImmediateContext->PSSetShaderResources(2, 1, &m_pSplatting[1]->m_pTextureSRV);
 		g_pImmediateContext->PSSetShaderResources(3, 1, &m_pSplatting[2]->m_pTextureSRV);
