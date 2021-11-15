@@ -28,9 +28,9 @@ void CS(uint3 GroupID : SV_GroupID,
 	textureLocation.y = DispatchThreadID.y;
 
 	// 0 ~ 1024 -> 0 ~ 1
-	float1 w = SelectMap[0].fTexWidth / 2.0f;
-	float1 h = SelectMap[0].fTexHeight / 2.0f;
-	float3 TexPos = float3(textureLocation.x - w, -(textureLocation.y - h), 0.0f);
+	//float1 w = SelectMap[0].fTexWidth;// / 2.0f;
+	//float1 h = SelectMap[0].fTexHeight;// / 2.0f;
+	float3 TexPos = float3(textureLocation.x, textureLocation.y, 0.0f);
 	float1 fDistance = distance(TexPos, SelectMap[0].vPickPos);
 	float4 vAlphaColor = CopyMap.Load(textureLocation);
 	float fDot = 1.0f - (fDistance / SelectMap[0].fRadius);

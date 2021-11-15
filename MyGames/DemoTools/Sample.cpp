@@ -4,7 +4,7 @@ int Sample::m_iTileCount = 257;
 float Sample::m_fCellCount = 10.0f;
 float Sample::m_fScale = 10.0f;
 
-ID3D11Texture2D* Sample ::LoadTexturetMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const TCHAR* pFilename)
+ID3D11Texture2D* Sample::LoadTexturetMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const TCHAR* pFilename)
 {
 	HRESULT hr;
 	ID3D11Resource* pTexture;
@@ -67,8 +67,8 @@ void Sample::SaveMapData()
 	WideCharToMultiByte(CP_ACP, 0, m_Save.fileName, len, cTemp, len, NULL, NULL);
 
 	fout << cTemp << endl << m_Save.iTileCount << endl
-		 << m_Save.fCellCount << endl << m_Save.fScale << endl 
-		 << m_Save.iListSize << endl;
+		<< m_Save.fCellCount << endl << m_Save.fScale << endl
+		<< m_Save.iListSize << endl;
 
 	m_Save.m_SaveVertexList.resize(m_Map.m_VertexList.size());
 
@@ -77,7 +77,7 @@ void Sample::SaveMapData()
 		m_Save.m_SaveVertexList[i].y = m_Map.m_VertexList[i].p.y;
 		fout << m_Save.m_SaveVertexList[i].y << endl;
 	}
-	
+
 	fout.close();
 
 	isave = 0;
@@ -203,11 +203,11 @@ bool Sample::Init()
 	}
 
 	m_Camera.CreateViewMatrix({ 0,300,-100 }, { 0,0,0 });
-	
+
 	if (m_bObjInitState)
 	{
 		m_pObj.Init();
-		
+
 		m_bObjInitState = false;
 	}
 	m_pObj.m_pMainCamera = m_pMainCamera;
@@ -231,7 +231,7 @@ bool Sample::Init()
 	//	return false;
 	//}
 #pragma endregion
-	
+
 #pragma region MapCreate
 	HMapDesc desc;
 	if (m_LoadData)
@@ -360,7 +360,7 @@ bool Sample::Frame()
 		g_pImmediateContext->UpdateSubresource(m_pSelectBuffer.Get(),
 			0, NULL, &m_SelectData, 0, 0);
 
-		ID3D11ShaderResourceView* arraySRV[3] = 
+		ID3D11ShaderResourceView* arraySRV[3] =
 		{
 			m_Map.m_pTexture->m_pTextureSRV,
 			m_pAlphaTextureSRVCopy.Get(),
@@ -468,11 +468,11 @@ bool Sample::Frame()
 			}
 
 		}
-		
+
 		if (Update)
-		{	
+		{
 			if (m_bCreateObj)
-			{	
+			{
 				Matrix matWorld;
 				HModel model;
 				H_SPHERE sphere;
@@ -481,11 +481,11 @@ bool Sample::Frame()
 				matWorld._42 = m_Picking.m_vInterSection.y;
 				matWorld._43 = m_Picking.m_vInterSection.z;
 
-				model.Init();				
+				model.Init();
 
 				sphere.fRadius = 80.0f;
 				sphere.vCenter = m_Picking.m_vInterSection;
-				
+
 				collision.sphere = sphere;
 				collision.mat = matWorld;
 				collision.pModel = model;
@@ -493,7 +493,7 @@ bool Sample::Frame()
 				m_ModelMatrixList.push_back(matWorld);
 				m_ColisionList.push_back(collision);
 			}
-				
+
 			if (m_bObjDelete)
 			{
 				for (int i = 0; i < m_ColisionList.size(); i++)
@@ -508,7 +508,7 @@ bool Sample::Frame()
 
 			if (m_bMoveObj)
 			{
-				
+
 				for (int i = 0; i < m_ColisionList.size(); i++)
 				{
 					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
@@ -520,10 +520,10 @@ bool Sample::Frame()
 						m_ColisionList[i].mat._41 = m_ModelMatrixList[i]._41;
 						m_ColisionList[i].mat._43 = m_ModelMatrixList[i]._43;
 						SelectNum = i;
-					}					
-					
+					}
+
 				}
-				
+
 			}
 
 			if (m_bScale)
@@ -531,7 +531,7 @@ bool Sample::Frame()
 				for (int i = 0; i < m_ColisionList.size(); i++)
 				{
 					if (m_Select.IntersectRayToSphere(&m_ColisionList[i].sphere, &m_Picking.m_Ray))
-					{	
+					{
 						Matrix trans;
 						trans._41 = m_ModelMatrixList[i]._41;
 						trans._43 = m_ModelMatrixList[i]._43;
@@ -544,7 +544,7 @@ bool Sample::Frame()
 						m_ColisionList[i].mat._41 = trans._41;
 						m_ColisionList[i].mat._43 = trans._43;
 					}
-				}				
+				}
 			}
 
 			if (m_bRotation)
@@ -556,7 +556,7 @@ bool Sample::Frame()
 						Matrix trans;
 						Matrix rotate;
 
-						rotate = Matrix::CreateRotationY(m_RotationCount * (HBASIS_PI/180.0f));
+						rotate = Matrix::CreateRotationY(m_RotationCount * (HBASIS_PI / 180.0f));
 
 						trans._41 = m_ModelMatrixList[i]._41;
 						trans._43 = m_ModelMatrixList[i]._43;
@@ -572,7 +572,7 @@ bool Sample::Frame()
 					}
 				}
 			}
-			
+
 		}
 
 	}
@@ -611,7 +611,7 @@ bool Sample::Frame()
 				}
 			}
 
-			float fMaxDist = 99999;			
+			float fMaxDist = 99999;
 			for (int select = 0; select < m_SelectNode.size(); select++)
 			{
 				HNode* pNode = m_SelectNode[select];
@@ -647,7 +647,7 @@ bool Sample::Frame()
 
 		float fMapWidth = m_Map.m_iNumCellCols * m_Map.m_fCellDistance;
 		float fWidthRatio = m_iTextureSizeX / fMapWidth;
-		Vector2 vCenter = Vector2((pick.x + (fMapWidth / 2.0f)) * fWidthRatio,	(-(pick.z - (fMapWidth / 2.0f))) * fWidthRatio);
+		Vector2 vCenter = Vector2((pick.x + (fMapWidth / 2.0f)) * fWidthRatio, (-(pick.z - (fMapWidth / 2.0f))) * fWidthRatio);
 
 
 
@@ -674,49 +674,49 @@ bool Sample::Frame()
 		g_pImmediateContext->CopyResource(m_pAlphaTextureCopy.Get(), m_pAlphaTexture.Get());
 
 		// 주석 제거시 상단 중앙 RPG맵 활성화
-		if (m_LoadData)
-		{
-			m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
-				g_pImmediateContext, pick, m_iSplattingNum);
-			g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
-			m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
-		}
-		else
-		{
-			m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging,
-				g_pImmediateContext, pick, m_iSplattingNum);
-			g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
-			m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
-		}
+		//if (m_LoadData)
+		//{
+		//	m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
+		//		g_pImmediateContext, pick, m_iSplattingNum);
+		//	g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_LoadTexture);
+		//	m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+		//}
+		//else
+		//{
+		//	m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_AlphaZeroTexture.pStaging,
+		//		g_pImmediateContext, pick, m_iSplattingNum);
+		//	g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
+		//	m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
+		//}
 	}
 #pragma endregion
 
 #pragma region UserInput
-/*
-	if (g_Input.GetKey('W') == KEY_HOLD)
-	{
-		m_UserShape.FrontMovement(1.0f);
-	}
-	if (g_Input.GetKey('S') == KEY_HOLD)
-	{
-		m_UserShape.FrontMovement(-1.0f);
-	}
-	if (g_Input.GetKey('A') == KEY_HOLD)
-	{
-		m_UserShape.RightMovement(-1.0f);
-	}
-	if (g_Input.GetKey('D') == KEY_HOLD)
-	{
-		m_UserShape.RightMovement(1.0f);
-	}
-	if (g_Input.GetKey('Q') == KEY_HOLD)
-	{
-		m_UserShape.UpMovement(1.0f);
-	}
-	if (g_Input.GetKey('E') == KEY_HOLD)
-	{
-		m_UserShape.UpMovement(-1.0f);
-	}*/
+	/*
+		if (g_Input.GetKey('W') == KEY_HOLD)
+		{
+			m_UserShape.FrontMovement(1.0f);
+		}
+		if (g_Input.GetKey('S') == KEY_HOLD)
+		{
+			m_UserShape.FrontMovement(-1.0f);
+		}
+		if (g_Input.GetKey('A') == KEY_HOLD)
+		{
+			m_UserShape.RightMovement(-1.0f);
+		}
+		if (g_Input.GetKey('D') == KEY_HOLD)
+		{
+			m_UserShape.RightMovement(1.0f);
+		}
+		if (g_Input.GetKey('Q') == KEY_HOLD)
+		{
+			m_UserShape.UpMovement(1.0f);
+		}
+		if (g_Input.GetKey('E') == KEY_HOLD)
+		{
+			m_UserShape.UpMovement(-1.0f);
+		}*/
 #pragma endregion
 
 
@@ -849,20 +849,20 @@ bool Sample::Render()
 				m_ControlNode.push_back(pNode);
 			}
 		}
-		
+
 		if (m_bIncreaseGround)
 		{
 			float transY = 0.0f;
 			float beforeY = 0.0f;
 
 			for (auto node : m_ControlNode)
-			{				
+			{
 				for (int v = 0; v < node->m_IndexList.size(); v++)
 				{
 					int iID = node->m_IndexList[v];
 					float fDist = (m_Map.m_VertexList[iID].p - pick).Length();
 					if (fDist < m_fRadius)
-					{						
+					{
 						if (m_Map.m_VertexList[iID].p.y < 255)
 						{
 							Vector3 v = m_Map.m_VertexList[iID].p;
@@ -914,7 +914,7 @@ bool Sample::Render()
 							{
 								transY = beforeY;
 							}
-						}						
+						}
 					}
 				}
 				// 실시간 노말 계산
@@ -939,7 +939,7 @@ bool Sample::Render()
 			float beforeY = 0.0f;
 
 			for (auto node : m_ControlNode)
-			{	
+			{
 				for (int v = 0; v < node->m_IndexList.size(); v++)
 				{
 					int iID = node->m_IndexList[v];
@@ -1043,7 +1043,7 @@ bool Sample::Render()
 		g_pImmediateContext->PSSetShaderResources(3, 1, &m_pSplatting[2]->m_pTextureSRV);
 		g_pImmediateContext->PSSetShaderResources(4, 1, &m_pSplatting[3]->m_pTextureSRV);
 		g_pImmediateContext->PSSetShaderResources(5, 1, m_pAlphaTextureSRVCopy.GetAddressOf());
-		m_QuadTree.Draw(g_pImmediateContext, node);	
+		m_QuadTree.Draw(g_pImmediateContext, node);
 	}
 #pragma endregion
 
@@ -1067,7 +1067,7 @@ bool Sample::Render()
 		m_Minimap.End(g_pImmediateContext);
 	}
 #pragma endregion	
-	
+
 	Matrix mat;
 	mat._41 = 1.5f;
 
