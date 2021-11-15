@@ -11,6 +11,8 @@ public:
 	Matrix matWorld = Matrix::Identity;
 	Matrix matParent = Matrix::Identity;
 	bool bDash = true;
+	bool bMove = false;
+	bool bSpace = true;
 
 public:
 	LRESULT	 MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

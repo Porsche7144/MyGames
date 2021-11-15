@@ -43,4 +43,7 @@
     <Text Include="PS.txt" />
     <Text Include="VS.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>

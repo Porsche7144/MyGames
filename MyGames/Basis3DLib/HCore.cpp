@@ -61,30 +61,30 @@ bool HCore::CameraFrame()
 		ApplyRS(g_pImmediateContext, HDxState::g_pRSEdit.Get());
 	}
 
-	//if (g_Input.GetKey('W') == KEY_HOLD)
-	//{
-	//	m_pMainCamera->FrontMovement(20.0f);
-	//}
-	//if (g_Input.GetKey('S') == KEY_HOLD)
-	//{
-	//	m_pMainCamera->FrontMovement(-20.0f);
-	//}
-	//if (g_Input.GetKey('A') == KEY_HOLD)
-	//{
-	//	m_pMainCamera->RightMovement(-20.0f);
-	//}
-	//if (g_Input.GetKey('D') == KEY_HOLD)
-	//{
-	//	m_pMainCamera->RightMovement(20.0f);
-	//}
-	//if (g_Input.GetKey('Q') == KEY_HOLD)
-	//{
-	//	m_pMainCamera->UpMovement(20.0f);
-	//}
-	//if (g_Input.GetKey('E') == KEY_HOLD)
-	//{
-	//	m_pMainCamera->UpMovement(-20.0f);
-	//}
+	if (g_Input.GetKey('W') == KEY_HOLD)
+	{
+		m_pMainCamera->FrontMovement(20.0f);
+	}
+	if (g_Input.GetKey('S') == KEY_HOLD)
+	{
+		m_pMainCamera->FrontMovement(-20.0f);
+	}
+	if (g_Input.GetKey('A') == KEY_HOLD)
+	{
+		m_pMainCamera->RightMovement(-20.0f);
+	}
+	if (g_Input.GetKey('D') == KEY_HOLD)
+	{
+		m_pMainCamera->RightMovement(20.0f);
+	}
+	if (g_Input.GetKey('Q') == KEY_HOLD)
+	{
+		m_pMainCamera->UpMovement(20.0f);
+	}
+	if (g_Input.GetKey('E') == KEY_HOLD)
+	{
+		m_pMainCamera->UpMovement(-20.0f);
+	}
 
 	m_pMainCamera->Frame();
 
@@ -130,9 +130,10 @@ bool HCore::GameInit()
 	}
 
 	g_TextureMgr.Init();
-
+	/////////////////////////////////
 	Init();
 	m_bFrameRun = true;
+
 	PostInit();
 
 	return true;
@@ -208,7 +209,7 @@ bool	HCore::PreRender()
 	m_SkyBox.SetMatrix(NULL, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProject);
 	m_SkyBox.Render(g_pImmediateContext);
 
-	g_pImmediateContext->RSSetState(HDxState::g_pRSBackCullSolid);
+	g_pImmediateContext->RSSetState(HDxState::g_pRSEdit.Get());
 	g_pImmediateContext->PSSetSamplers(0, 1, &HDxState::g_pSSWrapLinear);
 	g_pImmediateContext->OMSetDepthStencilState(HDxState::g_pDSSDepthEnable, 0);
 	return true;

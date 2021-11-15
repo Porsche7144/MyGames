@@ -158,16 +158,6 @@ void HFbxObj::ParseNodeAnimation(FbxNode* pNode)
 
 		AddKey(pNode, mat, fCurrentTime);
 
-		/*HAnimTrack track;
-		track.iTick = fCurrentTime * 30 * 160;
-		track.mat = DxConvertMatrix(ConvertMatrixA(mat));
-
-		auto data = m_hNodeMap.find(pNode);
-		data->second->m_AnimList.push_back(track);
-
-		fCurrentTime += m_AnimScene.fDeltaTime;*/
-
-
 		// 1) mat 부모행렬 역행렬 곱한다.
 		// FbxAMatrix self;
 		// 2) self 행렬 분해( S, R, T )

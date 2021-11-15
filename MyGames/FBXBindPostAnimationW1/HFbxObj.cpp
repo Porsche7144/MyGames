@@ -366,9 +366,6 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObj * pObj)
 	geom.SetS(scale);
 	// pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(geom));
 
-	/*geom = pNode->EvaluateGlobalTransform(1.0f);
-	pObj->m_matWorld = DxConvertMatrix(ConvertMatrixA(pNode->EvaluateGlobalTransform(1.0f)));*/
-
 	// 컬러 = 월드 * 역행렬 * 전치행렬
 	FbxAMatrix normalMatrix = geom;
 	normalMatrix = normalMatrix.Inverse();
@@ -381,17 +378,6 @@ void HFbxObj::ParseMesh(FbxNode * pNode, FbxMesh * pMesh, HModelObj * pObj)
 
 	bool bSkinedMesh = ParseMeshSkinningMap(pMesh, pObj->m_WeightList, pObj);
 	pObj->m_bSkinnedMesh = bSkinedMesh;
-	//if (pObj->m_bSkinnedMesh == false)
-	//{
-	//	auto data = m_pFbxNodeMap.find(pNode);
-	//	int  iBoneIndex = data->second;
-	//	pObj->m_WeightList.resize(iVertexCount);
-	//	for (int iv = 0; iv < iVertexCount; iv++)
-	//	{
-	//		pObj->m_WeightList[iv].m_Index.push_back(iBoneIndex);
-	//		pObj->m_WeightList[iv].m_Weight.push_back(1.0f);
-	//	}
-	//}
 
 	int iBasePolyIndex = 0;
 

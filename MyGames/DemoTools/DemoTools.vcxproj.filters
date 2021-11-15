@@ -103,7 +103,7 @@
       <Filter>PaneWindow\MapObject</Filter>
     </ClInclude>
     <ClInclude Include="HSelect.h">
-      <Filter>PaneWindow\MapObject</Filter>
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,14 +158,14 @@
     <ClCompile Include="HMapObjectModifyTool.cpp">
       <Filter>PaneWindow\MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="HSelect.cpp">
-      <Filter>PaneWindow\MapObject</Filter>
-    </ClCompile>
     <ClCompile Include="HPropertiesWnd.cpp">
       <Filter>PaneWindow\PropertiesWnd</Filter>
     </ClCompile>
     <ClCompile Include="CS.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="HSelect.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

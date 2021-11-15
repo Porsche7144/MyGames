@@ -282,7 +282,7 @@ bool HDevice::PreRender()
 		g_pImmediateContext->ClearRenderTargetView(m_pRednerTargetView.Get(), clearColor);
 		g_pImmediateContext->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 		g_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		g_pImmediateContext->RSSetState(HDxState::g_pRSBackCullSolid);
+		g_pImmediateContext->RSSetState(HDxState::g_pRSEdit.Get());
 		g_pImmediateContext->PSSetSamplers(0, 1, &HDxState::g_pSSWrapLinear);
 		g_pImmediateContext->OMSetDepthStencilState(HDxState::g_pDSSDepthEnable, 0);
 	}

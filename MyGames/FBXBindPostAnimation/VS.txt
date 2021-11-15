@@ -1,6 +1,6 @@
 // HLSL = 쉐이더 언어
 
-#define MAX_BONE_MATRIX 255
+#define MAX_BONE_MATRICES 255
 #define FT_CONSTANTBUFFER
 
 cbuffer HDataCB : register(b0)

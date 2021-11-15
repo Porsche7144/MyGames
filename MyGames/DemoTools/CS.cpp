@@ -20,7 +20,7 @@ HRESULT Sample::InitWork()
 	m_pSplatting[3] = g_TextureMgr.Load(g_pd3dDevice, L"../../Image/data/map/land.bmp");
 
 	m_SelectData[0].fRadius = 100.0f;
-	m_SelectData[0].iIndex = 2; // z
+	m_SelectData[0].iIndex = -1; // z
 	m_SelectData[0].vPickPos = Vector3(0, 0, 0);
 	m_SelectData[0].fTexHeight = 1024.0f;
 	m_SelectData[0].fTexWidth = 1024.0;

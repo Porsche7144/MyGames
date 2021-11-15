@@ -19,13 +19,7 @@ bool Sample::Init()
 
 	m_pFbxObj = make_shared<HFbxObj>();
 
-	//const char* filename[] =   { "../../Image/character/Sword and Shield Pack/paladin_prop_j_nordstrom.fbx", 
-	//						     "../../Image/character/Sword and Shield Pack/sword and shield attack.fbx",
-	//						     "../../Image/character/Sword and Shield Pack/sword and shield block.fbx" ,};
-
-	if (m_pFbxObj->Load("../../Image/character/Sword and Shield Pack/paladin_prop_j_nordstrom.fbx"))
-	if (m_pFbxObj->Load("../../Image/character/Sword and Shield Pack/sword and shield attack.fbx"))
-	if (m_pFbxObj->Load("../../Image/character/Sword and Shield Pack/sword and shield block.fbx"))
+	if (m_pFbxObj->Load("../../Image/FBX_Image/man.fbx"))
 	{
 		HStopwatch stopwatch;
 		for (auto data : m_pFbxObj->m_hNodeList)
@@ -36,19 +30,6 @@ bool Sample::Init()
 				HSubMesh* pSub = &pObject->m_SubMesh[iSub];
 				if (pSub->m_iNumFace <= 0) continue;
 
-				//pSub->m_VertexList.resize(
-				//	pSub->m_TriangleList.size() * 3);
-				//for (int iFace = 0; iFace < pSub->m_TriangleList.size(); iFace++)
-				//{
-				//	int iIndex = iFace * 3;
-				//	pSub->m_VertexList[iIndex + 0] =
-				//		pSub->m_TriangleList[iFace].vVertex[0];
-				//	pSub->m_VertexList[iIndex + 1] =
-				//		pSub->m_TriangleList[iFace].vVertex[1];
-				//	pSub->m_VertexList[iIndex + 2] =
-				//		pSub->m_TriangleList[iFace].vVertex[2];
-				//}
-
 				// 첫번째 PNCT vb
 				ID3D11Buffer* vb =
 					CreateVertexBuffer(g_pd3dDevice,
@@ -56,20 +37,6 @@ bool Sample::Init()
 						pSub->m_VertexList.size(),
 						sizeof(PNCT_VERTEX));
 				pSub->m_pVertexBuffer.Attach(vb);
-
-				//////////////////////////////////////////
-				//pSub->m_IWVertexList.resize(pSub->m_TriangleList.size() * 3);
-				//for (int iFace = 0; iFace < pSub->m_TriangleList.size(); iFace++)
-				//{
-				//	int iIndex = iFace * 3;
-				//	pSub->m_IWVertexList[iIndex + 0] =
-				//		pSub->m_TriangleList[iFace].vIWVertex[0];
-				//	pSub->m_IWVertexList[iIndex + 1] =
-				//		pSub->m_TriangleList[iFace].vIWVertex[1];
-				//	pSub->m_IWVertexList[iIndex + 2] =
-				//		pSub->m_TriangleList[iFace].vIWVertex[2];
-
-				//}
 
 				// 두번째 IW vb
 				ID3D11Buffer* vbiw =
@@ -88,7 +55,7 @@ bool Sample::Init()
 				pSub->m_pIndexBuffer.Attach(ib);
 
 
-				wstring loadTex = L"../../Image/character/Sword and Shield Pack/";
+				wstring loadTex = L"../../Image/FBX_Image/";
 				loadTex += pObject->FbxMaterialList[iSub].c_str();
 				pSub->m_pTexture = g_TextureMgr.Load(g_pd3dDevice, loadTex.c_str());
 
@@ -134,7 +101,7 @@ bool Sample::Frame()
 	for (int iNode = 0; iNode < m_pFbxObj->m_hNodeList.size(); iNode++)
 	{
 		HModelObj* pModelObj = m_pFbxObj->m_hNodeList[iNode];
-		// matWorld = Matrix::Identity;
+		//matWorld = Matrix::Identity;
 
 		// 바이패드 공간 * Global
 		std::string szName;
@@ -199,42 +166,56 @@ bool Sample::Frame()
 				break;
 			}
 		}
-
+		
 		if (g_Input.GetKey(VK_UP) == KEY_HOLD)
 		{
-			matWorld._43 = matWorld._43 + (1.0f * g_fSecondPerFrame);
-			if (m_pFbxObj->m_fTick >= 33 * m_pFbxObj->m_AnimScene.iTickPerFrame)
-			{
-				m_pFbxObj->m_fTick = 7 * 160;
-			}
-			// matWorld._43 = pModelObj->m_matAnim._43;
-		}
-		if (g_Input.GetKey(VK_DOWN) == KEY_HOLD)
-		{
-			matWorld._43 = matWorld._43 - (1.0f * g_fSecondPerFrame);
-			if (m_pFbxObj->m_fTick >= 33 * m_pFbxObj->m_AnimScene.iTickPerFrame)
-			{
-				m_pFbxObj->m_fTick = 7 * 160;
-			}
-			// matWorld._43 = pModelObj->m_matAnim._43;
-		}
-		if (g_Input.GetKey(VK_RIGHT) == KEY_HOLD)
-		{
-			matWorld._41 = matWorld._41 + (1.0f * g_fSecondPerFrame);
-			// matWorld._41 = pModelObj->m_matAnim._41;
-		}
-		if (g_Input.GetKey(VK_LEFT) == KEY_HOLD)
-		{
-			matWorld._41 = matWorld._41 - (1.0f * g_fSecondPerFrame);
-			// matWorld._41 = pModelObj->m_matAnim._41;
-		}
+			matWorld._43 = matWorld._43 + (0.5f * g_fSecondPerFrame);
 
-		if (g_Input.GetKey(VK_SPACE) == KEY_HOLD)
-		{
- 			if (m_pFbxObj->m_fTick >= 855 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+			if (m_pFbxObj->m_fTick >= 91 * m_pFbxObj->m_AnimScene.iTickPerFrame)
 			{
-				m_pFbxObj->m_fTick = 840 * 160;
+				m_pFbxObj->m_fTick = 61 * m_pFbxObj->m_AnimScene.iTickPerFrame;
 			}
+		}
+		else if (g_Input.GetKey(VK_DOWN) == KEY_HOLD)
+		{
+			matWorld._43 = matWorld._43 - (0.5f * g_fSecondPerFrame);
+			if (m_pFbxObj->m_fTick >= 91 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+			{
+				m_pFbxObj->m_fTick = 61 * m_pFbxObj->m_AnimScene.iTickPerFrame;
+			}
+		}
+		else if (g_Input.GetKey(VK_RIGHT) == KEY_HOLD)
+		{
+			matWorld._41 = matWorld._41 + (0.5f * g_fSecondPerFrame);
+			if (m_pFbxObj->m_fTick >= 91 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+			{
+				m_pFbxObj->m_fTick = 61 * m_pFbxObj->m_AnimScene.iTickPerFrame;
+			}
+		}
+		else if (g_Input.GetKey(VK_LEFT) == KEY_HOLD)
+		{
+			matWorld._41 = matWorld._41 - (0.5f * g_fSecondPerFrame);
+			if (m_pFbxObj->m_fTick >= 91 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+			{
+				m_pFbxObj->m_fTick = 61 * m_pFbxObj->m_AnimScene.iTickPerFrame;
+			}
+		}
+		else if (g_Input.GetKey(VK_SPACE) == KEY_HOLD)
+		{
+			if (!bSpace)
+			{
+				m_pFbxObj->m_fTick = 169 * m_pFbxObj->m_AnimScene.iTickPerFrame;
+				bSpace = true;
+			}
+ 			if (m_pFbxObj->m_fTick >= 210 * m_pFbxObj->m_AnimScene.iTickPerFrame)
+			{
+				m_pFbxObj->m_fTick = 170 * m_pFbxObj->m_AnimScene.iTickPerFrame;
+			}
+		}
+		else
+		{
+			m_pFbxObj->m_fTick = 60 * m_pFbxObj->m_AnimScene.iTickPerFrame;
+			bSpace = false;
 		}
 
 		 matParent._41 = matWorld._41;
@@ -248,7 +229,6 @@ bool Sample::Frame()
 bool Sample::Render()
 {
 
-	   
 	m_pFbxObj->SetMatrix(&matWorld, &m_pMainCamera->m_matView,
 		&m_pMainCamera->m_matProject);
 

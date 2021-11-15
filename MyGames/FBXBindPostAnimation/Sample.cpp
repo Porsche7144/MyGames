@@ -11,101 +11,101 @@ LRESULT	 Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 bool Sample::Init()
 {
-	m_Camera.CreateViewMatrix({ 0,50,-50 }, { 0,0,0 });
+	m_Camera.CreateViewMatrix({ 0,50,-3000 }, { 0,0,0 });
 
 	float fAspect = g_rtClient.right / (float)g_rtClient.bottom;
 	m_Camera.CreateProjectionMatrix(1, 5000, HBASIS_PI / 4.0f, fAspect);
 
 	m_pFbxObj = make_shared<HFbxObj>();
 
-if (m_pFbxObj->Load("../../Image/FBX_Image/man.fbx"))
-{
-	for (auto data : m_pFbxObj->m_hNodeList)
+	if (m_pFbxObj->Load("../../Image/FBX_Image/man.fbx"))
 	{
-		HModelObj* pObject = data;
-		if (pObject->m_TriangleList.size() <= 0 &&
-			pObject->m_SubMesh.size() <= 0)
+		for (auto data : m_pFbxObj->m_hNodeList)
 		{
-			continue;
-		}
-		if (pObject->m_SubMesh.size() == 0)
-		{
-			pObject->m_VertexList.resize(pObject->m_TriangleList.size() * 3);
-			for (int iFace = 0; iFace < pObject->m_TriangleList.size(); iFace++)
+			HModelObj* pObject = data;
+			if (pObject->m_TriangleList.size() <= 0 &&
+				pObject->m_SubMesh.size() <= 0)
 			{
-				int iIndex = iFace * 3;
-				pObject->m_VertexList[iIndex + 0] =
-					pObject->m_TriangleList[iFace].vVertex[0];
-				pObject->m_VertexList[iIndex + 1] =
-					pObject->m_TriangleList[iFace].vVertex[1];
-				pObject->m_VertexList[iIndex + 2] =
-					pObject->m_TriangleList[iFace].vVertex[2];
+				continue;
 			}
-
-			T_STR loadTexName = L"../../Image/FBX_Image/";
-			if (pObject->FbxMaterialList.size())
+			if (pObject->m_SubMesh.size() == 0)
 			{
-				loadTexName += pObject->FbxMaterialList[0];
+				pObject->m_VertexList.resize(pObject->m_TriangleList.size() * 3);
+				for (int iFace = 0; iFace < pObject->m_TriangleList.size(); iFace++)
+				{
+					int iIndex = iFace * 3;
+					pObject->m_VertexList[iIndex + 0] =
+						pObject->m_TriangleList[iFace].vVertex[0];
+					pObject->m_VertexList[iIndex + 1] =
+						pObject->m_TriangleList[iFace].vVertex[1];
+					pObject->m_VertexList[iIndex + 2] =
+						pObject->m_TriangleList[iFace].vVertex[2];
+				}
+
+				T_STR loadTexName = L"../../Image/FBX_Image/";
+				if (pObject->FbxMaterialList.size())
+				{
+					loadTexName += pObject->FbxMaterialList[0];
+				}
+				else
+				{
+					loadTexName.clear();
+				}
+				if (!pObject->Create(g_pd3dDevice,
+					L"vs.txt",
+					L"ps.txt",
+					loadTexName))
+				{
+					return false;
+				}
+
 			}
 			else
 			{
-				loadTexName.clear();
-			}
-			if (!pObject->Create(g_pd3dDevice,
-				L"vs.txt",
-				L"ps.txt",
-				loadTexName))
-			{
-				return false;
-			}
-
-		}
-		else
-		{
-			for (int iSub = 0; iSub < pObject->m_SubMesh.size(); iSub++)
-			{
-				HSubMesh* pSub = &pObject->m_SubMesh[iSub];
-				if (pSub->m_TriangleList.size() <= 0) continue;
-
-				pSub->m_VertexList.resize(
-					pSub->m_TriangleList.size() * 3);
-				for (int iFace = 0; iFace < pSub->m_TriangleList.size(); iFace++)
+				for (int iSub = 0; iSub < pObject->m_SubMesh.size(); iSub++)
 				{
-					int iIndex = iFace * 3;
-					pSub->m_VertexList[iIndex + 0] =
-						pSub->m_TriangleList[iFace].vVertex[0];
-					pSub->m_VertexList[iIndex + 1] =
-						pSub->m_TriangleList[iFace].vVertex[1];
-					pSub->m_VertexList[iIndex + 2] =
-						pSub->m_TriangleList[iFace].vVertex[2];
+					HSubMesh* pSub = &pObject->m_SubMesh[iSub];
+					if (pSub->m_TriangleList.size() <= 0) continue;
+
+					pSub->m_VertexList.resize(
+						pSub->m_TriangleList.size() * 3);
+					for (int iFace = 0; iFace < pSub->m_TriangleList.size(); iFace++)
+					{
+						int iIndex = iFace * 3;
+						pSub->m_VertexList[iIndex + 0] =
+							pSub->m_TriangleList[iFace].vVertex[0];
+						pSub->m_VertexList[iIndex + 1] =
+							pSub->m_TriangleList[iFace].vVertex[1];
+						pSub->m_VertexList[iIndex + 2] =
+							pSub->m_TriangleList[iFace].vVertex[2];
+					}
+
+					// vb
+					ID3D11Buffer* vb =
+						CreateVertexBuffer(g_pd3dDevice,
+							&pSub->m_VertexList.at(0),
+							pSub->m_VertexList.size(),
+							sizeof(PNCT_VERTEX));
+					pSub->m_pVertexBuffer.Attach(vb);
+					wstring loadTex = L"../../Image/FBX_Image/";
+					loadTex += pObject->FbxMaterialList[iSub].c_str();
+					pSub->m_pTexture = g_TextureMgr.Load(g_pd3dDevice, loadTex.c_str());
+
 				}
 
-				// vb
-				ID3D11Buffer* vb =
-					CreateVertexBuffer(g_pd3dDevice,
-						&pSub->m_VertexList.at(0),
-						pSub->m_VertexList.size(),
-						sizeof(PNCT_VERTEX));
-				pSub->m_pVertexBuffer.Attach(vb);
-				wstring loadTex = L"../../Image/FBX_Image/";
-				loadTex += pObject->FbxMaterialList[iSub].c_str();
-				pSub->m_pTexture = g_TextureMgr.Load(g_pd3dDevice, loadTex.c_str());
-
-			}
-
-			if (!pObject->Create(g_pd3dDevice,
-				L"vs.txt",
-				L"ps.txt",
-				L""))
-			{
-				return false;
+				if (!pObject->Create(g_pd3dDevice,
+					L"vs.txt",
+					L"ps.txt",
+					L""))
+				{
+					return false;
+				}
 			}
 		}
 	}
-}
 
 
-return true;
+	return true;
 };
 
 bool Sample::Frame()
@@ -208,7 +208,6 @@ bool Sample::Render()
 
 bool Sample::Release()
 {
-
 	for (auto data : m_pFbxObj->m_hNodeList)
 	{
 		HModelObj* pObject = data;

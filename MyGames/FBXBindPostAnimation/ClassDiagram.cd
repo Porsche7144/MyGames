@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="HFbxObj" Collapsed="true">
+    <Position X="3" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgBAAYhowDQAAAAAiIAAQQEEAkAAIAAAAAAEAgEA=</HashCode>
+      <FileName>HFbxObj.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HModelObj" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAGAABAAAAEAAAADAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>HModelObj.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sample" Collapsed="true">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAJACABAAAAE=</HashCode>
+      <FileName>Sample.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HCore" Collapsed="true">
+    <Position X="3" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIEAACAIAggAIBAQAQAAAAAQAEAKECAIBAqATCKAAM=</HashCode>
+      <FileName>C:\Users\kgca39B\Source\Repos\Porsche7144\MyGames\Include\Hcore.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HDevice" Collapsed="true">
+    <Position X="5.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CDAAAAAIAAAAIiAAAAQAAAACAAEAAEAMgBACABIiIEM=</HashCode>
+      <FileName>C:\Users\kgca39B\Source\Repos\Porsche7144\MyGames\Include\HDevice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HWindow" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAACAAAyAAAAQAAAAAgIAAEAAAIAAAAoAIQAoggAQ=</HashCode>
+      <FileName>C:\Users\kgca39B\Source\Repos\Porsche7144\MyGames\Include\HWindow.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HObject" Collapsed="true">
+    <Position X="3" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AYQAsCSAwAAABIRjC4EMEBAIAIiAYEBCABBS7TIGADE=</HashCode>
+      <FileName>C:\Users\kgca39B\Source\Repos\Porsche7144\MyGames\Include\HObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HBASIS_CORE_LIB::HDxObject" Collapsed="true">
+    <Position X="5.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AJUGAAABAoAAAAgFAAgAQiCREQIDAEGAARnCgJAGCAE=</HashCode>
+      <FileName>C:\Users\kgca39B\Source\Repos\Porsche7144\MyGames\Include\HDxObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="HSubMesh" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAIAQAAAAAABAAEAAAAAgAAAAAA=</HashCode>
+      <FileName>HModelObj.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HWeight" Collapsed="true">
+    <Position X="2.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAABiAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HModelObj.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HAnimTrack" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HModelObj.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="HScene" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAEAAAAAAACAAIQAABBAAAAgAAAQAAAAA=</HashCode>
+      <FileName>HModelObj.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="hNodeMap" Collapsed="true">
+    <Position X="2.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HFbxObj.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="hNodeList" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HFbxObj.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

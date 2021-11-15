@@ -256,6 +256,7 @@ bool Sample::Init()
 	}
 	else
 	{
+		//m_iTileCount = 513;
 		desc.iNumCols = m_iTileCount;
 		desc.iNumRows = m_iTileCount;
 		desc.fCellDistance = m_fCellCount;
@@ -597,9 +598,9 @@ bool Sample::Frame()
 #pragma region PickTextureSplatting
 	if (m_bSelect && m_bSplattingState)
 	{
+		bool Update = false;
 		if (!m_bFieldUpdateState)
 		{
-
 			for (int i = 0; i < m_QuadTree.m_leafList.size(); i++)
 			{
 				HNode* pNode = m_QuadTree.m_leafList[i];
@@ -610,8 +611,7 @@ bool Sample::Frame()
 				}
 			}
 
-			float fMaxDist = 99999;
-			bool Update = false;
+			float fMaxDist = 99999;			
 			for (int select = 0; select < m_SelectNode.size(); select++)
 			{
 				HNode* pNode = m_SelectNode[select];
@@ -629,6 +629,7 @@ bool Sample::Frame()
 			}
 		}
 
+
 		m_SelectData[0].fRadius = m_fRadius;
 		switch (m_iSplattingNum)
 		{
@@ -640,16 +641,21 @@ bool Sample::Frame()
 		default:
 			break;
 		}
-		//m_SelectData[0].iIndex = rand() % 4; // z
-		//float x = (rand() % m_iTextureSizeX) - m_iTextureSizeX / 2.0f;
-		//float y = (rand() % m_iTextureSizeX) - m_iTextureSizeX / 2.0f;
 
 		m_SelectData[0].fTexHeight = 1024.0f;
 		m_SelectData[0].fTexWidth = 1024.0f;
 
-		float x = (pick.x) - pick.x / 2.0f;
-		float z = (pick.z) - pick.z / 2.0f;
-		m_SelectData[0].vPickPos = Vector3(x, z, 0);		
+		float fMapWidth = m_Map.m_iNumCellCols * m_Map.m_fCellDistance;
+		float fWidthRatio = m_iTextureSizeX / fMapWidth;
+		Vector2 vCenter = Vector2((pick.x + (fMapWidth / 2.0f)) * fWidthRatio,	(-(pick.z - (fMapWidth / 2.0f))) * fWidthRatio);
+
+
+
+		float x = vCenter.x;
+		float z = vCenter.y;
+
+
+		m_SelectData[0].vPickPos = Vector3(x, z, 0);
 		g_pImmediateContext->UpdateSubresource(m_pSelectBuffer.Get(),
 			0, NULL, &m_SelectData, 0, 0);
 
@@ -666,7 +672,9 @@ bool Sample::Frame()
 			m_iTextureSizeX / 32, m_iTextureSizeY / 32, 1);
 
 		g_pImmediateContext->CopyResource(m_pAlphaTextureCopy.Get(), m_pAlphaTexture.Get());
-		/*if (m_LoadData)
+
+		// 주석 제거시 상단 중앙 RPG맵 활성화
+		if (m_LoadData)
 		{
 			m_AlphaZeroTexture.PickRenderTextureData(&m_Map, m_LoadTexture,
 				g_pImmediateContext, pick, m_iSplattingNum);
@@ -679,7 +687,7 @@ bool Sample::Frame()
 				g_pImmediateContext, pick, m_iSplattingNum);
 			g_pImmediateContext->CopyResource(m_AlphaZeroTexture.pTexture, m_AlphaZeroTexture.pStaging);
 			m_pTextureSRV[0] = m_AlphaZeroTexture.m_pSRV;
-		}*/
+		}
 	}
 #pragma endregion
 

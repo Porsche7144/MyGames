@@ -38,6 +38,9 @@
       <Project>{0f7e36e1-230f-437b-931b-4ec17b4505e5}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{2bb5fc6b-b1f5-4f36-a41a-66ba02545943}</ProjectGuid>
